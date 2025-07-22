@@ -4,7 +4,11 @@ A simple template of a Python project, with a rigid file structure, and predispo
 
 ## Relevant features
 
+<<<<<<< HEAD
 - All your project code into a single main package (`Avian-Blasters/`)
+=======
+- All your project code into a single main package (`Avian_Blasters/`)
+>>>>>>> main
 - All your project tests into a single test package (`test/`)
 - Unit testing support via [`unittest`](https://docs.python.org/3/library/unittest.html)
 - Automatic testing on all branches via GitHub Actions
@@ -22,7 +26,11 @@ A simple template of a Python project, with a rigid file structure, and predispo
 Overview:
 ```bash
 <root directory>
+<<<<<<< HEAD
 ├── Avian-Blasters/             # main package (should be named after your project)
+=======
+├── Avian_Blasters/             # main package (should be named after your project)
+>>>>>>> main
 │   ├── __init__.py         # python package marker
 │   └── __main__.py         # application entry point
 ├── test/                   # test package (should contain unit tests)
@@ -42,11 +50,16 @@ Overview:
 
 ## TODO-list for template usage
 
+<<<<<<< HEAD
 1. Use this template to create a new GitHub repository, say `Avian-Blasters`
+=======
+1. Use this template to create a new GitHub repository, say `Avian_Blasters`
+>>>>>>> main
     - this name will also be used to identify the package on PyPi
         + so, we suggest choosing a name which has not been used on PyPi, yet
         + we also suggest choosing a name which is a valid Python package name (i.e. `using_snake_case`)
 
+<<<<<<< HEAD
 2. Clone the `Avian-Blasters` repository
 
 3. Open a shell into your local `Avian-Blasters` directory and run 
@@ -55,6 +68,16 @@ Overview:
     ``` 
     
     This will coherently rename the template's project name with the one chosen by you (i.e. `Avian-Blasters`, in this example)
+=======
+2. Clone the `Avian_Blasters` repository
+
+3. Open a shell into your local `Avian_Blasters` directory and run 
+    ```bash
+    ./rename-template.sh Avian_Blasters
+    ``` 
+    
+    This will coherently rename the template's project name with the one chosen by you (i.e. `Avian_Blasters`, in this example)
+>>>>>>> main
 
 4. Commit & push
 
@@ -80,15 +103,25 @@ Overview:
     - cf. <https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-personal-access-token-classic>
     - the token must allow pushing to the repository
 
+<<<<<<< HEAD
 13. Put your main (resp. test) code in `Avian-Blasters/` (resp. `test/`)
+=======
+13. Put your main (resp. test) code in `Avian_Blasters/` (resp. `test/`)
+>>>>>>> main
 
 ## How to do stuff
 
 ### Run your code as an application
 
+<<<<<<< HEAD
 This will execute the file `Avian-Blasters/__main__.py`:
 ```bash
 python -m Avian-Blasters 
+=======
+This will execute the file `Avian_Blasters/__main__.py`:
+```bash
+python -m Avian_Blasters 
+>>>>>>> main
 ```
 
 ### Run unit tests
@@ -110,7 +143,11 @@ pip install -r requirements-dev.txt
 
 > This paragraph is more understandable if the reader has some background about [GitFlow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow)
 
+<<<<<<< HEAD
 GitHub actions automatically release a new version of `Avian-Blasters` on PyPi whenever commits are pushed on either the `main`/`master` or `develop` branches, as well as when new tags are pushed.
+=======
+GitHub actions automatically release a new version of `Avian_Blasters` on PyPi whenever commits are pushed on either the `main`/`master` or `develop` branches, as well as when new tags are pushed.
+>>>>>>> main
 
 Tags are assumed to consist of [semantic versioning](https://semver.org/) strings of the form `Major.Minor.Patch` where `Major`, `Minor`, and `Patch` are non-negative integers.
 
