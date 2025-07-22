@@ -42,19 +42,19 @@ Overview:
 
 ## TODO-list for template usage
 
-1. Use this template to create a new GitHub repository, say `Avian-Blasters`
+1. Use this template to create a new GitHub repository, say `Avian_Blasters`
     - this name will also be used to identify the package on PyPi
         + so, we suggest choosing a name which has not been used on PyPi, yet
         + we also suggest choosing a name which is a valid Python package name (i.e. `using_snake_case`)
 
-2. Clone the `Avian-Blasters` repository
+2. Clone the `Avian_Blasters` repository
 
-3. Open a shell into your local `Avian-Blasters` directory and run 
+3. Open a shell into your local `Avian_Blasters` directory and run 
     ```bash
-    ./rename-template.sh Avian-Blasters
+    ./rename-template.sh Avian_Blasters
     ``` 
     
-    This will coherently rename the template's project name with the one chosen by you (i.e. `Avian-Blasters`, in this example)
+    This will coherently rename the template's project name with the one chosen by you (i.e. `Avian_Blasters`, in this example)
 
 4. Commit & push
 
@@ -80,15 +80,15 @@ Overview:
     - cf. <https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-personal-access-token-classic>
     - the token must allow pushing to the repository
 
-13. Put your main (resp. test) code in `Avian-Blasters/` (resp. `test/`)
+13. Put your main (resp. test) code in `Avian_Blasters/` (resp. `test/`)
 
 ## How to do stuff
 
 ### Run your code as an application
 
-This will execute the file `Avian-Blasters/__main__.py`:
+This will execute the file `Avian_Blasters/__main__.py`:
 ```bash
-python -m Avian-Blasters 
+python -m Avian_Blasters 
 ```
 
 ### Run unit tests
@@ -110,7 +110,7 @@ pip install -r requirements-dev.txt
 
 > This paragraph is more understandable if the reader has some background about [GitFlow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow)
 
-GitHub actions automatically release a new version of `Avian-Blasters` on PyPi whenever commits are pushed on either the `main`/`master` or `develop` branches, as well as when new tags are pushed.
+GitHub actions automatically release a new version of `Avian_Blasters` on PyPi whenever commits are pushed on either the `main`/`master` or `develop` branches, as well as when new tags are pushed.
 
 Tags are assumed to consist of [semantic versioning](https://semver.org/) strings of the form `Major.Minor.Patch` where `Major`, `Minor`, and `Patch` are non-negative integers.
 
