@@ -30,11 +30,7 @@ jobs:
         run: pip install -r requirements-dev.txt
 
       - name: Change default logging level
-<<<<<<< HEAD
-        run: sed -i -e 's/DEBUG/WARN/g' Avian-Blasters/__init__.py
-=======
         run: sed -i -e 's/DEBUG/WARN/g' Avian_Blasters/__init__.py
->>>>>>> main
 
       - name: Get Node Version
         id: get-node-version
