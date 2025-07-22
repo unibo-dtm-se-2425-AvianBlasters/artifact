@@ -4,7 +4,7 @@ A simple template of a Python project, with a rigid file structure, and predispo
 
 ## Relevant features
 
-- All your project code into a single main package (`Avian-Blasters/`)
+- All your project code into a single main package (`Avian_Blasters/`)
 - All your project tests into a single test package (`test/`)
 - Unit testing support via [`unittest`](https://docs.python.org/3/library/unittest.html)
 - Automatic testing on all branches via GitHub Actions
@@ -22,7 +22,7 @@ A simple template of a Python project, with a rigid file structure, and predispo
 Overview:
 ```bash
 <root directory>
-├── Avian-Blasters/             # main package (should be named after your project)
+├── Avian_Blasters/             # main package (should be named after your project)
 │   ├── __init__.py         # python package marker
 │   └── __main__.py         # application entry point
 ├── test/                   # test package (should contain unit tests)
