@@ -80,19 +80,11 @@ class GetMinimumPythonVersion(distutils.cmd.Command):
         print(".".join(python_version[2:].split(".")[:2]))
 
 
-<<<<<<< HEAD
-url = 'https://github.com/aequitas-aod/Avian-Blasters'
-
-
-setup(
-    name='Avian-Blasters',  # Required
-=======
 url = 'https://github.com/aequitas-aod/Avian_Blasters'
 
 
 setup(
     name='Avian_Blasters',  # Required
->>>>>>> main
     version=version,
     description='Description of the project here',
     license='Apache 2.0 License',
