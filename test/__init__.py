@@ -1,9 +1,5 @@
 import unittest
-<<<<<<< HEAD
-from Avian-Blasters import MyClass
-=======
 from Avian_Blasters import MyClass
->>>>>>> main
 
 class TestMyClass(unittest.TestCase):
     # test methods' names should begin with `test_`
