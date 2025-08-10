@@ -1,7 +1,6 @@
 import unittest
-from artifact.Avian_Blasters.model.character.player.player import Player
-from artifact.Avian_Blasters.model.character.player.player_impl import PlayerImpl
-from artifact.Avian_Blasters.model.entity import Entity
+from Avian_Blasters.model.character.player.player_impl import PlayerImpl
+from Avian_Blasters.model.entity import Entity
 
 class testPlayer(unittest.TestCase):
     initial_x = 0
