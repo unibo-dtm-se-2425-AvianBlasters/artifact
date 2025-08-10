@@ -1,2 +1,21 @@
+from enum import Enum
+
+
+class PowerUpType(Enum):
+    DOUBLE_FIRE = 1
+    LASER = 2
+    INVULNERABILITY = 3
+
 class PowerUp:
-    ...
+    
+    def is_collected(self, player_position) -> bool:
+        ...
+
+    def effect_on_player(self, player): 
+        ...
+
+    def is_active(self) -> bool:
+        ...
+
+    def disable(self):
+        ...
