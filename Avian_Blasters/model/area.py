@@ -1,4 +1,4 @@
-from position import Position
+from pygame import Rect
 
 class Area:
     
@@ -19,4 +19,7 @@ class Area:
         ...
     
     def overlap(self, other) -> bool:
+        ...
+    
+    def get_area(self) -> Rect:
         ...
