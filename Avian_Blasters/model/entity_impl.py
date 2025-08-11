@@ -1,6 +1,6 @@
-from entity import Entity
-from area_impl import AreaImpl
-from area import Area
+from Avian_Blasters.model.entity import Entity
+from Avian_Blasters.model.area_impl import AreaImpl
+from Avian_Blasters.model.area import Area
 
 class EntityImpl(Entity):
     def __init__(self, x : int, y : int, width : int, height : int, type : Entity.TypeArea, delta : int):

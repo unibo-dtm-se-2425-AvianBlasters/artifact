@@ -1,7 +1,7 @@
-from model.character.character import Character
-from power_up_handler import PowerUpHandler
-from player_status_handler import PlayerStatus
-from score import Score
+from Avian_Blasters.model.character.character import Character
+from Avian_Blasters.model.character.player.power_up_handler import PowerUpHandler
+from Avian_Blasters.model.character.player.player_status_handler import PlayerStatus
+from Avian_Blasters.model.character.player.score import Score
 
 class Player(Character):
     

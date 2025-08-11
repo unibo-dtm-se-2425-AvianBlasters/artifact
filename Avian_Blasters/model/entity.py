@@ -1,5 +1,5 @@
 from enum import Enum
-from area import Area
+from Avian_Blasters.model.area import Area
 
 class Entity():
     class TypeArea(Enum):

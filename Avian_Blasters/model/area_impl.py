@@ -1,10 +1,10 @@
-from position import Position
-from area import Area
+from Avian_Blasters.model.position_impl import PositionImpl
+from Avian_Blasters.model.area import Area
 from pygame import Rect
 
 class AreaImpl(Area):
     def __init__(self, x : int, y : int, width : int, height : int):
-        self._position = Position(x, y)
+        self._position = PositionImpl(x, y)
         self._width = width
         self._height = height
         self._figure = self.__position_adjustment(x, y, width, height)
@@ -31,6 +31,5 @@ class AreaImpl(Area):
     def get_area(self) -> Rect:
         return self._figure
 
-    def __position_adjustment(x : int, y : int, width : int, height : int) -> Rect:
-        return Rect((x-width/2, y-height/2), (x-width/2, y+height/2),
-                    width, height)
+    def __position_adjustment(self, x : int, y : int, width : int, height : int) -> Rect:
+        return Rect(x-width/2, y+height/2, width, height)

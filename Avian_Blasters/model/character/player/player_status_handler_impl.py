@@ -1,4 +1,4 @@
-from player_status_handler import PlayerStatus
+from Avian_Blasters.model.character.player.player_status_handler import PlayerStatus
 
 class PlayerStatusImpl(PlayerStatus):
 
