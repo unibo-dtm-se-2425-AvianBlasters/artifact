@@ -6,7 +6,7 @@ class PlayerStatus:
         INVULNERABLE = 2
     
     @property
-    def get_current_status(self):
+    def get_current_status(self) -> Status:
         ...
     
     def set_current_status(self, new_status : Status):
