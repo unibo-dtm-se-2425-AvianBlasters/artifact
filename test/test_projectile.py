@@ -1,6 +1,6 @@
 import unittest
-from Avian_Blasters.model.item.projectile.laser_projectile import LaserProjectile
-from Avian_Blasters.model.item.projectile.normal_projectile import NormalProjectile
+from Avian_Blasters.model.item.projectile.projectile_types.laser_projectile import LaserProjectile
+from Avian_Blasters.model.item.projectile.projectile_types.normal_projectile import NormalProjectile
 from Avian_Blasters.model.item.projectile.projectile import Projectile, ProjectileType
 from Avian_Blasters.model.item.projectile.projectile_factory import ProjectileFactory
 from Avian_Blasters.model.item.projectile.projectile_impl import ProjectileImpl
@@ -22,7 +22,7 @@ class TestProjectileFactory(unittest.TestCase):
         self.assertIsInstance(projectile, LaserProjectile)
         self.assertEqual(position, projectile.position)
 
-class TestProjectile(unittest.TestCase):
+class TestNormalProjectile(unittest.TestCase):
     initial_x = 8
     initial_y = 8
     direction = -1
@@ -31,7 +31,7 @@ class TestProjectile(unittest.TestCase):
     initial_position = Position(initial_x, initial_y)
 
     def setUp(self):
-        self.projectile = ProjectileImpl(self.projectile_type, self.initial_position, direction=self.direction, speed=self.speed)
+        self.projectile = NormalProjectile(self.initial_position, direction=self.direction, speed=self.speed)
 
     def test_initial_status(self):
         self.assertEqual(self.projectile_type, self.projectile.type)
@@ -42,7 +42,7 @@ class TestProjectile(unittest.TestCase):
     def test_move(self):
         initial_position = self.projectile.position
         self.projectile.move()
-        new_position = Position(initial_position.x, initial_position.y + self.direction * self.speed)
+        new_position = Position(initial_position.get_x(), initial_position.get_y() + self.direction * self.speed)
         self.assertEqual(new_position, self.projectile.position)
 
     def test_destroy(self):

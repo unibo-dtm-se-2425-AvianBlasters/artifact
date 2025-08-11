@@ -1,5 +1,6 @@
 from enum import Enum
 
+from Avian_Blasters.model.area import Area
 from Avian_Blasters.model.position import Position
 
 class ProjectileType(Enum):
@@ -10,6 +11,10 @@ class Projectile:
 
     @property
     def position(self) -> Position:
+        ...
+
+    @property
+    def area(self) -> Area:
         ...
     
     @property
@@ -22,6 +27,10 @@ class Projectile:
 
     @property
     def direction(self) -> int:
+        ...
+
+    @property
+    def speed(self) -> int:
         ...
 
     def move(self):
