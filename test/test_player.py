@@ -2,7 +2,7 @@ import unittest
 from Avian_Blasters.model.character.player import *
 from Avian_Blasters.model.entity import Entity
 
-class testPlayer(unittest.TestCase):
+class TestPlayer(unittest.TestCase):
     initial_x = 0
     initial_y = 0
     width = 10
@@ -21,11 +21,11 @@ class testPlayer(unittest.TestCase):
                                 self.limit_right, self.limit_left)
     
     def test_inital_status(self):
-        self.assertEqual(3, self.player.get_health())
-        self.assertEqual(0, self.player.get_score().get_score())
-        self.assertEqual(0, self.player.get_score().get_multiplier())
-        self.assertEqual(Entity.TypeArea.PLAYER, self.player.get_type())
-        self.assertEqual(PlayerStatus.Status.NORMAL, self.player.get_status().get_current_status())
+        self.assertEqual(3, self.player.get_health)
+        self.assertEqual(0, self.player.get_score().get_score)
+        self.assertEqual(1, self.player.get_score().get_multiplier)
+        self.assertEqual(Entity.TypeArea.PLAYER, self.player.get_type)
+        self.assertEqual(PlayerStatus.Status.NORMAL, self.player.get_status().get_current_status)
 
     def test_movement(self):
         ...
@@ -34,10 +34,10 @@ class testPlayer(unittest.TestCase):
         ...
     
     def test_add_points(self):
-        self.assertEqual(0, self.player.get_score().get_score())
+        self.assertEqual(0, self.player.get_score().get_score)
         score_increment = 100
         self.player.get_score().add_points(score_increment)
-        self.assertEqual(score_increment, self.player.get_score().get_score())
+        self.assertEqual(score_increment, self.player.get_score().get_score)
         ...
     
     def test_damage(self):
