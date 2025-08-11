@@ -1,3 +1,4 @@
+from __future__ import annotations
 from Avian_Blasters.model.item.power_up.power_up import PowerUp
 
 class PowerUpHandlerImpl():
