@@ -1,8 +1,6 @@
 import unittest
 from Avian_Blasters.model.entity import Entity
 from Avian_Blasters.model.item.item import Direction
-from Avian_Blasters.model.item.projectile.projectile_types.laser_projectile import LaserProjectile
-from Avian_Blasters.model.item.projectile.projectile_types.normal_projectile import NormalProjectile
 from Avian_Blasters.model.item.projectile.projectile import Projectile, ProjectileType
 from Avian_Blasters.model.item.projectile.projectile_factory import ProjectileFactory
 from Avian_Blasters.model.item.projectile.projectile_impl import ProjectileImpl
@@ -13,18 +11,26 @@ class TestProjectileFactory(unittest.TestCase):
         self.factory = ProjectileFactory()
 
     def test_create_normal_projectile(self):
-        position = Position(5, 5)
-        projectile = self.factory.create_projectile(ProjectileType.NORMAL, position)
+        projectile = self.factory.create_projectile(projectile_type = ProjectileType.NORMAL, x = 5, y = 5, direction = Direction.UP, width = 2, height = 4, type_area = Entity.TypeArea.PLAYER_PROJECTILE, delta = 1)
+        self.assertIsInstance(projectile, ProjectileImpl)
         self.assertEqual(projectile.projectile_type, ProjectileType.NORMAL)
-        self.assertEqual(position.get_x, projectile.get_area().get_position_x)
-        self.assertEqual(position.get_y, projectile.get_area().get_position_y)
+        self.assertEqual(projectile.direction, Direction.UP)
+        self.assertEqual(projectile.get_area().get_position_x, 5)
+        self.assertEqual(projectile.get_area().get_position_y, 5)
+        self.assertTrue(projectile.active)
 
-    def test_create_laser_projectile(self):
-        position = Position(3, 0)
-        projectile = self.factory.create_projectile(ProjectileType.LASER, position)
-        self.assertEqual(projectile.projectile_type, ProjectileType.LASER)
-        self.assertEqual(position.get_x, projectile.get_area().get_position_x)
-        self.assertEqual(position.get_y, projectile.get_area().get_position_y)
+
+    def test_create_invalid_projectile_type(self):
+        with self.assertRaises(ValueError):
+            self.factory.create_projectile(projectile_type = "INVALID", x = 5, y = 5, direction = Direction.UP, width = 2, height = 4, type_area = Entity.TypeArea.PLAYER_PROJECTILE, delta = 1)
+
+    def test_create_invalid_dimensions(self):
+        with self.assertRaises(ValueError):
+            self.factory.create_projectile(projectile_type = ProjectileType.NORMAL, x = 5, y = 5, direction = Direction.UP, width = -1, height = 4, type_area = Entity.TypeArea.PLAYER_PROJECTILE, delta = 1)
+
+    def test_create_invalid_type_area(self):
+        with self.assertRaises(ValueError):
+            self.factory.create_projectile(projectile_type = ProjectileType.NORMAL, x = 5, y = 5, direction = Direction.UP, width = 2, height = 4, type_area = "INVALID", delta = 1)
 
 class TestProjectile(unittest.TestCase):
 
