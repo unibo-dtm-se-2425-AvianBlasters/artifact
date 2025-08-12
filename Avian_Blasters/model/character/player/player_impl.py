@@ -25,9 +25,14 @@ class PlayerImpl(CharacterImpl, Player):
     def move(self, x : int):
         if self.__can_move(x):
             super().move(x, self.get_area().get_position_y, self.get_area().get_width, self.get_area().get_height)
+        elif x>=0:
+            super().move((self._limit_r - self.get_area().get_position_x)/self._delta, self.get_area().get_position_y, self.get_area().get_width, self.get_area().get_height)
+        else:
+            super().move((self._limit_l - self.get_area().get_position_x)/self._delta, self.get_area().get_position_y, self.get_area().get_width, self.get_area().get_height)
     
     def __can_move(self, x : int) -> bool:
-        return (x != (self._limit_r - self.get_area().get_width/2) and x != (self._limit_l + self.get_area().get_height))
+        return abs(self._limit_r) > abs(x * self._delta + self.get_area().get_position_x + self.get_area().get_width/2) and abs(self._limit_l) > abs(x * self._delta + self.get_area().get_position_x - self.get_area().get_width/2)
+        #(abs(x*self._delta) <= abs(self._limit_r - self.get_area().get_width/2 - self.get_area().get_position_x) and abs(x*self._delta) <= abs(self._limit_l - self.get_area().get_width/2) - self.get_area().get_position_x)        
                 
     def get_score(self) -> Score:
         return self._score
