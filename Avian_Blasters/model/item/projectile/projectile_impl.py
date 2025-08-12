@@ -5,8 +5,8 @@ from Avian_Blasters.model.item.projectile.projectile import Projectile, Projecti
 from Avian_Blasters.model.position import Position
 
 class ProjectileImpl(ItemImpl, Projectile):
-    def __init__(self, x : int, y : int, width : int, height : int, projectile_type : ProjectileType, direction : Direction, delta : int):
-        super().__init__(x, y, width, height, Entity.TypeArea.PLAYER_PROJECTILE if direction == Direction.UP else Entity.TypeArea.ENEMY_PROJECTILE, delta)
+    def __init__(self, x : int, y : int, width : int, height : int, type : Entity.TypeArea, projectile_type : ProjectileType, direction : Direction, delta : int):
+        super().__init__(x, y, width, height, type, delta)
         self._projectile_type = projectile_type
         self._direction = direction
     
