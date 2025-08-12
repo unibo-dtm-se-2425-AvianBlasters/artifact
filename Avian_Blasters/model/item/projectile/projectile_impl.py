@@ -1,35 +1,19 @@
+from Avian_Blasters.model.entity import Entity
+from Avian_Blasters.model.item.item import Direction
+from Avian_Blasters.model.item.item_impl import ItemImpl
 from Avian_Blasters.model.item.projectile.projectile import Projectile, ProjectileType
 from Avian_Blasters.model.position import Position
 
-DEFAULT_SPEED = 1
-
-class ProjectileImpl(Projectile):
-    def __init__(self, projectile_type, position, direction, speed=DEFAULT_SPEED):
-        self._type = projectile_type
-        self._position = position
-        self._active = True
+class ProjectileImpl(ItemImpl, Projectile):
+    def __init__(self, x : int, y : int, width : int, height : int, projectile_type : ProjectileType, direction : Direction, delta : int):
+        super().__init__(x, y, width, height, Entity.TypeArea.PLAYER_PROJECTILE if direction == Direction.UP else Entity.TypeArea.ENEMY_PROJECTILE, delta)
+        self._projectile_type = projectile_type
         self._direction = direction
-        self._speed = speed
-
-    @property
-    def position(self) -> Position:
-        return self._position
     
     @property
-    def active(self) -> bool:
-        return self._active
+    def projectile_type(self) -> ProjectileType:
+        return self._projectile_type
     
     @property
-    def type(self) -> ProjectileType:
-        return self._type
-    
-    @property
-    def direction(self) -> int:
+    def direction(self) -> Direction:
         return self._direction
-    
-    @property
-    def speed(self) -> int:
-        return self._speed
-
-    def destroy(self):
-        self._active = False
