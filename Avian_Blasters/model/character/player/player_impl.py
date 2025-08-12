@@ -24,22 +24,22 @@ class PlayerImpl(CharacterImpl, Player):
     
     def move(self, x : int):
         if self.__can_move(x):
-            super().move(x, self.get_area().get_position_y()) 
+            super().move(x, self.get_area().get_position_y, self.get_area().get_width, self.get_area().get_height)
     
     def __can_move(self, x : int) -> bool:
-        return x != self._limit_r - self.get_area().get_width()/2 and x != self._limit_l + self.get_area().get_height
+        return (x != (self._limit_r - self.get_area().get_width/2) and x != (self._limit_l + self.get_area().get_height))
                 
     def get_score(self) -> Score:
         return self._score
     
     def is_touched(self, others: list[Entity]):
-        if self._status_handler.get_current_status() != PlayerStatus.Status.INVULNERABLE:
+        if self._status_handler.get_current_status != PlayerStatus.Status.INVULNERABLE:
             for i in others:
-                if i.get_type() == Entity.TypeArea.ENEMY or Entity.TypeArea.ENEMY_PROJECTILE:
+                if i.get_type == Entity.TypeArea.ENEMY or Entity.TypeArea.ENEMY_PROJECTILE:
                     if super().is_touched(i):
-                        damage = 3 if i.get_type() == Entity.TypeArea.ENEMY else 1
+                        damage = 3 if i.get_type == Entity.TypeArea.ENEMY else 1
                         self._health -= damage
-                        if self.get_health() <= 0:
+                        if self.get_health <= 0:
                             pass
                         else:
                             self._status_handler.set_current_status(PlayerStatus.Status.INVULNERABLE)

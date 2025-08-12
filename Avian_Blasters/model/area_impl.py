@@ -11,11 +11,11 @@ class AreaImpl(Area):
     
     @property
     def get_position_x(self) -> int:
-        return self._position.get_x()
+        return self._position.get_x
 
     @property
     def get_position_y(self) -> int:
-        return self._position.get_y()
+        return self._position.get_y
 
     @property
     def get_width(self) -> int:
