@@ -21,9 +21,9 @@ class TestPlayer(unittest.TestCase):
                                 self.limit_right, self.limit_left)
     
     def test_inital_status(self):
-        self.assertEqual(3, self.player.get_health)
-        self.assertEqual(0, self.player.get_score().get_score)
-        self.assertEqual(1, self.player.get_score().get_multiplier)
+        self.assertEqual(self.health, self.player.get_health)
+        self.assertEqual(self.initial_score, self.player.get_score().get_score)
+        self.assertEqual(self.initial_multiplier, self.player.get_score().get_multiplier)
         self.assertEqual(Entity.TypeArea.PLAYER, self.player.get_type)
         self.assertEqual(PlayerStatus.Status.NORMAL, self.player.get_status().get_current_status)
 
@@ -34,11 +34,11 @@ class TestPlayer(unittest.TestCase):
         ...
     
     def test_add_points(self):
-        self.assertEqual(0, self.player.get_score().get_score)
+        self.assertEqual(self.initial_score, self.player.get_score().get_score)
         score_increment = 100
         self.player.get_score().add_points(score_increment)
         self.assertEqual(score_increment, self.player.get_score().get_score)
-        ...
+        self.assertNotEquals(self.initial_score, self.player.get_score().get_score)
     
     def test_damage(self):
         ...
