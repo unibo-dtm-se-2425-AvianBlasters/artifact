@@ -15,9 +15,3 @@ class PowerUp(Item):
 
     def effect_on_player(self, player): 
         ...
-
-    def is_active(self) -> bool:
-        ...
-
-    def disable(self):
-        ...
