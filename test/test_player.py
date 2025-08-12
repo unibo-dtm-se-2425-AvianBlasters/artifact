@@ -28,7 +28,17 @@ class TestPlayer(unittest.TestCase):
         self.assertEqual(PlayerStatus.Status.NORMAL, self.player.get_status().get_current_status)
 
     def test_movement(self):
-        ...
+        movement_x = 10
+        self.player.move(movement_x)
+        self.assertEqual(movement_x * self.delta, self.player.get_area().get_position_x)
+        self.assertEqual(self.initial_y, self.player.get_area().get_position_y)
+        movement_x_2 = -20
+        self.player.move(movement_x_2)
+        self.assertEqual(movement_x * self.delta + movement_x_2 * self.delta, self.player.get_area().get_position_x)
+        self.assertEqual(self.initial_y, self.player.get_area().get_position_y)
+        self.player.move(movement_x)
+        self.assertEqual(self.initial_x, self.player.get_area().get_position_x)
+        self.assertEqual(self.initial_y, self.player.get_area().get_position_y)
     
     def test_going_against_wall(self):
         ...
