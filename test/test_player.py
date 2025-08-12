@@ -41,14 +41,30 @@ class TestPlayer(unittest.TestCase):
         self.assertEqual(self.initial_y, self.player.get_area().get_position_y)
     
     def test_going_against_wall(self):
-        ...
-    
+        movement_x = 51
+        self.player.move(movement_x)
+        self.assertEqual(self.limit_right, self.player.get_area().get_position_x)
+        self.assertEqual(self.initial_y, self.player.get_area().get_position_y)
+        movement_x2 = -50
+        self.player.move(movement_x2)
+        self.assertEqual(self.initial_x, self.player.get_area().get_position_x)
+        self.assertEqual(self.initial_y, self.player.get_area().get_position_y)
+        self.player.move((-movement_x - 1)/2)
+        self.assertEqual(-52, self.player.get_area().get_position_x)
+        self.assertEqual(self.initial_y, self.player.get_area().get_position_y)
+        self.player.move(movement_x2)
+        self.assertEqual(self.limit_left, self.player.get_area().get_position_x)
+        self.assertEqual(self.initial_y, self.player.get_area().get_position_y)
+        self.player.move(300)
+        self.assertEqual(self.limit_right, self.player.get_area().get_position_x)
+        self.assertEqual(self.initial_y, self.player.get_area().get_position_y)
+        
     def test_add_points(self):
         self.assertEqual(self.initial_score, self.player.get_score().get_score)
         score_increment = 100
         self.player.get_score().add_points(score_increment)
         self.assertEqual(score_increment, self.player.get_score().get_score)
-        self.assertNotEquals(self.initial_score, self.player.get_score().get_score)
+        self.assertNotEqual(self.initial_score, self.player.get_score().get_score)
     
     def test_damage(self):
         ...
