@@ -1,25 +1,30 @@
+import math
+
 from enemy_impl import EnemyImpl
+from attack_handler_impl import BirdAttackHandler
+
 
 class Bird(EnemyImpl):
-    """Implementation of a bird enemy with predictable wave movement 
-    and projectile attacks in the game."""
 
-    def __init__(self, x: int, y: int, width: int, height: int, speed: int, health: int):
-        super().__init__(x, y, width, height, speed, health)
-        self.direction = 1 # 1 for right, -1 for left
+    def __init__(
+        self,
+        x: int,
+        y: int,
+        width: int,
+        height: int,
+        speed: int,
+        health: int,
+        wave_amplitude: int = 20,
+        wave_frequency: float = 0.15,
+    ) -> None:
+        super().__init__(x, y, width, height, speed, health, attack_handler=BirdAttackHandler())
+        self._base_x = x
+        self._wave_amplitude = max(0, wave_amplitude)
+        self._wave_frequency = max(0.0, wave_frequency)
+        self._phase = 0.0
 
-    def attack(self):
-        """Birds attack by dropping projectiles."""
-        print(f"Bird at ({self.x}, {self.y}) attacks by dropping a projectile.")
-
-    def move(self):
-        """Move in a wave pattern (left-right sweeping)."""
-        self.x += self._speed * self.direction
-        if self.x <= 0 or self.x >= 800 - self.width: # Assuming 800 is the screen width
-            self.direction *= -1 # Change direction when hitting screen edges
-        self.y += self.speed
-
-        
-
-
-    
+    def move(self) -> None:
+        super().move()
+        self._phase += self._wave_frequency
+        offset = int(self._wave_amplitude * math.sin(self._phase))
+        self._x = self._base_x + offset

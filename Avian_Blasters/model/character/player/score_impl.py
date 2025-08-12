@@ -1,4 +1,4 @@
-from score import Score
+from Avian_Blasters.model.character.player.score import Score
 
 class ScoreImpl(Score):
     

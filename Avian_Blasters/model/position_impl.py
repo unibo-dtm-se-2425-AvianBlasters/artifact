@@ -1,4 +1,4 @@
-from position import Position
+from Avian_Blasters.model.position import Position
 
 class PositionImpl(Position):
 
