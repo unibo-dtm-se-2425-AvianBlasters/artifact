@@ -30,37 +30,28 @@ class TestPlayer(unittest.TestCase):
         self.assertEqual(Entity.TypeArea.PLAYER, self.player.get_type)
         self.assertEqual(PlayerStatus.Status.NORMAL, self.player.get_status().get_current_status)
 
+    def verify_movement(self, movement_x, check):
+        self.player.move(movement_x)
+        self.assertEqual(check, self.player.get_area().get_position_x)
+        self.assertEqual(self.initial_y, self.player.get_area().get_position_y)
+
     def test_movement(self):
+        self.verify_movement(0, self.initial_x)
         movement_x = 10
-        self.player.move(movement_x)
-        self.assertEqual(movement_x * self.delta, self.player.get_area().get_position_x)
-        self.assertEqual(self.initial_y, self.player.get_area().get_position_y)
+        self.verify_movement(movement_x, movement_x * self.delta)
         movement_x_2 = -20
-        self.player.move(movement_x_2)
-        self.assertEqual(movement_x * self.delta + movement_x_2 * self.delta, self.player.get_area().get_position_x)
-        self.assertEqual(self.initial_y, self.player.get_area().get_position_y)
-        self.player.move(movement_x)
-        self.assertEqual(self.initial_x, self.player.get_area().get_position_x)
-        self.assertEqual(self.initial_y, self.player.get_area().get_position_y)
+        self.verify_movement(movement_x_2, (movement_x + movement_x_2) * self.delta)
+        self.verify_movement(movement_x, self.initial_x)
     
     def test_going_against_wall(self):
         movement_x = 51
-        self.player.move(movement_x)
-        self.assertEqual(self.limit_right, self.player.get_area().get_position_x)
-        self.assertEqual(self.initial_y, self.player.get_area().get_position_y)
+        self.verify_movement(movement_x, self.limit_right)
         movement_x2 = -50
-        self.player.move(movement_x2)
-        self.assertEqual(self.initial_x, self.player.get_area().get_position_x)
-        self.assertEqual(self.initial_y, self.player.get_area().get_position_y)
-        self.player.move((-movement_x - 1)/2)
-        self.assertEqual(-52, self.player.get_area().get_position_x)
-        self.assertEqual(self.initial_y, self.player.get_area().get_position_y)
-        self.player.move(movement_x2)
-        self.assertEqual(self.limit_left, self.player.get_area().get_position_x)
-        self.assertEqual(self.initial_y, self.player.get_area().get_position_y)
-        self.player.move(300)
-        self.assertEqual(self.limit_right, self.player.get_area().get_position_x)
-        self.assertEqual(self.initial_y, self.player.get_area().get_position_y)
+        self.verify_movement(movement_x2, self.initial_x)
+        self.verify_movement((-movement_x - 1)/2, (-movement_x - 1)/2 * self.delta)
+        self.verify_movement(movement_x2, self.limit_left)
+        movement_x3 = 300
+        self.verify_movement(movement_x3, self.limit_right)
         
     def test_add_points(self):
         self.assertEqual(self.initial_score, self.player.get_score().get_score)
