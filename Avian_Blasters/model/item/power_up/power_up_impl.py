@@ -1,4 +1,6 @@
+from abc import abstractmethod
 from Avian_Blasters.model.area import Area
+from Avian_Blasters.model.character.player.player import Player
 from Avian_Blasters.model.entity import Entity
 from Avian_Blasters.model.item.item_impl import DEFAULT_DELTA
 from Avian_Blasters.model.item.power_up.power_up import PowerUp, PowerUpType
@@ -17,7 +19,11 @@ class PowerUpImpl(PowerUp):
     def is_collected(self, player_area : Area) -> bool:
         if self._collected:
             return True
-        if self.get_area().overlap(self, player_area):
+        if self.get_area().overlap(player_area):
             self._collected = True 
             return True
         return False
+    
+    @abstractmethod
+    def apply_effect(self, player : Player):
+        ...

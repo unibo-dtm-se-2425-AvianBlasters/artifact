@@ -1,4 +1,4 @@
-from Avian_Blasters.model.character.general_attack_handler import GeneralAttackHandler
+import pygame
 from Avian_Blasters.model.character.general_attack_handler_impl import GeneralAttackHandlerImpl
 from Avian_Blasters.model.character.player.player import Player
 from Avian_Blasters.model.entity import Entity
@@ -14,21 +14,39 @@ class PlayerAttackHandler(GeneralAttackHandlerImpl):
 
     def __init__(self, projectile_factory : ProjectileFactory, projectile_speed : int, projectile_type : ProjectileType, cooldown_steps: int = PLAYER_COOLDOWN_STEPS):
         super().__init__(projectile_factory, projectile_speed, projectile_type, cooldown_steps)
-        
+        self._number_of_projectiles = 1
+        self._shots_interval = 100
+        self._last_shot_time = 0
+        self._remaining_shots = 0
+
+    def set_number_of_projectiles(self, number_of_projectiles: int):
+        if number_of_projectiles < 1:
+            raise ValueError("Number of projectiles must be at least 1")
+        self._number_of_projectiles = number_of_projectiles
 
     def try_attack(self, player : Player):
         if not self._can_attack(player):
-            return None 
-        projectile = self.projectile_factory.create_projectile(
-            projectile_type=self.projectile_type,
-            x=player.get_area().get_position_x + player.get_area().get_width // 2,
-            y=player.get_area().get_position_y + player.get_area().get_height // 2,
-            direction= Direction.UP,
-            width=PLAYER_PROJECTILE_WIDTH,
-            height=PLAYER_PROJECTILE_HEIGHT,
-            type= Entity.TypeArea.PLAYER_PROJECTILE,
-            delta=self.projectile_speed)
-        self._reset_cooldown()
-        return projectile
+            return []
+        current_time = pygame.time.get_ticks()
+        if self._remaining_shots == 0:
+            self._remaining_shots = self._number_of_projectiles
+            self._last_shot_time = current_time
+        projectiles = []
+        if self._remaining_shots > 0 and (current_time - self._last_shot_time) >= self._shots_interval:
+            projectiles.append(self.projectile_factory.create_projectile(
+                projectile_type=self.projectile_type,
+                x=player.get_area().get_position_x + player.get_area().get_width // 2,
+                y=player.get_area().get_position_y + player.get_area().get_height // 2,
+                direction= Direction.UP,
+                width=PLAYER_PROJECTILE_WIDTH,
+                height=PLAYER_PROJECTILE_HEIGHT,
+                type= Entity.TypeArea.PLAYER_PROJECTILE,
+                delta=self.projectile_speed)
+            )
+            self._remaining_shots -= 1
+            self._last_shot_time = current_time
+            if self._remaining_shots <= 0:
+                self._reset_cooldown()
+        return projectiles
     
     # The Player should have a PlayerAttackHandler and it should use try_attack method in the shoot() method

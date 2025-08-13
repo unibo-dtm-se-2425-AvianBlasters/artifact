@@ -1,4 +1,5 @@
 from Avian_Blasters.model.character.character_impl import CharacterImpl
+from Avian_Blasters.model.character.player.player_attack_handler import PlayerAttackHandler
 from Avian_Blasters.model.entity import Entity
 from Avian_Blasters.model.character.player import *
 from Avian_Blasters.model.character.player.player import Player
@@ -8,12 +9,14 @@ from Avian_Blasters.model.character.player.power_up_handler import PowerUpHandle
 from Avian_Blasters.model.character.player.power_up_handler_impl import PowerUpHandlerImpl
 from Avian_Blasters.model.character.player.score import Score
 from Avian_Blasters.model.character.player.score_impl import ScoreImpl
+from Avian_Blasters.model.item.projectile.projectile_factory import ProjectileFactory
 
 class PlayerImpl(CharacterImpl, Player):
     
     def __init__(self, x : int, y : int, width : int, height : int, delta : int, health : int, initial_score : int, initial_multiplier : int, limit_right : int, limit_left : int):
         super().__init__(x, y, width, height, Entity.TypeArea.PLAYER, delta, health)
         self._power_up_handler = PowerUpHandlerImpl(None)
+        self._attack_handler = PlayerAttackHandler(None) # Needs a projectile factory
         self._score = ScoreImpl(initial_score, initial_multiplier)
         self._status_handler = PlayerStatusImpl(PlayerStatus.Status.NORMAL)
         self._limit_r = limit_right
@@ -21,6 +24,9 @@ class PlayerImpl(CharacterImpl, Player):
 
     def power_up_handler_get(self) -> PowerUpHandler:
         return self._power_up_handler
+    
+    def player_attack_handler_get(self) -> PlayerAttackHandler:
+        return self._attack_handler
     
     def move(self, x : int):
         if self.__can_move(x):

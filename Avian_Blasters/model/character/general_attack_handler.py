@@ -1,4 +1,5 @@
 from abc import abstractmethod
+from ast import List
 from typing import Optional
 
 from Avian_Blasters.model.character.character import Character
@@ -12,7 +13,7 @@ class GeneralAttackHandler:
         ...
     
     @abstractmethod
-    def try_attack(self, character) -> Optional[Projectile]:
+    def try_attack(self, character) -> List[Projectile]:
         ...
 
     @abstractmethod
