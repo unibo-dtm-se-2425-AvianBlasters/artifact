@@ -4,7 +4,7 @@ class Score:
         ...
     
     @property
-    def get_score(self):
+    def get_score(self) -> int:
         ...
     
     @property

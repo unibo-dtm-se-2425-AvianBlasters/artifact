@@ -1,4 +1,4 @@
-from entity import Entity
+from Avian_Blasters.model.entity import Entity
 
 class Character(Entity):
 
