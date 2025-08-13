@@ -8,6 +8,11 @@ from Avian_Blasters.model.character.player.power_up_handler import PowerUpHandle
 from Avian_Blasters.model.character.player.power_up_handler_impl import PowerUpHandlerImpl
 from Avian_Blasters.model.character.player.score import Score
 from Avian_Blasters.model.character.player.score_impl import ScoreImpl
+from Avian_Blasters.model.character.player.player_attack_handler import PlayerAttackHandler
+from Avian_Blasters.model.item.projectile.projectile import Projectile
+from Avian_Blasters.model.item.projectile.projectile import ProjectileType
+from Avian_Blasters.model.item.projectile.projectile_factory import ProjectileFactory
+from typing import Optional
 
 class PlayerImpl(CharacterImpl, Player):
     
@@ -16,6 +21,7 @@ class PlayerImpl(CharacterImpl, Player):
         self._power_up_handler = PowerUpHandlerImpl(None)
         self._score = ScoreImpl(initial_score, initial_multiplier)
         self._status_handler = PlayerStatusImpl(PlayerStatus.Status.NORMAL)
+        self._attack_handler = PlayerAttackHandler(ProjectileFactory(), PlayerAttackHandler.PLAYER_PROJECTILE_SPEED, ProjectileType.NORMAL, )
         self._limit_r = limit_right
         self._limit_l = limit_left
 
@@ -51,3 +57,6 @@ class PlayerImpl(CharacterImpl, Player):
     
     def get_status(self) -> PlayerStatus:
         return self._status_handler
+    
+    def shoot(self) -> Optional[Projectile]:
+        return self._attack_handler.try_attack(self)
