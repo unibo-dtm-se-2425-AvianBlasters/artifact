@@ -1,6 +1,9 @@
 import unittest
 from Avian_Blasters.model.character.player import *
 from Avian_Blasters.model.entity import Entity
+from Avian_Blasters.model.item.projectile.projectile import ProjectileType
+# from Avian_Blasters.model.item.projectile.projectile_impl import ProjectileImpl
+# from Avian_Blasters.model.item.item import Direction
 
 class TestPlayer(unittest.TestCase):
     initial_x = 0
@@ -70,5 +73,7 @@ class TestPlayer(unittest.TestCase):
         ...
     
     def test_shoot(self):
-        ...
+        self.assertEqual(ProjectileType.NORMAL, self.player.shoot().projectile_type)
+        self.assertEqual(None, self.player.shoot())
+        
 
