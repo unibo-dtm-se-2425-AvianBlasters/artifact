@@ -6,8 +6,9 @@ class PlayerStatusImpl(PlayerStatus):
         self._status = status
     
     @property
-    def get_current_status(self) -> PlayerStatus.Status:
+    def status(self) -> PlayerStatus.Status:
         return self._status
     
-    def set_current_status(self, new_status : PlayerStatus.Status):
+    @status.setter
+    def status(self, new_status : PlayerStatus.Status):
         self._status = new_status

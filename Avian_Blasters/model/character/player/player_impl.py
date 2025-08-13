@@ -44,7 +44,7 @@ class PlayerImpl(CharacterImpl, Player):
         return self._score
     
     def is_touched(self, others: list[Entity]):
-        if self._status_handler.get_current_status != PlayerStatus.Status.INVULNERABLE:
+        if self._status_handler.status != PlayerStatus.Status.INVULNERABLE:
             for i in others:
                 if i.get_type == Entity.TypeArea.ENEMY or Entity.TypeArea.ENEMY_PROJECTILE:
                     if super().is_touched(i):
@@ -53,7 +53,7 @@ class PlayerImpl(CharacterImpl, Player):
                         if self.get_health <= 0:
                             pass
                         else:
-                            self._status_handler.set_current_status(PlayerStatus.Status.INVULNERABLE)
+                            self._status_handler.status(PlayerStatus.Status.INVULNERABLE)
     
     def get_status(self) -> PlayerStatus:
         return self._status_handler

@@ -25,10 +25,10 @@ class TestPlayer(unittest.TestCase):
     
     def test_inital_status(self):
         self.assertEqual(self.health, self.player.get_health)
-        self.assertEqual(self.initial_score, self.player.get_score().get_score)
-        self.assertEqual(self.initial_multiplier, self.player.get_score().get_multiplier)
+        self.assertEqual(self.initial_score, self.player.get_score().score)
+        self.assertEqual(self.initial_multiplier, self.player.get_score().multiplier)
         self.assertEqual(Entity.TypeArea.PLAYER, self.player.get_type)
-        self.assertEqual(PlayerStatus.Status.NORMAL, self.player.get_status().get_current_status)
+        self.assertEqual(PlayerStatus.Status.NORMAL, self.player.get_status().status)
 
     def verify_movement(self, movement_x, check):
         self.player.move(movement_x)
@@ -54,11 +54,11 @@ class TestPlayer(unittest.TestCase):
         self.verify_movement(movement_x3, self.limit_right)
         
     def test_add_points(self):
-        self.assertEqual(self.initial_score, self.player.get_score().get_score)
+        self.assertEqual(self.initial_score, self.player.get_score().score)
         score_increment = 100
         self.player.get_score().add_points(score_increment)
-        self.assertEqual(score_increment, self.player.get_score().get_score)
-        self.assertNotEqual(self.initial_score, self.player.get_score().get_score)
+        self.assertEqual(score_increment, self.player.get_score().score)
+        self.assertNotEqual(self.initial_score, self.player.get_score().score)
     
     def test_damage(self):
         ...

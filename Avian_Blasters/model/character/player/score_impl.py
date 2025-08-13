@@ -10,13 +10,14 @@ class ScoreImpl(Score):
         self._score += points
     
     @property
-    def get_score(self) -> int:
+    def score(self) -> int:
         return self._score
     
     @property
-    def get_multiplier(self) -> int:
+    def multiplier(self) -> int:
         return self._multiplier
     
-    def set_multiplier(self, multiplier : int):
+    @multiplier.setter
+    def multiplier(self, multiplier : int):
         self._multiplier = multiplier
     
