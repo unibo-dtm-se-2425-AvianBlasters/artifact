@@ -25,19 +25,19 @@ class PlayerImpl(CharacterImpl, Player):
         self._limit_r = limit_right
         self._limit_l = limit_left
 
-    def power_up_handler_get(self) -> PowerUpHandler:
+    def get_power_up_handler(self) -> PowerUpHandler:
         return self._power_up_handler
     
     def move(self, x : int):
         if self.__can_move(x):
-            super().move(x, self.get_area().get_position_y, self.get_area().get_width, self.get_area().get_height)
+            super().move(x, self.get_area().get_position_y, self.get_area().width, self.get_area().height)
         elif x>=0:
-            super().move((self._limit_r - self.get_area().get_position_x)/self._delta, self.get_area().get_position_y, self.get_area().get_width, self.get_area().get_height)
+            super().move((self._limit_r - self.get_area().get_position_x)/self._delta, self.get_area().get_position_y, self.get_area().width, self.get_area().height)
         else:
-            super().move((self._limit_l - self.get_area().get_position_x)/self._delta, self.get_area().get_position_y, self.get_area().get_width, self.get_area().get_height)
+            super().move((self._limit_l - self.get_area().get_position_x)/self._delta, self.get_area().get_position_y, self.get_area().width, self.get_area().height)
     
     def __can_move(self, x : int) -> bool:
-        return abs(self._limit_r) > abs(x * self._delta + self.get_area().get_position_x + self.get_area().get_width/2) and abs(self._limit_l) > abs(x * self._delta + self.get_area().get_position_x - self.get_area().get_width/2)
+        return abs(self._limit_r) > abs(x * self._delta + self.get_area().get_position_x + self.get_area().width/2) and abs(self._limit_l) > abs(x * self._delta + self.get_area().get_position_x - self.get_area().width/2)
         #(abs(x*self._delta) <= abs(self._limit_r - self.get_area().get_width/2 - self.get_area().get_position_x) and abs(x*self._delta) <= abs(self._limit_l - self.get_area().get_width/2) - self.get_area().get_position_x)        
                 
     def get_score(self) -> Score:
@@ -49,8 +49,8 @@ class PlayerImpl(CharacterImpl, Player):
                 if i.get_type == Entity.TypeArea.ENEMY or Entity.TypeArea.ENEMY_PROJECTILE:
                     if super().is_touched(i):
                         damage = 3 if i.get_type == Entity.TypeArea.ENEMY else 1
-                        self._health -= damage
-                        if self.get_health <= 0:
+                        super().health(-damage)
+                        if self.health <= 0:
                             pass
                         else:
                             self._status_handler.status(PlayerStatus.Status.INVULNERABLE)

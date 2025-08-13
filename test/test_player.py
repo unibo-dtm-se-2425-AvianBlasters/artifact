@@ -24,7 +24,7 @@ class TestPlayer(unittest.TestCase):
                                 self.limit_right, self.limit_left)
     
     def test_inital_status(self):
-        self.assertEqual(self.health, self.player.get_health)
+        self.assertEqual(self.health, self.player.health)
         self.assertEqual(self.initial_score, self.player.get_score().score)
         self.assertEqual(self.initial_multiplier, self.player.get_score().multiplier)
         self.assertEqual(Entity.TypeArea.PLAYER, self.player.get_type)

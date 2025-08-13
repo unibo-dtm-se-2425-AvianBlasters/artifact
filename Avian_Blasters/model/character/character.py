@@ -5,7 +5,11 @@ from typing import Optional
 class Character(Entity):
 
     @property
-    def get_health(self) -> int:
+    def health(self) -> int:
+        ...
+
+    @health.setter
+    def health(self, health : int):
         ...
     
     def shoot(self) -> Optional[Projectile]:

@@ -22,8 +22,8 @@ class PlayerAttackHandler(GeneralAttackHandlerImpl):
             return None 
         projectile = self._projectile_factory.create_projectile(
             self._projectile_type,
-            player.get_area().get_position_x + player.get_area().get_width // 2,
-            player.get_area().get_position_y + player.get_area().get_height // 2,
+            player.get_area().get_position_x + player.get_area().width // 2,
+            player.get_area().get_position_y + player.get_area().height // 2,
             Direction.UP,
             PLAYER_PROJECTILE_WIDTH,
             PLAYER_PROJECTILE_HEIGHT,
