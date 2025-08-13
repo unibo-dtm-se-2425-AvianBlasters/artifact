@@ -74,6 +74,11 @@ class TestPlayer(unittest.TestCase):
     
     def test_shoot(self):
         self.assertEqual(ProjectileType.NORMAL, self.player.shoot().projectile_type)
-        self.assertEqual(None, self.player.shoot())
+        i=0
+        while (i<15):
+            self.assertEqual(None, self.player.shoot())
+            i += 1
+        self.assertEqual(ProjectileType.NORMAL, self.player.shoot().projectile_type)
+
         
 
