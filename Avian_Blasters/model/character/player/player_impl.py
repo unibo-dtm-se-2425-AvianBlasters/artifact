@@ -49,10 +49,8 @@ class PlayerImpl(CharacterImpl, Player):
                 if i.get_type == Entity.TypeArea.ENEMY or Entity.TypeArea.ENEMY_PROJECTILE:
                     if super().is_touched(i):
                         damage = 3 if i.get_type == Entity.TypeArea.ENEMY else 1
-                        super().health(-damage)
-                        if self.health <= 0:
-                            pass
-                        else:
+                        self.get_health_handler().take_damage(damage)
+                        if self.get_health_handler().current_health > 0:
                             self._status_handler.status(PlayerStatus.Status.INVULNERABLE)
     
     def get_status(self) -> PlayerStatus:
