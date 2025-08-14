@@ -56,7 +56,7 @@ class TestProjectile(unittest.TestCase):
     def test_move(self):
         initial_position_x = self.projectile_player.get_area().get_position_x
         initial_position_y = self.projectile_player.get_area().get_position_y
-        self.projectile_player.move(0, 1)
+        self.projectile_player.move(0, 1, 2, 2)
         new_position_x = initial_position_x + 0
         new_position_y = initial_position_y + 1
         self.assertEqual(new_position_x, self.projectile_player.get_area().get_position_x)
@@ -70,7 +70,7 @@ class TestProjectile(unittest.TestCase):
         last_position_x = self.projectile_player.get_area().get_position_x
         last_position_y = self.projectile_player.get_area().get_position_y
         self.projectile_player.destroy()
-        self.projectile_player.move(1, 1)
+        self.projectile_player.move(1, 1, 2, 2)
         self.assertEqual(last_position_x, self.projectile_player.get_area().get_position_x)
         self.assertEqual(last_position_y, self.projectile_player.get_area().get_position_y)
         self.assertFalse(self.projectile_player.active)
