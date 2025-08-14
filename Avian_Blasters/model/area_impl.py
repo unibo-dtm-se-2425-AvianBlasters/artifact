@@ -18,12 +18,20 @@ class AreaImpl(Area):
         return self._position.get_y
 
     @property
-    def get_width(self) -> int:
+    def width(self) -> int:
         return self._width
     
+    @width.setter
+    def width(self, new_width : int):
+        self._width = new_width
+    
     @property
-    def get_height(self) -> int:
+    def height(self) -> int:
         return self._height
+    
+    @height.setter
+    def height(self, new_height : int):
+        self._height = new_height
     
     def overlap(self, other : Area) -> bool:
         return self.get_area().colliderect(other.get_area())

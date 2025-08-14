@@ -10,6 +10,7 @@ PLAYER_PROJECTILE_WIDTH = 5
 PLAYER_PROJECTILE_HEIGHT = 5
 
 class PlayerAttackHandler(GeneralAttackHandlerImpl):
+    PLAYER_PROJECTILE_SPEED = 3
 
     def __init__(self, projectile_factory : ProjectileFactory, projectile_speed : int, projectile_type : ProjectileType, cooldown_steps: int = PLAYER_COOLDOWN_STEPS):
         super().__init__(projectile_factory, projectile_speed, projectile_type, cooldown_steps)
@@ -39,20 +40,18 @@ class PlayerAttackHandler(GeneralAttackHandlerImpl):
             self._last_shot_time = current_time
         projectiles = []
         if self._remaining_shots > 0 and (current_time - self._last_shot_time) >= self._shots_interval:
-            projectiles.append(self._projectile_factory.create_projectile(
-                projectile_type=self.projectile_type,
-                x=player.get_area().get_position_x + player.get_area().get_width // 2,
-                y=player.get_area().get_position_y + player.get_area().get_height // 2,
-                direction= Direction.UP,
-                width=PLAYER_PROJECTILE_WIDTH,
-                height=PLAYER_PROJECTILE_HEIGHT,
-                type= Entity.TypeArea.PLAYER_PROJECTILE,
-                delta=self.projectile_speed)
+            projectiles.append(self.__projectile_factory.create_projectile(
+                self._projectile_type,
+                player.get_area().get_position_x + player.get_area().width // 2,
+                player.get_area().get_position_y + player.get_area().height // 2,
+                Direction.UP,
+                PLAYER_PROJECTILE_WIDTH,
+                PLAYER_PROJECTILE_HEIGHT,
+                Entity.TypeArea.PLAYER_PROJECTILE,
+                self._projectile_speed)
             )
             self._remaining_shots -= 1
             self._last_shot_time = current_time
             if self._remaining_shots <= 0:
                 self._reset_cooldown()
         return projectiles
-    
-    # The Player should have a PlayerAttackHandler and it should use try_attack method in the shoot() method

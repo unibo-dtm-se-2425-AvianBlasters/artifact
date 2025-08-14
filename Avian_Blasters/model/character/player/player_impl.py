@@ -9,7 +9,11 @@ from Avian_Blasters.model.character.player.power_up_handler import PowerUpHandle
 from Avian_Blasters.model.character.player.power_up_handler_impl import PowerUpHandlerImpl
 from Avian_Blasters.model.character.player.score import Score
 from Avian_Blasters.model.character.player.score_impl import ScoreImpl
+from Avian_Blasters.model.character.player.player_attack_handler import PlayerAttackHandler
+from Avian_Blasters.model.item.projectile.projectile import Projectile
+from Avian_Blasters.model.item.projectile.projectile import ProjectileType
 from Avian_Blasters.model.item.projectile.projectile_factory import ProjectileFactory
+from typing import Optional
 
 class PlayerImpl(CharacterImpl, Player):
     
@@ -19,10 +23,11 @@ class PlayerImpl(CharacterImpl, Player):
         self._attack_handler = PlayerAttackHandler(None) # Needs a projectile factory
         self._score = ScoreImpl(initial_score, initial_multiplier)
         self._status_handler = PlayerStatusImpl(PlayerStatus.Status.NORMAL)
+        self._attack_handler = PlayerAttackHandler(ProjectileFactory(), PlayerAttackHandler.PLAYER_PROJECTILE_SPEED, ProjectileType.NORMAL, )
         self._limit_r = limit_right
         self._limit_l = limit_left
 
-    def power_up_handler_get(self) -> PowerUpHandler:
+    def get_power_up_handler(self) -> PowerUpHandler:
         return self._power_up_handler
     
     def player_attack_handler_get(self) -> PlayerAttackHandler:
@@ -30,30 +35,31 @@ class PlayerImpl(CharacterImpl, Player):
     
     def move(self, x : int):
         if self.__can_move(x):
-            super().move(x, self.get_area().get_position_y, self.get_area().get_width, self.get_area().get_height)
+            super().move(x, self.get_area().get_position_y, self.get_area().width, self.get_area().height)
         elif x>=0:
-            super().move((self._limit_r - self.get_area().get_position_x)/self._delta, self.get_area().get_position_y, self.get_area().get_width, self.get_area().get_height)
+            super().move((self._limit_r - self.get_area().get_position_x)/self._delta, self.get_area().get_position_y, self.get_area().width, self.get_area().height)
         else:
-            super().move((self._limit_l - self.get_area().get_position_x)/self._delta, self.get_area().get_position_y, self.get_area().get_width, self.get_area().get_height)
+            super().move((self._limit_l - self.get_area().get_position_x)/self._delta, self.get_area().get_position_y, self.get_area().width, self.get_area().height)
     
     def __can_move(self, x : int) -> bool:
-        return abs(self._limit_r) > abs(x * self._delta + self.get_area().get_position_x + self.get_area().get_width/2) and abs(self._limit_l) > abs(x * self._delta + self.get_area().get_position_x - self.get_area().get_width/2)
+        return abs(self._limit_r) > abs(x * self._delta + self.get_area().get_position_x + self.get_area().width/2) and abs(self._limit_l) > abs(x * self._delta + self.get_area().get_position_x - self.get_area().width/2)
         #(abs(x*self._delta) <= abs(self._limit_r - self.get_area().get_width/2 - self.get_area().get_position_x) and abs(x*self._delta) <= abs(self._limit_l - self.get_area().get_width/2) - self.get_area().get_position_x)        
                 
     def get_score(self) -> Score:
         return self._score
     
     def is_touched(self, others: list[Entity]):
-        if self._status_handler.get_current_status != PlayerStatus.Status.INVULNERABLE:
+        if self._status_handler.status != PlayerStatus.Status.INVULNERABLE:
             for i in others:
                 if i.get_type == Entity.TypeArea.ENEMY or Entity.TypeArea.ENEMY_PROJECTILE:
                     if super().is_touched(i):
                         damage = 3 if i.get_type == Entity.TypeArea.ENEMY else 1
-                        self._health -= damage
-                        if self.get_health <= 0:
-                            pass
-                        else:
-                            self._status_handler.set_current_status(PlayerStatus.Status.INVULNERABLE)
+                        self.get_health_handler().take_damage(damage)
+                        if self.get_health_handler().current_health > 0:
+                            self._status_handler.status(PlayerStatus.Status.INVULNERABLE)
     
     def get_status(self) -> PlayerStatus:
         return self._status_handler
+    
+    def shoot(self) -> Optional[Projectile]:
+        return self._attack_handler.try_attack(self)

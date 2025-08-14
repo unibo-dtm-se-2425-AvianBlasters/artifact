@@ -6,7 +6,7 @@ from Avian_Blasters.model.character.player.score import Score
 
 class Player(Character):
     
-    def power_up_handler_get(self) -> PowerUpHandler:
+    def get_power_up_handler(self) -> PowerUpHandler:
         ...
 
     def player_attack_handler_get(self) -> PlayerAttackHandler:
@@ -16,4 +16,7 @@ class Player(Character):
         ...
     
     def get_status(self) -> PlayerStatus:
+        ...
+    
+    def move(self, x : int):
         ...

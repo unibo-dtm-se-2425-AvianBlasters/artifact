@@ -4,13 +4,14 @@ class Score:
         ...
     
     @property
-    def get_score(self) -> int:
+    def score(self) -> int:
         ...
     
     @property
-    def get_multiplier(self) -> int:
+    def multiplier(self) -> int:
         ...
     
-    def set_multiplier(self, multiplier : int):
+    @multiplier.setter
+    def multiplier(self, multiplier : int):
         ...
     

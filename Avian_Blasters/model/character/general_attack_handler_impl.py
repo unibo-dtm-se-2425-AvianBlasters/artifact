@@ -23,4 +23,4 @@ class GeneralAttackHandlerImpl(GeneralAttackHandler):
         self._projectile_type = projectile_type
         
     def _reset_cooldown(self):
-        self._cooldown = self.cooldown_steps
+        self._cooldown = self._cooldown_steps

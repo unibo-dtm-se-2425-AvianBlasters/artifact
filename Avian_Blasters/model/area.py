@@ -11,11 +11,19 @@ class Area:
         ...
 
     @property
-    def get_width(self) -> int:
+    def width(self) -> int:
+        ...
+    
+    @width.setter
+    def width(self, new_width : int):
         ...
     
     @property
-    def get_height(self) -> int:
+    def height(self) -> int:
+        ...
+    
+    @height.setter
+    def height(self, new_height : int):
         ...
     
     def overlap(self, other) -> bool:
