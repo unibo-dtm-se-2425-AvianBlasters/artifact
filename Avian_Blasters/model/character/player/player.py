@@ -13,3 +13,6 @@ class Player(Character):
     
     def get_status(self) -> PlayerStatus:
         ...
+    
+    def move(self, x : int):
+        ...

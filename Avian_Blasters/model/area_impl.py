@@ -21,9 +21,17 @@ class AreaImpl(Area):
     def width(self) -> int:
         return self._width
     
+    @width.setter
+    def width(self, new_width : int):
+        self._width = new_width
+    
     @property
     def height(self) -> int:
         return self._height
+    
+    @height.setter
+    def height(self, new_height : int):
+        self._height = new_height
     
     def overlap(self, other : Area) -> bool:
         return self.get_area().colliderect(other.get_area())
