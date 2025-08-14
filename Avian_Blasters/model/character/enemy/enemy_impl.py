@@ -1,8 +1,8 @@
 from typing import Optional
 
 from enemy import Enemy
-from health_handler import HealthHandler
-from health_handler_impl import HealthHandlerImpl
+from Avian_Blasters.model.character.health_handler import HealthHandler
+from Avian_Blasters.model.character.health_handler_impl import HealthHandlerImpl
 from attack_handler import AttackHandler
 from attack_handler_impl import AttackHandlerImpl
 from item.projectile.projectile import Projectile
