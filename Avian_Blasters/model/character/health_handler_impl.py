@@ -1,4 +1,4 @@
-from health_handler import HealthHandler
+from Avian_Blasters.model.character.health_handler import HealthHandler
 
 
 class HealthHandlerImpl(HealthHandler):
