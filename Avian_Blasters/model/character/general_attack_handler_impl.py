@@ -1,5 +1,5 @@
 from Avian_Blasters.model.character.character import Character
-from Avian_Blasters.model.character.general_attack_handler_impl import GeneralAttackHandler
+from Avian_Blasters.model.character.general_attack_handler import GeneralAttackHandler
 from Avian_Blasters.model.item.projectile.projectile import ProjectileType
 from Avian_Blasters.model.item.projectile.projectile_factory import ProjectileFactory
 
@@ -21,12 +21,6 @@ class GeneralAttackHandlerImpl(GeneralAttackHandler):
 
     def set_projectile_type(self, projectile_type: ProjectileType):
         self._projectile_type = projectile_type
-    
-    def _can_attack(self, character : Character) -> bool:
-        if self._cooldown > 0:
-            self._cooldown -= 1
-            return False
-        return True
         
     def _reset_cooldown(self):
         self._cooldown = self.cooldown_steps

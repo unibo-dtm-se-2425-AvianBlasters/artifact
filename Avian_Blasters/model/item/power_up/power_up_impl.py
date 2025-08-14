@@ -24,6 +24,5 @@ class PowerUpImpl(PowerUp):
             return True
         return False
     
-    @abstractmethod
     def apply_effect(self, player : Player):
         ...

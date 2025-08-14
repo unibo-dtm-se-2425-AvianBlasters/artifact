@@ -13,15 +13,11 @@ class GeneralAttackHandler:
         ...
     
     @abstractmethod
-    def try_attack(self, character) -> List[Projectile]:
+    def try_attack(self, character) -> list[Projectile]:
         ...
 
     @abstractmethod
     def _reset_cooldown(self):
-        ...
-
-    @abstractmethod
-    def _can_attack(self, character : Character) -> bool:
         ...
 
     
