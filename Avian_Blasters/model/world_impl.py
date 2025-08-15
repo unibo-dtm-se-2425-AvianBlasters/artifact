@@ -16,7 +16,7 @@ class WorldImpl(World):
         return self._entities
     
     def add_entities(self, entities : list[Entity]):
-        ...
+        self.__setter(entities)
 
     def get_players(self) -> list[Player]:
         return self.__getter(Entity.TypeArea.PLAYER)
@@ -25,21 +25,20 @@ class WorldImpl(World):
         return self.__getter(Entity.TypeArea.ENEMY)
     
     def add_enemies(self, enemies : list[Enemy]):
-        ...
+        self.add_entities(enemies)
 
     def get_power_ups(self) -> list[PowerUp]:
         return self.__getter(Entity.TypeArea.POWERUP)
 
-    
     def add_power_ups(self, power_ups : list[PowerUp]):
-        ...
+        self.add_entities(power_ups)
     
     def get_projectiles(self) -> list[Projectile]:
         temp = self.__getter(Entity.TypeArea.PLAYER_PROJECTILE) + self.__getter(Entity.TypeArea.ENEMY_PROJECTILE)
         return temp
     
     def add_projectiles(self, projectiles : list[Projectile]):
-        ...
+        self.add_entities(projectiles)
 
     def __getter(self, type : Entity.TypeArea) -> list[type]:
         list = []
@@ -47,3 +46,7 @@ class WorldImpl(World):
             if i.get_type == type:
                 list.append(i)
         return list
+    
+    def __setter(self, entities : list):
+        for i in entities:
+            self._entities.append(i)

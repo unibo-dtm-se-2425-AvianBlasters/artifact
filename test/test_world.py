@@ -5,8 +5,6 @@ from Avian_Blasters.model.world_impl import WorldImpl
 from Avian_Blasters.model.item.item import Direction
 from Avian_Blasters.model.item.projectile.projectile import ProjectileType
 from Avian_Blasters.model.item.projectile.projectile_impl import ProjectileImpl
-# from Avian_Blasters.model.item.item import Direction
-
 
 class TestWorld(unittest.TestCase):
 
@@ -22,9 +20,16 @@ class TestWorld(unittest.TestCase):
             self.entities.append(i)
         self.world = WorldImpl(self.entities)
     
-    def test_check(self):
+    def test_initialisation(self):
         self.assertEqual(self.entities, self.world.get_all_entities())
         self.assertEqual(self.players, self.world.get_players())
         self.assertEqual(list(), self.world.get_enemies())
         self.assertEqual(list(), self.world.get_power_ups())
         self.assertEqual(set(self.projectiles), set(self.world.get_projectiles()))
+    
+    def test_addition(self):
+        self.world.add_entities(self.players)
+        self.assertEqual(self.players + self.players, self.world.get_players())
+        self.world.add_projectiles(self.projectiles)
+        self.assertEqual(set(self.projectiles + self.projectiles), set(self.world.get_projectiles()))
+        self.assertEqual(set(self.entities + self.players + self.projectiles), set(self.world.get_all_entities()))
