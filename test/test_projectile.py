@@ -1,4 +1,6 @@
 import unittest
+from unittest.mock import Mock
+from Avian_Blasters.model.character.player.player_attack_handler import PLAYER_COOLDOWN_STEPS, PLAYER_PROJECTILE_WIDTH, PlayerAttackHandler
 from Avian_Blasters.model.entity import Entity
 from Avian_Blasters.model.item.item import Direction
 from Avian_Blasters.model.item.projectile.projectile import Projectile, ProjectileType
@@ -74,3 +76,88 @@ class TestProjectile(unittest.TestCase):
         self.assertEqual(last_position_x, self.projectile_player.get_area().get_position_x)
         self.assertEqual(last_position_y, self.projectile_player.get_area().get_position_y)
         self.assertFalse(self.projectile_player.active)
+
+class TestPlayerAttackHandler(unittest.TestCase):
+    def setUp(self):
+        self.projectile_factory = ProjectileFactory()
+        self.attack_handler = PlayerAttackHandler(self.projectile_factory, 3, ProjectileType.NORMAL)
+        self.player = Mock()
+        self.player.get_area.return_value = Mock(get_position_x=50, get_position_y=50, width=10, height=10)
+
+    def test_initial_status(self):
+        self.assertEqual(self.attack_handler._projectile_speed, 3)
+        self.assertEqual(self.attack_handler._projectile_type, ProjectileType.NORMAL)
+        self.assertEqual(self.attack_handler._cooldown_steps, PLAYER_COOLDOWN_STEPS)
+
+    def test_set_number_of_projectiles(self):
+        self.attack_handler.set_number_of_projectiles(3)
+        self.assertEqual(self.attack_handler._number_of_projectiles, 3)
+
+    def test_try_attack_single_projectile(self):
+        self.attack_handler.set_number_of_projectiles(1)
+        self.assertEqual(self.attack_handler._number_of_projectiles, 1)
+        projectiles = self.attack_handler.try_attack(self.player)
+        self.assertEqual(len(projectiles), 1)
+        for projectile in projectiles:
+            self.assertIsInstance(projectile, Projectile)
+            self.assertEqual(projectile.get_area().get_position_x, 50)
+            self.assertEqual(projectile.get_area().get_position_y, 50)
+            self.assertEqual(projectile.direction, Direction.UP)
+            self.assertEqual(projectile.projectile_type, ProjectileType.NORMAL)
+
+    def test_try_attack_double_shot(self):
+        self.attack_handler.set_number_of_projectiles(2)
+        self.assertEqual(self.attack_handler._number_of_projectiles, 2)
+        projectiles = self.attack_handler.try_attack(self.player)
+        self.assertEqual(len(projectiles), 2)   
+        player_center_x = 50
+        player_center_y = 50
+        offset = 20
+        total_width = (2 - 1) * offset
+        start_x = player_center_x - total_width // 2 
+        for i, projectile in enumerate(projectiles):
+            self.assertIsInstance(projectile, Projectile)
+            expected_x = start_x + i * (offset)
+            self.assertEqual(projectile.get_area().get_position_x, expected_x)
+            self.assertEqual(projectile.get_area().get_position_y, player_center_y)
+            self.assertEqual(projectile.direction, Direction.UP)
+            self.assertEqual(projectile.projectile_type, ProjectileType.NORMAL)
+            print(projectile.get_area().get_position_x, projectile.get_area().get_position_y)
+
+    def test_try_attack_multiple_projectiles(self):
+        self.attack_handler.set_number_of_projectiles(3)
+        self.assertEqual(self.attack_handler._number_of_projectiles, 3)
+        projectiles = self.attack_handler.try_attack(self.player)
+        self.assertEqual(len(projectiles), 3)   
+        player_center_x = 50
+        player_center_y = 50
+        offset = 20
+        total_width =  (3 - 1) * offset
+        start_x = player_center_x - total_width // 2 
+        for i, projectile in enumerate(projectiles):
+            self.assertIsInstance(projectile, Projectile)
+            expected_x = start_x + i * (offset) 
+            self.assertEqual(projectile.get_area().get_position_x, expected_x)
+            self.assertEqual(projectile.get_area().get_position_y, player_center_y)
+            self.assertEqual(projectile.direction, Direction.UP)
+            self.assertEqual(projectile.projectile_type, ProjectileType.NORMAL)
+            print(projectile.get_area().get_position_x, projectile.get_area().get_position_y)
+
+    def test_cooldown(self):
+        self.attack_handler._cooldown = 0
+        projectiles = self.attack_handler.try_attack(self.player)
+        self.assertEqual(len(projectiles), 1)
+        self.assertGreater(self.attack_handler._cooldown, 0)
+        projectiles = self.attack_handler.try_attack(self.player)
+        self.assertEqual(len(projectiles), 0)
+        while self.attack_handler._cooldown > 0:
+            projectiles = self.attack_handler.try_attack(self.player)
+            self.assertEqual(len(projectiles), 0)
+        projectiles = self.attack_handler.try_attack(self.player)
+        self.assertEqual(len(projectiles), 1)
+        
+        
+
+
+
+        
