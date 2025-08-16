@@ -2,6 +2,7 @@ import unittest
 from unittest.mock import Mock, PropertyMock, patch
 from Avian_Blasters.model.area import Area
 from Avian_Blasters.model.area_impl import AreaImpl
+from Avian_Blasters.model.character.player.player_attack_handler import PlayerAttackHandler
 from Avian_Blasters.model.character.player.player_status_handler import PlayerStatus
 from Avian_Blasters.model.character.player.player_status_handler_impl import PlayerStatusImpl
 from Avian_Blasters.model.character.player.power_up_handler_impl import PowerUpHandlerImpl
@@ -13,6 +14,7 @@ from Avian_Blasters.model.item.power_up.power_up_types.double_fire_power_up impo
 from Avian_Blasters.model.item.power_up.power_up_types.invulnerability_power_up import InvulnerabilityPowerUp
 from Avian_Blasters.model.item.power_up.power_up_types.laser_power_up import LaserPowerUp
 from Avian_Blasters.model.item.projectile.projectile import ProjectileType
+from Avian_Blasters.model.item.projectile.projectile_factory import ProjectileFactory
 
 class DummyPowerUp(PowerUpImpl):
     def apply_effect(self, player):
@@ -66,6 +68,20 @@ class InvulnerabilityPowerUpTest(unittest.TestCase):
         self.assertEqual(self.player_status.status, PlayerStatus.Status.INVULNERABLE)
         self.power_up.remove_effect(self.player)
         self.assertEqual(self.player_status.status, PlayerStatus.Status.NORMAL)
+
+class DoubleFirePowerUpTest(unittest.TestCase):
+    def setUp(self):
+        self.power_up = DoubleFirePowerUp(x=10, y=10, width=4, height=4, type=Entity.TypeArea.POWERUP, power_up_type=PowerUpType.DOUBLE_FIRE, is_timed=True, duration=10.0, delta=1)
+        self.projectile_factory = ProjectileFactory()
+        self.attack_handler = PlayerAttackHandler(self.projectile_factory, 3, ProjectileType.NORMAL)
+        self.player = Mock()
+        self.player.player_attack_handler_get = Mock(return_value=self.attack_handler)
+
+    def test_apply_and_remove_effect(self):
+        self.power_up.apply_effect(self.player)
+        self.assertEqual(self.player.player_attack_handler_get().number_of_projectiles, 2)
+        self.power_up.remove_effect(self.player)
+        self.assertEqual(self.player.player_attack_handler_get().number_of_projectiles, 1)
 
 class PowerUpFactoryTest(unittest.TestCase):
     def setUp(self):

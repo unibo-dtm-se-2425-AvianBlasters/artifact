@@ -18,6 +18,10 @@ class PlayerAttackHandler(GeneralAttackHandlerImpl):
         self._projectile_factory = projectile_factory
         self._projectile_type = projectile_type
 
+    @property
+    def number_of_projectiles(self):
+        return self._number_of_projectiles
+
     def set_number_of_projectiles(self, number_of_projectiles: int):
         if number_of_projectiles < 1:
             raise ValueError("Number of projectiles must be at least 1")
