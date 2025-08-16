@@ -66,10 +66,52 @@ class TestPlayer(unittest.TestCase):
     def test_shoot(self):
         self.assertEqual(ProjectileType.NORMAL, self.player.shoot().projectile_type)
         i=0
-        while (i<15):
+        while (i < 15):
             self.assertEqual(None, self.player.shoot())
             i += 1
         self.assertEqual(ProjectileType.NORMAL, self.player.shoot().projectile_type)
 
         
+class TestPlayerStatusHandler(unittest.TestCase):
+    def setUp(self):
+        self.health_handler = PlayerStatusImpl(PlayerStatus.Status.NORMAL)
 
+    def test_set_up(self):
+        self.assertEqual(PlayerStatus.Status.NORMAL, self.health_handler.status)
+
+    def test_invulnerability(self):
+        cooldown = 15
+        self.health_handler.invincibility(cooldown)
+        i = 0
+        while (i < cooldown):
+            self.assertEqual(PlayerStatus.Status.INVULNERABLE, self.health_handler.status)
+            self.health_handler.update()
+            i += 1
+        self.assertEqual(PlayerStatus.Status.NORMAL, self.health_handler.status)
+
+class TestScore(unittest.TestCase):
+    def setUp(self):
+        self.score = ScoreImpl(0,1)
+    
+    def test_set_up(self):
+        self.assertEqual(0, self.score.score)
+        self.assertEqual(1, self.score.multiplier)
+    
+    def test_add_points(self):
+        self.addition(1000)
+    
+    def test_multiplier_change(self):
+        initial_multiplier = self.score._multiplier
+        new_multiplier = 2
+        self.score.multiplier = new_multiplier
+        self.assertEqual(new_multiplier, self.score.multiplier)
+        self.addition(1000)
+        self.score.multiplier = initial_multiplier
+        self.assertNotEqual(new_multiplier, self.score.multiplier)
+        self.addition(1000)
+        
+    def addition(self, addition : int):
+        initial_score = self.score.score
+        self.score.add_points(addition)
+        self.assertEqual(initial_score + addition * self.score.multiplier, self.score.score)
+    
