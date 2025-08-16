@@ -20,6 +20,7 @@ class PowerUpHandlerImpl(PowerUpHandler):
         self._power_up_active.apply_effect(player)
         if power_up.is_timed:
             self._start_time = pygame.time.get_ticks()
+        self._power_up_active.destroy() #it destroys the item after applying the effect
     
     def player_update(self, player: Player):
         if self._power_up_active and self._power_up_active.is_timed:
