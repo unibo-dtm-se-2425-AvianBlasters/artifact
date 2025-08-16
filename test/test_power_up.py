@@ -16,8 +16,8 @@ class TestPowerUp(unittest.TestCase):
     def test_initial_status(self):
         self.assertEqual(10, self.power_up.get_area().get_position_x)
         self.assertEqual(10, self.power_up.get_area().get_position_y)
-        self.assertEqual(4, self.power_up.get_area().get_width)
-        self.assertEqual(4, self.power_up.get_area().get_height)
+        self.assertEqual(4, self.power_up.get_area().width)
+        self.assertEqual(4, self.power_up.get_area().height)
         self.assertEqual(Entity.TypeArea.POWERUP, self.power_up.get_type)
         self.assertEqual(PowerUpType.LASER, self.power_up.power_up_type)
 
