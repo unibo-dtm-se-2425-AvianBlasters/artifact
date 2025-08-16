@@ -7,7 +7,7 @@ class ScoreImpl(Score):
         self._multiplier = initial_multiplier
 
     def add_points(self, points : int):
-        self._score += points
+        self._score += points * self._multiplier
     
     @property
     def score(self) -> int:
