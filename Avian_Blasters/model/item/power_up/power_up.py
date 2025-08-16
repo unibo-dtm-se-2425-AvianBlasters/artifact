@@ -13,11 +13,23 @@ class PowerUpType(Enum):
     INVULNERABILITY = 3
 
 class PowerUp(ItemImpl):
+
+    @property
+    def power_up_type(self) -> PowerUpType:
+        ...
+
+    @property
+    def is_timed(self) -> bool:
+        ...
+
+    @property
+    def duration(self) -> float | None:
+        ...
     
     def is_collected(self, player_area: Area) -> bool:
         ...
 
-    def effect_on_player(self, player : "Player"): 
+    def apply_effect(self, player : "Player"): 
         ...
 
     def remove_effect(self, player : "Player"):

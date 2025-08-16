@@ -7,10 +7,20 @@ from Avian_Blasters.model.item.power_up.power_up import PowerUp, PowerUpType
 
 
 class PowerUpImpl(PowerUp):
-    def __init__(self, x: int, y: int, width: int, height: int, type: Entity.TypeArea, power_up_type: PowerUpType, delta: int = DEFAULT_DELTA):
+    def __init__(self, x: int, y: int, width: int, height: int, type: Entity.TypeArea, power_up_type: PowerUpType, is_timed: bool = False, duration: float | None = None, delta: int = DEFAULT_DELTA):
         super().__init__(x, y, width, height, type, delta)
         self._power_up_type = power_up_type
         self._collected = False
+        self._is_timed = is_timed
+        self._duration = duration
+
+    @property
+    def is_timed(self) -> bool:
+        return self._is_timed
+    
+    @property
+    def duration(self) -> float | None:
+        return self._duration
 
     @property
     def power_up_type(self) -> PowerUpType:
@@ -25,4 +35,7 @@ class PowerUpImpl(PowerUp):
         return False
     
     def apply_effect(self, player : Player):
+        ...
+
+    def remove_effect(self, player : Player):
         ...

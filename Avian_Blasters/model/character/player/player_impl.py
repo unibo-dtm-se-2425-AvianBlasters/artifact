@@ -19,7 +19,7 @@ class PlayerImpl(CharacterImpl, Player):
     
     def __init__(self, x : int, y : int, width : int, height : int, delta : int, health : int, initial_score : int, initial_multiplier : int, limit_right : int, limit_left : int):
         super().__init__(x, y, width, height, Entity.TypeArea.PLAYER, delta, health)
-        self._power_up_handler = PowerUpHandlerImpl(None)
+        self._power_up_handler = PowerUpHandler(None)
         self._attack_handler = PlayerAttackHandler(None) # Needs a projectile factory
         self._score = ScoreImpl(initial_score, initial_multiplier)
         self._status_handler = PlayerStatusImpl(PlayerStatus.Status.NORMAL)
