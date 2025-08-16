@@ -8,11 +8,11 @@ COOLDOWN_STEPS_DEFAULT = 20
 PROJECTILE_SPEED_DEFAULT = 1
 
 class GeneralAttackHandlerImpl(GeneralAttackHandler):
-    def __init__(self, projectile_factory : ProjectileFactory):
+    def __init__(self, projectile_factory : ProjectileFactory, projectile_speed : int = PROJECTILE_SPEED_DEFAULT, cooldown_steps: int = COOLDOWN_STEPS_DEFAULT):
         self._projectile_type = PROJECTILE_TYPE_DEFAULT
-        self._projectile_speed = PROJECTILE_SPEED_DEFAULT
+        self._projectile_speed = projectile_speed
         self._projectile_factory = projectile_factory
-        self._cooldown_steps = max(0, COOLDOWN_STEPS_DEFAULT)
+        self._cooldown_steps = max(0, cooldown_steps)
         self._cooldown = 0
 
     @property

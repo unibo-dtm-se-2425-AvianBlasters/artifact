@@ -5,7 +5,7 @@ from Avian_Blasters.model.item.item import Direction
 from Avian_Blasters.model.item.projectile.projectile import ProjectileType
 from Avian_Blasters.model.item.projectile.projectile_factory import ProjectileFactory
 
-PLAYER_COOLDOWN_STEPS = 15
+PLAYER_COOLDOWN_STEPS = 5
 PLAYER_PROJECTILE_WIDTH = 5
 PLAYER_PROJECTILE_HEIGHT = 5
 
@@ -13,12 +13,10 @@ class PlayerAttackHandler(GeneralAttackHandlerImpl):
     PLAYER_PROJECTILE_SPEED = 3
 
     def __init__(self, projectile_factory : ProjectileFactory, projectile_speed : int, projectile_type : ProjectileType, cooldown_steps: int = PLAYER_COOLDOWN_STEPS):
-        super().__init__(projectile_factory, projectile_speed, projectile_type, cooldown_steps)
+        super().__init__(projectile_factory, projectile_speed, cooldown_steps)
         self._number_of_projectiles = 1
-        self._shots_interval = 100
-        self._last_shot_time = 0
-        self._remaining_shots = 0
         self._projectile_factory = projectile_factory
+        self._projectile_type = projectile_type
 
     def set_number_of_projectiles(self, number_of_projectiles: int):
         if number_of_projectiles < 1:
@@ -34,24 +32,29 @@ class PlayerAttackHandler(GeneralAttackHandlerImpl):
     def try_attack(self, player):
         if not self._can_attack():
             return []
-        current_time = pygame.time.get_ticks()
-        if self._remaining_shots == 0:
-            self._remaining_shots = self._number_of_projectiles
-            self._last_shot_time = current_time
         projectiles = []
-        if self._remaining_shots > 0 and (current_time - self._last_shot_time) >= self._shots_interval:
-            projectiles.append(self.__projectile_factory.create_projectile(
-                self._projectile_type,
-                player.get_area().get_position_x + player.get_area().width // 2,
-                player.get_area().get_position_y + player.get_area().height // 2,
-                Direction.UP,
-                PLAYER_PROJECTILE_WIDTH,
-                PLAYER_PROJECTILE_HEIGHT,
-                Entity.TypeArea.PLAYER_PROJECTILE,
-                self._projectile_speed)
+        player_center_x = player.get_area().get_position_x 
+        player_center_y = player.get_area().get_position_y 
+        offset = 20
+        total_width = (self._number_of_projectiles - 1) * offset
+        start_x = player_center_x - total_width // 2 
+        for i in range(self._number_of_projectiles):
+            if self._number_of_projectiles == 1:
+                projectile_x = player_center_x
+            else:
+                projectile_x = start_x + i * offset
+            projectile = self._projectile_factory.create_projectile(
+                projectile_type=self._projectile_type,
+                x=projectile_x,
+                y=player_center_y,
+                direction=Direction.UP,
+                width=PLAYER_PROJECTILE_WIDTH, 
+                height=PLAYER_PROJECTILE_HEIGHT,
+                type_area=Entity.TypeArea.PLAYER_PROJECTILE,
+                delta=self.PLAYER_PROJECTILE_SPEED
             )
-            self._remaining_shots -= 1
-            self._last_shot_time = current_time
-            if self._remaining_shots <= 0:
-                self._reset_cooldown()
+            projectiles.append(projectile)
+        self._reset_cooldown()
         return projectiles
+                
+                
