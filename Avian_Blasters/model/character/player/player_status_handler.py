@@ -12,3 +12,9 @@ class PlayerStatus:
     @status.setter
     def status(self, new_status : Status):
         ...
+    
+    def invincibility(self, cooldown : int):
+        ...
+    
+    def update(self):
+        ...

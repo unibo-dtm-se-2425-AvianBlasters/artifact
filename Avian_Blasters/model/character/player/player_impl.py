@@ -14,6 +14,8 @@ from Avian_Blasters.model.item.projectile.projectile import ProjectileType
 from Avian_Blasters.model.item.projectile.projectile_factory import ProjectileFactory
 from typing import Optional
 
+DEFAULT_COOLDOWN = 30
+
 class PlayerImpl(CharacterImpl, Player):
     
     def __init__(self, x : int, y : int, width : int, height : int, delta : int, health : int, initial_score : int, initial_multiplier : int, limit_right : int, limit_left : int):
@@ -51,7 +53,9 @@ class PlayerImpl(CharacterImpl, Player):
                         damage = 3 if i.get_type == Entity.TypeArea.ENEMY else 1
                         self.get_health_handler().take_damage(damage)
                         if self.get_health_handler().current_health > 0:
-                            self._status_handler.status(PlayerStatus.Status.INVULNERABLE)
+                            self._status_handler.invincibility(DEFAULT_COOLDOWN)
+        else:
+            self._status_handler.update()
     
     def get_status(self) -> PlayerStatus:
         return self._status_handler
