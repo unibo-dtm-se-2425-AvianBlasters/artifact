@@ -4,7 +4,7 @@ from Avian_Blasters.model.item.item_impl import ItemImpl
 from Avian_Blasters.model.item.projectile.projectile import Projectile, ProjectileType
 from Avian_Blasters.model.position import Position
 
-class ProjectileImpl(ItemImpl, Projectile):
+class ProjectileImpl(Projectile):
     def __init__(self, x : int, y : int, width : int, height : int, type : Entity.TypeArea, projectile_type : ProjectileType, direction : Direction, delta : int):
         super().__init__(x, y, width, height, type, delta)
         self._projectile_type = projectile_type
@@ -17,3 +17,7 @@ class ProjectileImpl(ItemImpl, Projectile):
     @property
     def direction(self) -> Direction:
         return self._direction
+    
+    def move(self, movement_x, movement_y, width, height):
+        if self.active:
+            super().move(movement_x, movement_y, width, height)
