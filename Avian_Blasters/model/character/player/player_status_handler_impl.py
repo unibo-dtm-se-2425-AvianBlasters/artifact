@@ -1,6 +1,7 @@
 from Avian_Blasters.model.character.player.player_status_handler import PlayerStatus
 
 class PlayerStatusImpl(PlayerStatus):
+    """PlayerStatusImpl is an implementation of PlayerStatus"""
 
     def __init__(self, status : PlayerStatus.Status):
         self._status = status

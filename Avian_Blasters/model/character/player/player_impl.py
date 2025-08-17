@@ -17,6 +17,8 @@ from typing import Optional
 DEFAULT_COOLDOWN = 30
 
 class PlayerImpl(CharacterImpl, Player):
+    """PlayerImpl is an implementation of Player that takes advantage of
+    the implementations present in CharacterImpl"""
     
     def __init__(self, x : int, y : int, width : int, height : int, delta : int, health : int, initial_score : int, initial_multiplier : int, limit_right : int, limit_left : int):
         super().__init__(x, y, width, height, Entity.TypeArea.PLAYER, delta, health)

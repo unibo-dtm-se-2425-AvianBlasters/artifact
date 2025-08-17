@@ -1,6 +1,7 @@
 from Avian_Blasters.model.character.player.score import Score
 
 class ScoreImpl(Score):
+    """ScoreImpl is an implementation of Score"""
     
     def __init__(self, initial_score : int, initial_multiplier : int):
         self._score = initial_score

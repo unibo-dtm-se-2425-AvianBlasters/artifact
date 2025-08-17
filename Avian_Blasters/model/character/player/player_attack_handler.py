@@ -11,6 +11,8 @@ PLAYER_PROJECTILE_WIDTH = 5
 PLAYER_PROJECTILE_HEIGHT = 5
 
 class PlayerAttackHandler(GeneralAttackHandlerImpl):
+    """PlayerAttackHandler is an implementation of GeneralAttackHandler used to handle
+    the attacks that have to be performed by the player character"""
     PLAYER_PROJECTILE_SPEED = 3
 
     def __init__(self, projectile_factory : ProjectileFactory, projectile_speed : int, projectile_type : ProjectileType, cooldown_steps: int = PLAYER_COOLDOWN_STEPS):
