@@ -36,6 +36,3 @@ class PowerUpImpl(PowerUp):
     
     def apply_effect(self, player : Player):
         ...
-
-    def remove_effect(self, player : Player):
-        ...
