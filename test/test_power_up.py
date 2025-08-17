@@ -11,6 +11,7 @@ from Avian_Blasters.model.item.power_up.power_up import PowerUpType
 from Avian_Blasters.model.item.power_up.power_up_factory import PowerUpFactory
 from Avian_Blasters.model.item.power_up.power_up_impl import PowerUpImpl
 from Avian_Blasters.model.item.power_up.power_up_types.double_fire_power_up import DoubleFirePowerUp
+from Avian_Blasters.model.item.power_up.power_up_types.health_recovery_power_up import HealthRecoveryPowerUp
 from Avian_Blasters.model.item.power_up.power_up_types.invulnerability_power_up import InvulnerabilityPowerUp
 from Avian_Blasters.model.item.power_up.power_up_types.laser_power_up import LaserPowerUp
 from Avian_Blasters.model.item.projectile.projectile import ProjectileType
@@ -82,6 +83,16 @@ class DoubleFirePowerUpTest(unittest.TestCase):
         self.assertEqual(self.player.player_attack_handler_get().number_of_projectiles, 2)
         self.power_up.remove_effect(self.player)
         self.assertEqual(self.player.player_attack_handler_get().number_of_projectiles, 1)
+
+class HealthRecoveryPowerUpTest(unittest.TestCase):
+    def setUp(self):
+        self.power_up = HealthRecoveryPowerUp(x=10, y=10, width=4, height=4, type=Entity.TypeArea.POWERUP, power_up_type=PowerUpType.HEALTH_RECOVERY, is_timed=False, duration = None, delta=1)
+        self.player = Mock()
+        self.player.get_health_handler.return_value = Mock()
+
+    def test_apply_effect(self):
+        self.power_up.apply_effect(self.player)
+        self.player.get_health_handler().heal.assert_called_once()
 
 class PowerUpFactoryTest(unittest.TestCase):
     def setUp(self):
