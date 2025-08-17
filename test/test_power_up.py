@@ -125,6 +125,13 @@ class PowerUpFactoryTest(unittest.TestCase):
         self.assertEqual(self.x, power_up.get_area().get_position_x)
         self.assertEqual(self.y, power_up.get_area().get_position_y)
 
+    def test_create_health_recovery_power_up(self):
+        power_up = self.factory.create_power_up(PowerUpType.HEALTH_RECOVERY, self.x, self.y, self.width, self.height, self.type_area, self.delta)
+        self.assertIsInstance(power_up, HealthRecoveryPowerUp)
+        self.assertEqual(PowerUpType.HEALTH_RECOVERY, power_up.power_up_type)
+        self.assertEqual(self.x, power_up.get_area().get_position_x)
+        self.assertEqual(self.y, power_up.get_area().get_position_y)
+
     def test_create_invalid_power_up_type(self):
         with self.assertRaises(ValueError):
             self.factory.create_power_up("INVALID_TYPE", self.x, self.y, self.width, self.height, self.type_area, self.delta)
