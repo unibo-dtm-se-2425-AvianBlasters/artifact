@@ -64,12 +64,18 @@ class TestPlayer(unittest.TestCase):
         ...
     
     def test_shoot(self):
-        self.assertEqual(ProjectileType.NORMAL, self.player.shoot().projectile_type)
+        shots = self.player.shoot()
+        for i in shots:
+            self.assertEqual(ProjectileType.NORMAL, i.projectile_type)
         i=0
-        while (i < 15):
-            self.assertEqual(None, self.player.shoot())
+        while (i < 5):
+            shots = self.player.shoot()
+            for i in shots:
+                self.assertEqual(None, i)
             i += 1
-        self.assertEqual(ProjectileType.NORMAL, self.player.shoot().projectile_type)
+        shots = self.player.shoot()
+        for i in shots:
+            self.assertEqual(ProjectileType.NORMAL, i.projectile_type)
 
         
 class TestPlayerStatusHandler(unittest.TestCase):

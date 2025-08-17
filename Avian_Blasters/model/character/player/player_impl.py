@@ -67,5 +67,5 @@ class PlayerImpl(CharacterImpl, Player):
     def get_status(self) -> PlayerStatus:
         return self._status_handler
     
-    def shoot(self) -> Optional[Projectile]:
+    def shoot(self) -> list[Projectile]:
         return self._attack_handler.try_attack(self)
