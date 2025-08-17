@@ -3,6 +3,8 @@ from Avian_Blasters.model.area import Area
 from pygame import Rect
 
 class AreaImpl(Area):
+    """AreaImpl is an implementation of Area"""
+
     def __init__(self, x : int, y : int, width : int, height : int):
         self._position = PositionImpl(x, y)
         self._width = width

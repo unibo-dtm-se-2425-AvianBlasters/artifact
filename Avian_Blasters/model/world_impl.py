@@ -9,6 +9,8 @@ WORLD_WIDTH = 120
 WORLD_HEIGHT = 90 
 
 class WorldImpl(World):
+    """WorldImpl is an implementation of World"""
+    
     def __init__(self, entities : list[Entity]):
         self._entities = entities
 

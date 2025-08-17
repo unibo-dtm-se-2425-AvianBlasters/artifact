@@ -1,6 +1,7 @@
 from Avian_Blasters.model.position import Position
 
 class PositionImpl(Position):
+    """PositionImpl is an implementation of Position"""
 
     def __init__(self, x : int, y : int):
         self._x = x

@@ -3,6 +3,8 @@ from Avian_Blasters.model.area_impl import AreaImpl
 from Avian_Blasters.model.area import Area
 
 class EntityImpl(Entity):
+    """EntityImpl is an implementation of Entity"""
+
     def __init__(self, x : int, y : int, width : int, height : int, type : Entity.TypeArea, delta : int):
         self._area = AreaImpl(x, y, width, height)
         self._type = type
