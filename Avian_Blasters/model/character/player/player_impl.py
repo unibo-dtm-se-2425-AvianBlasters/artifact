@@ -13,7 +13,6 @@ from Avian_Blasters.model.character.player.player_attack_handler import PlayerAt
 from Avian_Blasters.model.item.projectile.projectile import Projectile
 from Avian_Blasters.model.item.projectile.projectile import ProjectileType
 from Avian_Blasters.model.item.projectile.projectile_factory import ProjectileFactory
-from typing import Optional
 
 DEFAULT_COOLDOWN = 30
 
@@ -52,7 +51,7 @@ class PlayerImpl(CharacterImpl, Player):
     def get_score(self) -> Score:
         return self._score
     
-    def is_touched(self, others: list[Entity]):
+    def is_touched(self, others: list[Entity]) -> bool:
         if self._status_handler.status != PlayerStatus.Status.INVULNERABLE:
             for i in others:
                 if i.get_type == Entity.TypeArea.ENEMY or Entity.TypeArea.ENEMY_PROJECTILE:
@@ -61,8 +60,13 @@ class PlayerImpl(CharacterImpl, Player):
                         self.get_health_handler().take_damage(damage)
                         if self.get_health_handler().current_health > 0:
                             self._status_handler.invincibility(DEFAULT_COOLDOWN)
+                        return True
         else:
             self._status_handler.update()
+            return False
+        return False
+
+
     
     def get_status(self) -> PlayerStatus:
         return self._status_handler

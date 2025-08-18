@@ -1,9 +1,8 @@
 import unittest
 from Avian_Blasters.model.character.player import *
 from Avian_Blasters.model.entity import Entity
+from Avian_Blasters.model.entity_impl import EntityImpl
 from Avian_Blasters.model.item.projectile.projectile import ProjectileType
-# from Avian_Blasters.model.item.projectile.projectile_impl import ProjectileImpl
-# from Avian_Blasters.model.item.item import Direction
 
 class TestPlayer(unittest.TestCase):
     initial_x = 0
@@ -61,7 +60,18 @@ class TestPlayer(unittest.TestCase):
         self.assertNotEqual(self.initial_score, self.player.get_score().score)
     
     def test_damage(self):
-        ...
+        test_enemy_projectile = EntityImpl(x=0, y=0, width=self.width, height=self.height, type=Entity.TypeArea.ENEMY_PROJECTILE, delta=self.delta)
+        test_enemy = EntityImpl(x=0, y=30, width=self.width, height=self.height, type=Entity.TypeArea.ENEMY, delta=self.delta)
+        self.assertTrue(self.player.is_touched([test_enemy_projectile]))
+        self.assertEqual(self.health - 1, self.player.get_health_handler().current_health)
+        i = 0
+        while (i<30):
+            self.assertFalse(self.player.is_touched([test_enemy_projectile]))
+            i += 1
+        self.assertFalse(self.player.is_touched([test_enemy]))
+        test_enemy.move(0,-15, self.width, self.height)
+        self.assertTrue(self.player.is_touched([test_enemy]))
+        self.assertEqual(0, self.player.get_health_handler().current_health)
     
     def test_shoot(self):
         shots = self.player.shoot()
@@ -94,6 +104,7 @@ class TestPlayerStatusHandler(unittest.TestCase):
             self.health_handler.update()
             i += 1
         self.assertEqual(PlayerStatus.Status.NORMAL, self.health_handler.status)
+
 
 class TestScore(unittest.TestCase):
     def setUp(self):

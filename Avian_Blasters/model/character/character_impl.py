@@ -1,6 +1,7 @@
 from Avian_Blasters.model.character.character import Character
 from Avian_Blasters.model.character.health_handler import HealthHandler
 from Avian_Blasters.model.character.health_handler_impl import HealthHandlerImpl
+from Avian_Blasters.model.item.projectile.projectile import Projectile
 from Avian_Blasters.model.entity_impl import EntityImpl
 from Avian_Blasters.model.entity import Entity
 
@@ -15,5 +16,5 @@ class CharacterImpl(EntityImpl, Character):
     def get_health_handler(self) -> HealthHandler:
         return self._health_handler
     
-    def shoot(self):
+    def shoot(self) -> list[Projectile]:
         ...
