@@ -15,7 +15,4 @@ class Projectile(ItemImpl):
     def projectile_type(self) -> ProjectileType:
         ...
 
-    @property
-    def direction(self) -> Direction:
-        ...
         

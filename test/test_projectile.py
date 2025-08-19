@@ -13,10 +13,9 @@ class TestProjectileFactory(unittest.TestCase):
         self.factory = ProjectileFactory()
 
     def test_create_normal_projectile(self):
-        projectile = self.factory.create_projectile(projectile_type = ProjectileType.NORMAL, x = 5, y = 5, direction = Direction.UP, width = 2, height = 4, type_area = Entity.TypeArea.PLAYER_PROJECTILE, delta = 1)
+        projectile = self.factory.create_projectile(projectile_type = ProjectileType.NORMAL, x = 5, y = 5, width = 2, height = 4, type_area = Entity.TypeArea.PLAYER_PROJECTILE, delta = 1)
         self.assertIsInstance(projectile, ProjectileImpl)
         self.assertEqual(projectile.projectile_type, ProjectileType.NORMAL)
-        self.assertEqual(projectile.direction, Direction.UP)
         self.assertEqual(projectile.get_area().get_position_x, 5)
         self.assertEqual(projectile.get_area().get_position_y, 5)
         self.assertTrue(projectile.active)
@@ -24,21 +23,21 @@ class TestProjectileFactory(unittest.TestCase):
 
     def test_create_invalid_projectile_type(self):
         with self.assertRaises(ValueError):
-            self.factory.create_projectile(projectile_type = "INVALID", x = 5, y = 5, direction = Direction.UP, width = 2, height = 4, type_area = Entity.TypeArea.PLAYER_PROJECTILE, delta = 1)
+            self.factory.create_projectile(projectile_type = "INVALID", x = 5, y = 5, width = 2, height = 4, type_area = Entity.TypeArea.PLAYER_PROJECTILE, delta = 1)
 
     def test_create_invalid_dimensions(self):
         with self.assertRaises(ValueError):
-            self.factory.create_projectile(projectile_type = ProjectileType.NORMAL, x = 5, y = 5, direction = Direction.UP, width = -1, height = 4, type_area = Entity.TypeArea.PLAYER_PROJECTILE, delta = 1)
+            self.factory.create_projectile(projectile_type = ProjectileType.NORMAL, x = 5, y = 5, width = -1, height = 4, type_area = Entity.TypeArea.PLAYER_PROJECTILE, delta = 1)
 
     def test_create_invalid_type_area(self):
         with self.assertRaises(ValueError):
-            self.factory.create_projectile(projectile_type = ProjectileType.NORMAL, x = 5, y = 5, direction = Direction.UP, width = 2, height = 4, type_area = "INVALID", delta = 1)
+            self.factory.create_projectile(projectile_type = ProjectileType.NORMAL, x = 5, y = 5, width = 2, height = 4, type_area = "INVALID", delta = 1)
 
 class TestProjectile(unittest.TestCase):
 
     def setUp(self):
-        self.projectile_player = ProjectileImpl(x = 10, y = 10, width = 2, height = 4, type = Entity.TypeArea.PLAYER_PROJECTILE ,projectile_type = ProjectileType.NORMAL, direction = Direction.UP, delta = 1)
-        self.projectile_enemy = ProjectileImpl(x = 20, y = 20, width = 2, height = 4, type = Entity.TypeArea.ENEMY_PROJECTILE, projectile_type = ProjectileType.NORMAL, direction = Direction.DOWN, delta = 1)
+        self.projectile_player = ProjectileImpl(x = 10, y = 10, width = 2, height = 4, type = Entity.TypeArea.PLAYER_PROJECTILE ,projectile_type = ProjectileType.NORMAL, delta = 1)
+        self.projectile_enemy = ProjectileImpl(x = 20, y = 20, width = 2, height = 4, type = Entity.TypeArea.ENEMY_PROJECTILE, projectile_type = ProjectileType.NORMAL, delta = 1)
 
     def test_entity_type(self):
         self.assertEqual(Entity.TypeArea.PLAYER_PROJECTILE, self.projectile_player.get_type)
@@ -102,7 +101,6 @@ class TestPlayerAttackHandler(unittest.TestCase):
             self.assertIsInstance(projectile, Projectile)
             self.assertEqual(projectile.get_area().get_position_x, 50)
             self.assertEqual(projectile.get_area().get_position_y, 50)
-            self.assertEqual(projectile.direction, Direction.UP)
             self.assertEqual(projectile.projectile_type, ProjectileType.NORMAL)
 
     def test_try_attack_double_shot(self):
@@ -120,7 +118,6 @@ class TestPlayerAttackHandler(unittest.TestCase):
             expected_x = start_x + i * (offset)
             self.assertEqual(projectile.get_area().get_position_x, expected_x)
             self.assertEqual(projectile.get_area().get_position_y, player_center_y)
-            self.assertEqual(projectile.direction, Direction.UP)
             self.assertEqual(projectile.projectile_type, ProjectileType.NORMAL)
             print(projectile.get_area().get_position_x, projectile.get_area().get_position_y)
 
@@ -139,7 +136,6 @@ class TestPlayerAttackHandler(unittest.TestCase):
             expected_x = start_x + i * (offset) 
             self.assertEqual(projectile.get_area().get_position_x, expected_x)
             self.assertEqual(projectile.get_area().get_position_y, player_center_y)
-            self.assertEqual(projectile.direction, Direction.UP)
             self.assertEqual(projectile.projectile_type, ProjectileType.NORMAL)
             print(projectile.get_area().get_position_x, projectile.get_area().get_position_y)
 

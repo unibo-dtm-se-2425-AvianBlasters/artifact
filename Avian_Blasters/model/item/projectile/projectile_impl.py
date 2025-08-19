@@ -5,18 +5,13 @@ from Avian_Blasters.model.item.projectile.projectile import Projectile, Projecti
 from Avian_Blasters.model.position import Position
 
 class ProjectileImpl(Projectile):
-    def __init__(self, x : int, y : int, width : int, height : int, type : Entity.TypeArea, projectile_type : ProjectileType, direction : Direction, delta : int):
+    def __init__(self, x : int, y : int, width : int, height : int, type : Entity.TypeArea, projectile_type : ProjectileType, delta : int):
         super().__init__(x, y, width, height, type, delta)
         self._projectile_type = projectile_type
-        self._direction = direction
     
     @property
     def projectile_type(self) -> ProjectileType:
         return self._projectile_type
-    
-    @property
-    def direction(self) -> Direction:
-        return self._direction
     
     def move(self, movement_x, movement_y, width, height):
         if self.active:
