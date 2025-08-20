@@ -5,7 +5,7 @@ from attack_handler_impl import BirdAttackHandler
 
 
 class Bird(EnemyImpl):
-
+    """ Bird is an enemy that moves in a wave-like pattern and drops bullets downward. """
     def __init__(
         self,
         x: int,

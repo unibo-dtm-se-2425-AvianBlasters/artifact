@@ -9,7 +9,7 @@ from item.projectile.projectile import Projectile
 
 
 class EnemyImpl(Enemy):
-
+    """ Base class for all enemies in the game. It provides basic movement, attack, and health handling. """
     def __init__(
         self,
         x: int,
@@ -33,7 +33,7 @@ class EnemyImpl(Enemy):
 
     @property
     def x(self) -> int:
-        return self._x
+        return self._x  
 
     @property
     def y(self) -> int:

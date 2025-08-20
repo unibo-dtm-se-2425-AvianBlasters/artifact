@@ -6,6 +6,8 @@ from attack_handler_impl import BatAttackHandler
 
 class Bat(EnemyImpl):
 
+    """ Bat is an enemy that moves horizontally and attacks by firing sound waves. """
+
     def __init__(self, x: int, y: int, width: int, height: int, speed: int, health: int) -> None:
         super().__init__(x, y, width, height, speed, health, attack_handler=BatAttackHandler())
         self._target_x: Optional[int] = None

@@ -7,8 +7,8 @@ from item.projectile.projectile import Projectile
 
 
 @dataclass
-class _SimpleProjectile(Projectile):
-
+class _SimpleProjectile(Projectile):  
+    """ This class represents Projectiles that are simple downward bullets or sound waves. """
     x: int
     y: int
     speed_y: int
@@ -17,7 +17,9 @@ class _SimpleProjectile(Projectile):
     slow_factor: float = 1.0  # 1.0 means no slow; < 1 slows the target
     slow_duration_steps: int = 0
 
+      
     def step(self) -> None:
+        """ Move the projectile down by its speed_y. """
         self.y += self.speed_y
 
 
@@ -26,12 +28,13 @@ class AttackHandlerImpl(AttackHandler):
     def __init__(self, fire_chance: float = 0.05, cooldown_steps: int = 20, projectile_speed: int = 4) -> None:
         if not 0.0 <= fire_chance <= 1.0:
             raise ValueError("fire_chance must be within [0, 1]")
-        self._fire_chance = fire_chance
-        self._cooldown_steps = max(0, cooldown_steps)
+        self._fire_chance = fire_chance         #Chance of firing a projectile on each attack attempt. 
+        self._cooldown_steps = max(0, cooldown_steps) # Steps to wait before the next attack can occur. 
         self._cooldown = 0
-        self._projectile_speed = projectile_speed
+        self._projectile_speed = projectile_speed   
 
     def _ready_and_roll(self) -> bool:
+        """ Checking if handler is ready to attack and rolling for fire chance. """
         if self._cooldown > 0:
             self._cooldown -= 1
             return False
@@ -41,6 +44,7 @@ class AttackHandlerImpl(AttackHandler):
         return False
 
     def try_attack(self, enemy) -> Optional[Projectile]:  # type: ignore[override]
+        """ Determining whether the enemy can attack and returning a projectile if so. """
         if not self._ready_and_roll():
             return None
         # Default projectile is a small downward bullet
@@ -72,6 +76,7 @@ class BirdAttackHandler(AttackHandlerImpl):
 
 
 class BatAttackHandler(AttackHandler):
+    """ Bats fire sound waves that slow down the player. """
 
     def __init__(self, fire_chance: float = 0.04, cooldown_steps: int = 30, wave_speed: int = 2, slow_factor: float = 0.6, slow_duration_steps: int = 45) -> None:
         if not 0.0 <= fire_chance <= 1.0:
