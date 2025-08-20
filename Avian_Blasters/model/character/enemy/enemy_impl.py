@@ -1,11 +1,11 @@
 from typing import Optional
 
-from enemy import Enemy
+from Avian_Blasters.model.character.enemy.enemy import Enemy
 from Avian_Blasters.model.character.health_handler import HealthHandler
 from Avian_Blasters.model.character.health_handler_impl import HealthHandlerImpl
-from attack_handler import AttackHandler
-from attack_handler_impl import AttackHandlerImpl
-from item.projectile.projectile import Projectile
+from Avian_Blasters.model.character.enemy.attack_handler import AttackHandler
+from Avian_Blasters.model.character.enemy.attack_handler_impl import AttackHandlerImpl
+from Avian_Blasters.model.item.projectile.projectile import Projectile
 
 
 class EnemyImpl(Enemy):

@@ -1,7 +1,7 @@
 from typing import Optional
 
-from enemy_impl import EnemyImpl
-from attack_handler_impl import BatAttackHandler
+from Avian_Blasters.model.character.enemy.enemy_impl import EnemyImpl
+from Avian_Blasters.model.character.enemy.attack_handler_impl import BatAttackHandler
 
 
 class Bat(EnemyImpl):

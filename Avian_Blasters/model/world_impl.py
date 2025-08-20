@@ -42,12 +42,12 @@ class WorldImpl(World):
     def add_projectiles(self, projectiles : list[Projectile]):
         self.add_entities(projectiles)
 
-    def __getter(self, type : Entity.TypeArea) -> list[type]:
-        list = []
+    def __getter(self, type : Entity.TypeArea) -> list[Entity]:
+        result_list = []
         for i in self._entities:
             if i.get_type == type:
-                list.append(i)
-        return list
+                result_list.append(i)
+        return result_list
     
     def __setter(self, entities : list):
         for i in entities:

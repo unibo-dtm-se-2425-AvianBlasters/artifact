@@ -42,4 +42,4 @@ class AreaImpl(Area):
         return self._figure
 
     def __position_adjustment(self, x : int, y : int, width : int, height : int) -> Rect:
-        return Rect(x-width/2, y+height/2, width, height)
+        return Rect(int(x-width/2), int(y-height/2), width, height)
