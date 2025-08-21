@@ -22,5 +22,9 @@ class GeneralAttackHandlerImpl(GeneralAttackHandler):
     def set_projectile_type(self, projectile_type: ProjectileType):
         self._projectile_type = projectile_type
         
+    def try_attack(self, character):
+        """Base implementation - should be overridden by subclasses"""
+        return []
+        
     def _reset_cooldown(self):
         self._cooldown = self._cooldown_steps

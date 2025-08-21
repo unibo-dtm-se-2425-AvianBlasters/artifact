@@ -8,6 +8,7 @@ from Avian_Blasters.model.position import Position
 class ProjectileType(Enum):
     NORMAL = 1
     LASER = 2
+    SOUND_WAVE = 3
 
 class Projectile(ItemImpl):
     

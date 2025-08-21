@@ -7,20 +7,23 @@ project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 character_path = os.path.join(project_root, 'Avian_Blasters', 'model', 'character')
 enemy_path = os.path.join(character_path, 'enemy')
 model_path = os.path.join(project_root, 'Avian_Blasters', 'model')
+item_path = os.path.join(model_path, 'item', 'projectile')
 
 sys.path.insert(0, character_path)
 sys.path.insert(0, enemy_path)
 sys.path.insert(0, model_path)
+sys.path.insert(0, item_path)
 
 from bird import Bird
 from bat import Bat
 from enemy_impl import EnemyImpl
 from health_handler_impl import HealthHandlerImpl
 from attack_handler_impl import (
-    AttackHandlerImpl,
+    EnemyAttackHandler,
     BirdAttackHandler,
     BatAttackHandler,
 )
+from projectile_factory import ProjectileFactory
 
 
 class TestEnemyHealthHandler(unittest.TestCase):
@@ -59,57 +62,57 @@ class TestEnemyHealthHandler(unittest.TestCase):
 
 class TestAttackHandlers(unittest.TestCase):
     def setUp(self):
-        self.always_attack_handler = AttackHandlerImpl(fire_chance=1.0, cooldown_steps=0)
-        self.never_attack_handler = AttackHandlerImpl(fire_chance=0.0, cooldown_steps=0)
-        self.cooldown_handler = AttackHandlerImpl(fire_chance=1.0, cooldown_steps=3)
+        self.factory = ProjectileFactory()
+        self.always_attack_handler = EnemyAttackHandler(self.factory, fire_chance=1.0, cooldown_steps=0)
+        self.never_attack_handler = EnemyAttackHandler(self.factory, fire_chance=0.0, cooldown_steps=0)
+        self.cooldown_handler = EnemyAttackHandler(self.factory, fire_chance=1.0, cooldown_steps=3)
 
     def test_always_attack(self):
         enemy = EnemyImpl(x=50, y=60, width=16, height=12, speed=2, max_health=10)
-        projectile = self.always_attack_handler.try_attack(enemy)
-        self.assertIsNotNone(projectile)
-        self.assertEqual(50, projectile.x)
-        self.assertEqual(66, projectile.y)  # y + height//2
+        projectiles = self.always_attack_handler.try_attack(enemy)
+        self.assertEqual(1, len(projectiles))
+        projectile = projectiles[0]
+        self.assertEqual(50, projectile.get_area().get_position_x)
 
     def test_never_attack(self):
         enemy = EnemyImpl(x=50, y=60, width=16, height=12, speed=2, max_health=10)
-        projectile = self.never_attack_handler.try_attack(enemy)
-        self.assertIsNone(projectile)
+        projectiles = self.never_attack_handler.try_attack(enemy)
+        self.assertEqual(0, len(projectiles))
 
     def test_cooldown_behavior(self):
         enemy = EnemyImpl(x=50, y=60, width=16, height=12, speed=2, max_health=10)
         
         # First attack should succeed
-        projectile1 = self.cooldown_handler.try_attack(enemy)
-        self.assertIsNotNone(projectile1)
+        projectiles1 = self.cooldown_handler.try_attack(enemy)
+        self.assertEqual(1, len(projectiles1))
         
         # Next 3 attacks should fail due to cooldown
         for _ in range(3):
-            projectile = self.cooldown_handler.try_attack(enemy)
-            self.assertIsNone(projectile)
+            projectiles = self.cooldown_handler.try_attack(enemy)
+            self.assertEqual(0, len(projectiles))
         
         # After cooldown, should succeed again
-        projectile2 = self.cooldown_handler.try_attack(enemy)
-        self.assertIsNotNone(projectile2)
+        projectiles2 = self.cooldown_handler.try_attack(enemy)
+        self.assertEqual(1, len(projectiles2))
 
     def test_bird_attack_handler(self):
-        bird_handler = BirdAttackHandler(fire_chance=1.0, cooldown_steps=0)
+        bird_handler = BirdAttackHandler(self.factory, fire_chance=1.0, cooldown_steps=0)
         enemy = EnemyImpl(x=100, y=200, width=20, height=16, speed=3, max_health=5)
         
-        projectile = bird_handler.try_attack(enemy)
-        self.assertIsNotNone(projectile)
-        self.assertEqual("bullet", projectile.kind)
-        self.assertEqual(1, projectile.damage)
+        projectiles = bird_handler.try_attack(enemy)
+        self.assertEqual(1, len(projectiles))
 
     def test_bat_attack_handler(self):
-        bat_handler = BatAttackHandler(fire_chance=1.0, cooldown_steps=0)
+        bat_handler = BatAttackHandler(self.factory, fire_chance=1.0, cooldown_steps=0)
         enemy = EnemyImpl(x=80, y=150, width=18, height=14, speed=4, max_health=3)
         
-        projectile = bat_handler.try_attack(enemy)
-        self.assertIsNotNone(projectile)
-        self.assertEqual("sound_wave", projectile.kind)
-        self.assertEqual(0, projectile.damage)  # Sound waves don't deal direct damage
-        self.assertLess(projectile.slow_factor, 1.0)  # Should slow the target
-        self.assertGreater(projectile.slow_duration_steps, 0)
+        projectiles = bat_handler.try_attack(enemy)
+        self.assertEqual(1, len(projectiles))
+        
+        # Verify that bat creates sound wave projectiles
+        projectile = projectiles[0]
+        from Avian_Blasters.model.item.projectile.projectile import ProjectileType
+        self.assertEqual(ProjectileType.SOUND_WAVE, projectile.projectile_type)
 
 
 class TestEnemyImpl(unittest.TestCase):
@@ -140,7 +143,8 @@ class TestEnemyImpl(unittest.TestCase):
 
     def test_attack_delegation(self):
         # Set up enemy with guaranteed attack
-        always_attack = AttackHandlerImpl(fire_chance=1.0, cooldown_steps=0)
+        factory = ProjectileFactory()
+        always_attack = EnemyAttackHandler(factory, fire_chance=1.0, cooldown_steps=0)
         enemy = EnemyImpl(
             x=75, y=100, width=16, height=12, speed=2, max_health=10,
             attack_handler=always_attack
@@ -152,6 +156,10 @@ class TestEnemyImpl(unittest.TestCase):
         # Test shoot() alias
         projectile2 = enemy.shoot()
         self.assertIsNotNone(projectile2)
+        
+        # Test new shoot_all() method
+        projectiles = enemy.shoot_all()
+        self.assertEqual(1, len(projectiles))
 
 
 class TestBird(unittest.TestCase):

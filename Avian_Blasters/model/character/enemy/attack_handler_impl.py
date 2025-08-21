@@ -1,106 +1,64 @@
 import random
-from dataclasses import dataclass
 from typing import Optional
 
-from attack_handler import AttackHandler
-from item.projectile.projectile import Projectile
+from Avian_Blasters.model.character.general_attack_handler_impl import GeneralAttackHandlerImpl
+from Avian_Blasters.model.entity import Entity
+from Avian_Blasters.model.item.item import Direction
+from Avian_Blasters.model.item.projectile.projectile import ProjectileType
+from Avian_Blasters.model.item.projectile.projectile_factory import ProjectileFactory
 
 
-@dataclass
-class _SimpleProjectile(Projectile):  
-    """ This class represents Projectiles that are simple downward bullets or sound waves. """
-    x: int
-    y: int
-    speed_y: int
-    damage: int = 1
-    kind: str = "bullet"  # e.g. "bullet" or "sound_wave"
-    slow_factor: float = 1.0  # 1.0 means no slow; < 1 slows the target
-    slow_duration_steps: int = 0
-
-      
-    def step(self) -> None:
-        """ Move the projectile down by its speed_y. """
-        self.y += self.speed_y
-
-
-class AttackHandlerImpl(AttackHandler):
-
-    def __init__(self, fire_chance: float = 0.05, cooldown_steps: int = 20, projectile_speed: int = 4) -> None:
-        if not 0.0 <= fire_chance <= 1.0:
-            raise ValueError("fire_chance must be within [0, 1]")
-        self._fire_chance = fire_chance         #Chance of firing a projectile on each attack attempt. 
-        self._cooldown_steps = max(0, cooldown_steps) # Steps to wait before the next attack can occur. 
-        self._cooldown = 0
-        self._projectile_speed = projectile_speed   
-
-    def _ready_and_roll(self) -> bool:
-        """ Checking if handler is ready to attack and rolling for fire chance. """
-        if self._cooldown > 0:
-            self._cooldown -= 1
-            return False
-        if random.random() <= self._fire_chance:
-            self._cooldown = self._cooldown_steps
-            return True
-        return False
-
-    def try_attack(self, enemy) -> Optional[Projectile]:  # type: ignore[override]
-        """ Determining whether the enemy can attack and returning a projectile if so. """
-        if not self._ready_and_roll():
-            return None
-        # Default projectile is a small downward bullet
-        return _SimpleProjectile(
-            x=enemy.x,
-            y=enemy.y + max(1, enemy.height // 2),
-            speed_y=self._projectile_speed,
-            damage=1,
-            kind="bullet",
-        )
-
-
-class BirdAttackHandler(AttackHandlerImpl):
-    """Birds drop standard bullets downward."""
-
-    def __init__(self, fire_chance: float = 0.06, cooldown_steps: int = 18, projectile_speed: int = 5) -> None:
-        super().__init__(fire_chance, cooldown_steps, projectile_speed)
-
-    def try_attack(self, enemy) -> Optional[Projectile]:  # type: ignore[override]
-        if not self._ready_and_roll():
-            return None
-        return _SimpleProjectile(
-            x=enemy.x,
-            y=enemy.y + max(1, enemy.height // 2),
-            speed_y=self._projectile_speed,
-            damage=1,
-            kind="bullet",
-        )
-
-
-class BatAttackHandler(AttackHandler):
-    """ Bats fire sound waves that slow down the player. """
-
-    def __init__(self, fire_chance: float = 0.04, cooldown_steps: int = 30, wave_speed: int = 2, slow_factor: float = 0.6, slow_duration_steps: int = 45) -> None:
+class EnemyAttackHandler(GeneralAttackHandlerImpl):
+    """Base enemy attack handler that extends the general attack handler"""
+    
+    def __init__(self, projectile_factory: ProjectileFactory, fire_chance: float = 0.05, 
+                 cooldown_steps: int = 20, projectile_speed: int = 4):
+        super().__init__(projectile_factory, projectile_speed, cooldown_steps)
         if not 0.0 <= fire_chance <= 1.0:
             raise ValueError("fire_chance must be within [0, 1]")
         self._fire_chance = fire_chance
-        self._cooldown_steps = max(0, cooldown_steps)
-        self._cooldown = 0
-        self._wave_speed = wave_speed
-        self._slow_factor = slow_factor
-        self._slow_duration_steps = slow_duration_steps
-
-    def try_attack(self, enemy) -> Optional[Projectile]:  # type: ignore[override]
+        self._projectile_type = ProjectileType.NORMAL
+        
+    def _can_attack(self) -> bool:
+        """Check if the handler is ready to attack and roll for fire chance"""
         if self._cooldown > 0:
             self._cooldown -= 1
-            return None
-        if random.random() > self._fire_chance:
-            return None
-        self._cooldown = self._cooldown_steps
-        return _SimpleProjectile(
+            return False
+        return random.random() <= self._fire_chance
+        
+    def try_attack(self, enemy):
+        """Try to attack and return a list of projectiles"""
+        if not self._can_attack():
+            return []
+            
+        projectile = self._projectile_factory.create_projectile(
+            projectile_type=self._projectile_type,
             x=enemy.x,
             y=enemy.y + max(1, enemy.height // 2),
-            speed_y=self._wave_speed,
-            damage=0,  # sound wave does not deal direct damage
-            kind="sound_wave",
-            slow_factor=self._slow_factor,
-            slow_duration_steps=self._slow_duration_steps,
+            direction=Direction.DOWN,
+            width=5,
+            height=5,
+            type_area=Entity.TypeArea.ENEMY_PROJECTILE,
+            delta=self._projectile_speed
         )
+        
+        self._reset_cooldown()
+        return [projectile]
+
+
+class BirdAttackHandler(EnemyAttackHandler):
+    """Birds drop standard bullets downward"""
+    
+    def __init__(self, projectile_factory: ProjectileFactory, fire_chance: float = 0.06, 
+                 cooldown_steps: int = 18, projectile_speed: int = 5):
+        super().__init__(projectile_factory, fire_chance, cooldown_steps, projectile_speed)
+
+
+class BatAttackHandler(EnemyAttackHandler):
+    """Bats fire sound waves that slow down the player"""
+    
+    def __init__(self, projectile_factory: ProjectileFactory, fire_chance: float = 0.04, 
+                 cooldown_steps: int = 30, projectile_speed: int = 2):
+        super().__init__(projectile_factory, fire_chance, cooldown_steps, projectile_speed)
+        # Use sound wave projectiles that disrupt player movement
+        self._projectile_type = ProjectileType.SOUND_WAVE
