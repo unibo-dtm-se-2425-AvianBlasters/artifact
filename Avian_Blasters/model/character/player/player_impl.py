@@ -36,11 +36,7 @@ class PlayerImpl(CharacterImpl, Player):
         return self._attack_handler
     
     def move(self, x : int):
-        # Apply movement reduction if player is slowed by bat sound waves
-        effective_movement = x
-        if self._status_handler.status == PlayerStatus.Status.SLOWED:
-            # Reduce movement speed by 50% when slowed
-            effective_movement = int(x * 0.5)
+        effective_movement = self.__effective_movement(x)
         
         if self.__can_move(effective_movement):
             super().move(effective_movement, 0, self.get_area().width, self.get_area().height)
@@ -51,7 +47,15 @@ class PlayerImpl(CharacterImpl, Player):
     
     def __can_move(self, x : int) -> bool:
         return self._limit_r > (x * self._delta + self.get_area().get_position_x + self.get_area().width/2) and self._limit_l < (x * self._delta + self.get_area().get_position_x - self.get_area().width/2)
-        #(abs(x*self._delta) <= abs(self._limit_r - self.get_area().get_width/2 - self.get_area().get_position_x) and abs(x*self._delta) <= abs(self._limit_l - self.get_area().get_width/2) - self.get_area().get_position_x)        
+        #(abs(x*self._delta) <= abs(self._limit_r - self.get_area().get_width/2 - self.get_area().get_position_x) and abs(x*self._delta) <= abs(self._limit_l - self.get_area().get_width/2) - self.get_area().get_position_x)
+
+    def __effective_movement(self, x : int) -> int:
+        # Apply movement reduction if player is slowed by bat sound waves
+        if self._status_handler.status == PlayerStatus.Status.SLOWED:
+            # Reduce movement speed by 50% when slowed
+            return int(x * 0.5)
+        else:
+            return x
                 
     def get_score(self) -> Score:
         return self._score
@@ -79,10 +83,6 @@ class PlayerImpl(CharacterImpl, Player):
 
     def get_status(self) -> PlayerStatus:
         return self._status_handler
-    
-    def update_status(self):
-        """Update the player status (e.g., reduce slowed effect timer)"""
-        self._status_handler.update()
     
     def shoot(self) -> list[Projectile]:
         return self._attack_handler.try_attack(self)
