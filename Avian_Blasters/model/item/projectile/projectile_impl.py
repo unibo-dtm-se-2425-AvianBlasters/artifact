@@ -1,5 +1,4 @@
 from Avian_Blasters.model.entity import Entity
-from Avian_Blasters.model.item.item import Direction
 from Avian_Blasters.model.item.item_impl import ItemImpl
 from Avian_Blasters.model.item.projectile.projectile import Projectile, ProjectileType
 from Avian_Blasters.model.position import Position

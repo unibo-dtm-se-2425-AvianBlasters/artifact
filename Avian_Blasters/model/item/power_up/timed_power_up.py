@@ -1,5 +1,4 @@
 from abc import abstractmethod
-import pygame
 from Avian_Blasters.model.character.player.player import Player
 from Avian_Blasters.model.entity import Entity
 from Avian_Blasters.model.item.item_impl import DEFAULT_DELTA

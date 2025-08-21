@@ -1,5 +1,4 @@
 from Avian_Blasters.model.entity import Entity
-from Avian_Blasters.model.item.item import Direction
 from Avian_Blasters.model.item.item_impl import DEFAULT_DELTA
 from Avian_Blasters.model.item.projectile.projectile import Projectile, ProjectileType
 from Avian_Blasters.model.item.projectile.projectile_impl import ProjectileImpl

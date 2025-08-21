@@ -1,7 +1,6 @@
 import pygame
 from Avian_Blasters.model.character.general_attack_handler_impl import GeneralAttackHandlerImpl
 from Avian_Blasters.model.entity import Entity
-from Avian_Blasters.model.item.item import Direction
 from Avian_Blasters.model.item.projectile.projectile import ProjectileType
 from Avian_Blasters.model.item.projectile.projectile_factory import ProjectileFactory
 
