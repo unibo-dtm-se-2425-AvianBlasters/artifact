@@ -35,3 +35,12 @@ class Entity():
     def is_touched(self, other : "Entity") -> bool:
         """Checks whether an Entity is touching another"""
         ...
+    
+    @property
+    def delta(self) -> int:
+        """Gives access to the movement delta property of the Entity"""
+        ...
+    
+    @delta.setter
+    def delta(self, new_delta : int):
+        ...

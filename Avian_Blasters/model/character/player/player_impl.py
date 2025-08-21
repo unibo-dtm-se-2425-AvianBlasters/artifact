@@ -28,6 +28,7 @@ class PlayerImpl(CharacterImpl, Player):
         self._attack_handler = PlayerAttackHandler(ProjectileFactory(), PlayerAttackHandler.PLAYER_PROJECTILE_SPEED, ProjectileType.NORMAL, )
         self._limit_r = limit_right
         self._limit_l = limit_left
+        self._default_speed = delta
 
     def get_power_up_handler(self) -> PowerUpHandler:
         return self._power_up_handler
@@ -37,13 +38,16 @@ class PlayerImpl(CharacterImpl, Player):
     
     def move(self, x : int):
         effective_movement = self.__effective_movement(x)
+        dx = 0
+        dy = 0
         if self.__can_move(effective_movement):
-            super().move(effective_movement, 0, self.get_area().width, self.get_area().height)
+            dx = effective_movement
         elif effective_movement > 0:
-            super().move((self._limit_r - self.get_area().get_position_x)/self._delta, 0, self.get_area().width, self.get_area().height)
+            dx = (self._limit_r - self.get_area().get_position_x)/self._delta
         elif effective_movement < 0:
-            super().move((self._limit_l - self.get_area().get_position_x)/self._delta, 0, self.get_area().width, self.get_area().height)
-    
+            dx = (self._limit_l - self.get_area().get_position_x)/self._delta
+        super().move(dx, dy, self.get_area().width, self.get_area().height)
+
     def __can_move(self, x : int) -> bool:
         if x > 0:
             return self._limit_r > (x * self._delta + self.get_area().get_position_x + self.get_area().width/2)
@@ -63,6 +67,7 @@ class PlayerImpl(CharacterImpl, Player):
         return self._score
     
     def is_touched(self, others: list[Entity]) -> bool:
+        self.__update()
         if self._status_handler.status != PlayerStatus.Status.INVULNERABLE:
             for i in others:
                 if i.get_type == Entity.TypeArea.ENEMY or i.get_type == Entity.TypeArea.ENEMY_PROJECTILE:
@@ -87,3 +92,10 @@ class PlayerImpl(CharacterImpl, Player):
     
     def shoot(self) -> list[Projectile]:
         return self._attack_handler.try_attack(self)
+    
+    def __update(self):
+        if self.get_status().status == PlayerStatus.Status.SLOWED and self._delta != self._default_speed/2:
+            self.delta = int (self._default_speed/2)
+        elif self.get_status().status != PlayerStatus.Status.SLOWED and self._delta == self._default_speed/2:
+            self.delta = self._default_speed
+        
