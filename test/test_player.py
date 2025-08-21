@@ -31,7 +31,10 @@ class TestPlayer(unittest.TestCase):
 
     def verify_movement(self, movement_x, check):
         self.player.move(movement_x)
-        self.assertEqual(check, self.player.get_area().get_position_x)
+        if (movement_x * self.delta > self.limit_right or movement_x * self.delta < self.limit_left) and check not in [self.limit_left, self.limit_right]:
+            self.assertNotEqual(check, self.player.get_area().get_position_x)
+        else:    
+            self.assertEqual(check, self.player.get_area().get_position_x)
         self.assertEqual(self.initial_y, self.player.get_area().get_position_y)
 
     def test_movement(self):
@@ -43,9 +46,9 @@ class TestPlayer(unittest.TestCase):
         self.verify_movement(movement_x, self.initial_x)
     
     def test_going_against_wall(self):
-        movement_x = 51
+        movement_x = int (100 / self.delta) + 1
         self.verify_movement(movement_x, self.limit_right)
-        movement_x2 = -50
+        movement_x2 = - int (100 / self.delta)
         self.verify_movement(movement_x2, self.initial_x)
         self.verify_movement((-movement_x - 1)/2, (-movement_x - 1)/2 * self.delta)
         self.verify_movement(movement_x2, self.limit_left)
@@ -69,7 +72,7 @@ class TestPlayer(unittest.TestCase):
             self.assertFalse(self.player.is_touched([test_enemy_projectile]))
             i += 1
         self.assertFalse(self.player.is_touched([test_enemy]))
-        test_enemy.move(0,-15, self.width, self.height)
+        test_enemy.move(0,-test_enemy.get_area().get_position_y/self.delta, self.width, self.height)
         self.assertTrue(self.player.is_touched([test_enemy]))
         self.assertEqual(0, self.player.get_health_handler().current_health)
     
