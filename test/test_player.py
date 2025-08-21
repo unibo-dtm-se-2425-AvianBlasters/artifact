@@ -93,20 +93,20 @@ class TestPlayer(unittest.TestCase):
         
 class TestPlayerStatusHandler(unittest.TestCase):
     def setUp(self):
-        self.health_handler = PlayerStatusImpl(PlayerStatus.Status.NORMAL)
+        self.status_handler = PlayerStatusImpl(PlayerStatus.Status.NORMAL)
 
     def test_set_up(self):
-        self.assertEqual(PlayerStatus.Status.NORMAL, self.health_handler.status)
+        self.assertEqual(PlayerStatus.Status.NORMAL, self.status_handler.status)
 
     def test_invulnerability(self):
         cooldown = 15
-        self.health_handler.invincibility(cooldown)
+        self.status_handler.invincibility(cooldown)
         i = 0
         while (i < cooldown):
-            self.assertEqual(PlayerStatus.Status.INVULNERABLE, self.health_handler.status)
-            self.health_handler.update()
+            self.assertEqual(PlayerStatus.Status.INVULNERABLE, self.status_handler.status)
+            self.status_handler.update()
             i += 1
-        self.assertEqual(PlayerStatus.Status.NORMAL, self.health_handler.status)
+        self.assertEqual(PlayerStatus.Status.NORMAL, self.status_handler.status)
 
     def test_slowing_effect(self):
         """Test that the slowing effect from bat sound waves works correctly"""
@@ -130,6 +130,20 @@ class TestPlayerStatusHandler(unittest.TestCase):
         # After 10 updates, should be back to normal
         status_handler.update()
         self.assertEqual(PlayerStatus.Status.NORMAL, status_handler.status)
+
+    def test_change(self):
+        cooldown = 15
+        self.status_handler.slow_down(cooldown)
+        self.assertEqual(PlayerStatus.Status.SLOWED, self.status_handler.status)
+        self.status_handler.invincibility(cooldown)
+        self.assertEqual(PlayerStatus.Status.INVULNERABLE, self.status_handler.status)
+        i = 0
+        while (i < cooldown):
+            self.status_handler.slow_down(cooldown)
+            self.assertEqual(PlayerStatus.Status.INVULNERABLE, self.status_handler.status)
+            self.status_handler.update()
+            i += 1
+        self.assertEqual(PlayerStatus.Status.NORMAL, self.status_handler.status)
 
 
 class TestScore(unittest.TestCase):
