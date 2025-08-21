@@ -32,7 +32,7 @@ class Area:
     def height(self, new_height : int):
         ...
     
-    def overlap(self, other) -> bool:
+    def overlap(self, other : "Area") -> bool:
         """Checks whether another area is overlapping with
         the one that is calling this method"""
         ...
