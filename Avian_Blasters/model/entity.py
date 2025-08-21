@@ -32,6 +32,6 @@ class Entity():
     #def move(self, movement_x : int, movement_y : int):
     #    ...
 
-    def is_touched(self, other) -> bool:
+    def is_touched(self, other : "Entity") -> bool:
         """Checks whether an Entity is touching another"""
         ...

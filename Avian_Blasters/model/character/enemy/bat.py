@@ -1,13 +1,16 @@
 from typing import Optional
 
-from enemy_impl import EnemyImpl
-from attack_handler_impl import BatAttackHandler
+from Avian_Blasters.model.character.enemy.enemy_impl import EnemyImpl
+from Avian_Blasters.model.character.enemy.attack_handler_impl import BatAttackHandler
+from Avian_Blasters.model.item.projectile.projectile_factory import ProjectileFactory
 
 
 class Bat(EnemyImpl):
 
+    """ Bat is an enemy that moves horizontally and attacks by firing sound waves. """
+
     def __init__(self, x: int, y: int, width: int, height: int, speed: int, health: int) -> None:
-        super().__init__(x, y, width, height, speed, health, attack_handler=BatAttackHandler())
+        super().__init__(x, y, width, height, speed, health, attack_handler=BatAttackHandler(ProjectileFactory()))
         self._target_x: Optional[int] = None
 
     def set_target_x(self, player_x: int) -> None:

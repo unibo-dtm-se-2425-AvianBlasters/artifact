@@ -9,6 +9,8 @@ class PlayerStatus:
         INVULNERABLE = 2
         """State the player is in after getting hit or after obtaining a certain
         power-up"""
+        SLOWED = 3
+        """State the player is in when affected by bat sound waves, reducing movement speed"""
     
     @property
     def status(self) -> Status:
@@ -21,6 +23,10 @@ class PlayerStatus:
     
     def invincibility(self, cooldown : int):
         """Change the status to invulnerable for a certain time (cooldown)"""
+        ...
+    
+    def slow_down(self, cooldown : int):
+        """Slow down the player for a certain time (cooldown) due to sound wave attack"""
         ...
     
     def update(self):

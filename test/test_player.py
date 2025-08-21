@@ -1,9 +1,8 @@
 import unittest
 from Avian_Blasters.model.character.player import *
 from Avian_Blasters.model.entity import Entity
+from Avian_Blasters.model.entity_impl import EntityImpl
 from Avian_Blasters.model.item.projectile.projectile import ProjectileType
-# from Avian_Blasters.model.item.projectile.projectile_impl import ProjectileImpl
-# from Avian_Blasters.model.item.item import Direction
 
 class TestPlayer(unittest.TestCase):
     initial_x = 0
@@ -61,15 +60,32 @@ class TestPlayer(unittest.TestCase):
         self.assertNotEqual(self.initial_score, self.player.get_score().score)
     
     def test_damage(self):
-        ...
+        test_enemy_projectile = EntityImpl(x=0, y=0, width=self.width, height=self.height, type=Entity.TypeArea.ENEMY_PROJECTILE, delta=self.delta)
+        test_enemy = EntityImpl(x=0, y=30, width=self.width, height=self.height, type=Entity.TypeArea.ENEMY, delta=self.delta)
+        self.assertTrue(self.player.is_touched([test_enemy_projectile]))
+        self.assertEqual(self.health - 1, self.player.get_health_handler().current_health)
+        i = 0
+        while (i<30):
+            self.assertFalse(self.player.is_touched([test_enemy_projectile]))
+            i += 1
+        self.assertFalse(self.player.is_touched([test_enemy]))
+        test_enemy.move(0,-15, self.width, self.height)
+        self.assertTrue(self.player.is_touched([test_enemy]))
+        self.assertEqual(0, self.player.get_health_handler().current_health)
     
     def test_shoot(self):
-        self.assertEqual(ProjectileType.NORMAL, self.player.shoot().projectile_type)
+        shots = self.player.shoot()
+        for i in shots:
+            self.assertEqual(ProjectileType.NORMAL, i.projectile_type)
         i=0
-        while (i < 15):
-            self.assertEqual(None, self.player.shoot())
+        while (i < 5):
+            shots = self.player.shoot()
+            for i in shots:
+                self.assertEqual(None, i)
             i += 1
-        self.assertEqual(ProjectileType.NORMAL, self.player.shoot().projectile_type)
+        shots = self.player.shoot()
+        for i in shots:
+            self.assertEqual(ProjectileType.NORMAL, i.projectile_type)
 
         
 class TestPlayerStatusHandler(unittest.TestCase):
@@ -88,6 +104,30 @@ class TestPlayerStatusHandler(unittest.TestCase):
             self.health_handler.update()
             i += 1
         self.assertEqual(PlayerStatus.Status.NORMAL, self.health_handler.status)
+
+    def test_slowing_effect(self):
+        """Test that the slowing effect from bat sound waves works correctly"""
+        from Avian_Blasters.model.character.player.player_status_handler import PlayerStatus
+        from Avian_Blasters.model.character.player.player_status_handler_impl import PlayerStatusImpl
+        
+        status_handler = PlayerStatusImpl(PlayerStatus.Status.NORMAL)
+        
+        # Initially should be normal
+        self.assertEqual(PlayerStatus.Status.NORMAL, status_handler.status)
+        
+        # Apply slowing effect
+        status_handler.slow_down(10)
+        self.assertEqual(PlayerStatus.Status.SLOWED, status_handler.status)
+        
+        # Update several times and check that it eventually goes back to normal
+        for _ in range(9):
+            status_handler.update()
+            self.assertEqual(PlayerStatus.Status.SLOWED, status_handler.status)
+        
+        # After 10 updates, should be back to normal
+        status_handler.update()
+        self.assertEqual(PlayerStatus.Status.NORMAL, status_handler.status)
+
 
 class TestScore(unittest.TestCase):
     def setUp(self):

@@ -1,11 +1,12 @@
 import math
 
-from enemy_impl import EnemyImpl
-from attack_handler_impl import BirdAttackHandler
+from Avian_Blasters.model.character.enemy.enemy_impl import EnemyImpl
+from Avian_Blasters.model.character.enemy.attack_handler_impl import BirdAttackHandler
+from Avian_Blasters.model.item.projectile.projectile_factory import ProjectileFactory
 
 
 class Bird(EnemyImpl):
-
+    """ Bird is an enemy that moves in a wave-like pattern and drops bullets downward. """
     def __init__(
         self,
         x: int,
@@ -17,7 +18,7 @@ class Bird(EnemyImpl):
         wave_amplitude: int = 20,
         wave_frequency: float = 0.15,
     ) -> None:
-        super().__init__(x, y, width, height, speed, health, attack_handler=BirdAttackHandler())
+        super().__init__(x, y, width, height, speed, health, attack_handler=BirdAttackHandler(ProjectileFactory()))
         self._base_x = x
         self._wave_amplitude = max(0, wave_amplitude)
         self._wave_frequency = max(0.0, wave_frequency)

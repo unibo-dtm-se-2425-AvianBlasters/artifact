@@ -1,15 +1,16 @@
 from typing import Optional
 
-from enemy import Enemy
+from Avian_Blasters.model.character.enemy.enemy import Enemy
 from Avian_Blasters.model.character.health_handler import HealthHandler
 from Avian_Blasters.model.character.health_handler_impl import HealthHandlerImpl
-from attack_handler import AttackHandler
-from attack_handler_impl import AttackHandlerImpl
-from item.projectile.projectile import Projectile
+from Avian_Blasters.model.character.general_attack_handler import GeneralAttackHandler
+from Avian_Blasters.model.character.enemy.attack_handler_impl import EnemyAttackHandler
+from Avian_Blasters.model.item.projectile.projectile import Projectile
+from Avian_Blasters.model.item.projectile.projectile_factory import ProjectileFactory
 
 
 class EnemyImpl(Enemy):
-
+    """ Base class for all enemies in the game. It provides basic movement, attack, and health handling. """
     def __init__(
         self,
         x: int,
@@ -18,7 +19,7 @@ class EnemyImpl(Enemy):
         height: int,
         speed: int,
         max_health: int,
-        attack_handler: Optional[AttackHandler] = None,
+        attack_handler: Optional[GeneralAttackHandler] = None,
         health_handler: Optional[HealthHandler] = None,
     ) -> None:
         self._x = x
@@ -29,11 +30,11 @@ class EnemyImpl(Enemy):
         self._health_handler: HealthHandler = health_handler or HealthHandlerImpl(
             max_health
         )
-        self._attack_handler: AttackHandler = attack_handler or AttackHandlerImpl()
+        self._attack_handler: GeneralAttackHandler = attack_handler or EnemyAttackHandler(ProjectileFactory())
 
     @property
     def x(self) -> int:
-        return self._x
+        return self._x  
 
     @property
     def y(self) -> int:
@@ -51,7 +52,8 @@ class EnemyImpl(Enemy):
         self._y += self._speed
 
     def attack(self) -> Optional[Projectile]:
-        return self._attack_handler.try_attack(self)
+        projectiles = self._attack_handler.try_attack(self)
+        return projectiles[0] if projectiles else None
 
     def take_damage(self, damage: int) -> None:
         self._health_handler.take_damage(damage)
@@ -65,3 +67,7 @@ class EnemyImpl(Enemy):
 
     def shoot(self) -> Optional[Projectile]:
         return self.attack()
+
+    def shoot_all(self) -> list[Projectile]:
+        """New method that returns all projectiles from an attack"""
+        return self._attack_handler.try_attack(self)

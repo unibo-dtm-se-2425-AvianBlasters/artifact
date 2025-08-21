@@ -2,6 +2,8 @@ from Avian_Blasters.model.character.health_handler import HealthHandler
 
 
 class HealthHandlerImpl(HealthHandler):
+    """ This class represents Health of the character, 
+        managing current health, maximum health, and damage handling. """
     def __init__(self, max_health: int) -> None:
         if max_health <= 0:
             raise ValueError("max_health must be positive")

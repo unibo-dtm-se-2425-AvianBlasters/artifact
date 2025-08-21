@@ -1,9 +1,8 @@
 from abc import ABC, abstractmethod
 from typing import Optional
 
-
-from character import Character
-from item.projectile.projectile import Projectile
+from Avian_Blasters.model.character.character import Character
+from Avian_Blasters.model.item.projectile.projectile import Projectile
 
 
 class Enemy(Character, ABC):

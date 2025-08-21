@@ -26,5 +26,5 @@ class EntityImpl(Entity):
     # def move(self, movement_x : int, movement_y : int):
     #    self.move(self, movement_x * self._delta, movement_y * self._delta, self._area.get_width, self._area.get_height)
     
-    def is_touched(self, other) -> bool:
-        return self._area.overlap(other)
+    def is_touched(self, other : Entity) -> bool:
+        return self._area.overlap(other.get_area())

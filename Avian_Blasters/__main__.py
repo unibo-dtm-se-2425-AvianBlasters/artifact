@@ -1,7 +1,16 @@
-import Avian_Blasters
+from Avian_Blasters.controller.game_controller_impl import GameControllerImpl
 
-# this is the main module of your app
-# it is only required if your project must be runnable
-# this is the script to be executed whenever some users writes `python -m Avian_Blasters` on the command line, eg.
-x = Avian_Blasters.MyClass().my_method()
-print(x)
+def main():
+    """Main entry point for Avian Blasters game"""
+    game_controller = GameControllerImpl()
+    
+    if game_controller.initialize():
+        game_controller.run()
+    else:
+        print("Failed to initialize game. Please check your pygame installation.")
+
+if __name__ == "__main__":
+    main()
+else:
+    # For compatibility with python -m Avian_Blasters
+    main()
