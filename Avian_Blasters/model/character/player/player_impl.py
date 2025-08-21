@@ -23,7 +23,6 @@ class PlayerImpl(CharacterImpl, Player):
     def __init__(self, x : int, y : int, width : int, height : int, delta : int, health : int, initial_score : int, initial_multiplier : int, limit_right : int, limit_left : int):
         super().__init__(x, y, width, height, Entity.TypeArea.PLAYER, delta, health)
         self._power_up_handler = PowerUpHandlerImpl(None)
-        self._attack_handler = PlayerAttackHandler(ProjectileFactory(), 3, ProjectileType.NORMAL, ) # Needs a projectile factory
         self._score = ScoreImpl(initial_score, initial_multiplier)
         self._status_handler = PlayerStatusImpl(PlayerStatus.Status.NORMAL)
         self._attack_handler = PlayerAttackHandler(ProjectileFactory(), PlayerAttackHandler.PLAYER_PROJECTILE_SPEED, ProjectileType.NORMAL, )
@@ -51,7 +50,7 @@ class PlayerImpl(CharacterImpl, Player):
             super().move((self._limit_l - self.get_area().get_position_x)//self._delta, 0, self.get_area().width, self.get_area().height)
     
     def __can_move(self, x : int) -> bool:
-        return abs(self._limit_r) > abs(x * self._delta + self.get_area().get_position_x + self.get_area().width/2) and abs(self._limit_l) > abs(x * self._delta + self.get_area().get_position_x - self.get_area().width/2)
+        return self._limit_r > (x * self._delta + self.get_area().get_position_x + self.get_area().width/2) and self._limit_l < (x * self._delta + self.get_area().get_position_x - self.get_area().width/2)
         #(abs(x*self._delta) <= abs(self._limit_r - self.get_area().get_width/2 - self.get_area().get_position_x) and abs(x*self._delta) <= abs(self._limit_l - self.get_area().get_width/2) - self.get_area().get_position_x)        
                 
     def get_score(self) -> Score:
