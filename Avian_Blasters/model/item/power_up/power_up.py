@@ -11,6 +11,7 @@ class PowerUpType(Enum):
     DOUBLE_FIRE = 1
     LASER = 2
     INVULNERABILITY = 3
+    HEALTH_RECOVERY = 4
 
 class PowerUp(ItemImpl):
 

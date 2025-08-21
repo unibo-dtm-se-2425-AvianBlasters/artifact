@@ -7,13 +7,10 @@ from Avian_Blasters.model.item.projectile.projectile_impl import ProjectileImpl
 
 class ProjectileFactory:
 
-    def create_projectile(self, projectile_type: ProjectileType, x: int, y: int, direction: Direction, width: int , height: int, type_area: Entity.TypeArea, delta: int = DEFAULT_DELTA):
+    def create_projectile(self, projectile_type: ProjectileType, x: int, y: int, width: int , height: int, type_area: Entity.TypeArea, delta: int = DEFAULT_DELTA):
         
         if not isinstance(type_area, Entity.TypeArea):
             raise ValueError("Invalid type area")
-        
-        if not isinstance(direction, Direction):
-            raise ValueError("Invalid direction")
 
         if not isinstance(projectile_type, ProjectileType):
             raise ValueError("Invalid projectile type")
@@ -21,4 +18,4 @@ class ProjectileFactory:
         if width <= 0 or height <= 0:
             raise ValueError("Width and height must be positive integers")
         
-        return ProjectileImpl(x, y, width, height, type_area, projectile_type, direction, delta)
+        return ProjectileImpl(x, y, width, height, type_area, projectile_type, delta)

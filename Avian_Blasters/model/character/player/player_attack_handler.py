@@ -53,7 +53,6 @@ class PlayerAttackHandler(GeneralAttackHandlerImpl):
                 projectile_type=self._projectile_type,
                 x=projectile_x,
                 y=player_center_y,
-                direction=Direction.UP,
                 width=PLAYER_PROJECTILE_WIDTH, 
                 height=PLAYER_PROJECTILE_HEIGHT,
                 type_area=Entity.TypeArea.PLAYER_PROJECTILE,
