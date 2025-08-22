@@ -1,3 +1,4 @@
+from Avian_Blasters.model.entity import Entity
 from Avian_Blasters.model.character.character import Character
 from Avian_Blasters.model.character.health_handler import HealthHandler
 from Avian_Blasters.model.character.player.player_attack_handler import PlayerAttackHandler
@@ -33,4 +34,10 @@ class Player(Character):
         """This method is used to move the player character.
         As the Player can only move from left to right, only the
         variation of its position on the x axis has to be set"""
+        ...
+    
+    def is_touched(self, others : list[Entity]) -> bool:
+        """Checks if Player is touching other entities and
+        handles damage/status changes related to the
+        interactions with enemies and enemy projectiles"""
         ...
