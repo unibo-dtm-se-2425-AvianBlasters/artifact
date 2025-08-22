@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from Avian_Blasters.model.entity import Entity
 from Avian_Blasters.model.item.power_up.power_up import PowerUpType
 from Avian_Blasters.model.item.power_up.power_up_impl import PowerUpImpl
