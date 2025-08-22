@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from Avian_Blasters.model.area import Area
 from Avian_Blasters.model.character.player.player import Player
 from Avian_Blasters.model.entity import Entity
