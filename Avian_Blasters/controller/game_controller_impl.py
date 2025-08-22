@@ -54,7 +54,8 @@ class GameControllerImpl(GameController):
                 initial_score=0,
                 initial_multiplier=1,
                 limit_right=115,  # Near right edge
-                limit_left=5     # Near left edge
+                limit_left=5,     # Near left edge
+                fps = TARGET_FPS
             )
             
             # Create enemies in formation (like Space Invaders)
