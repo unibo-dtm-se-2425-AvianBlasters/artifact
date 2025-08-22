@@ -15,12 +15,13 @@ class TestPlayer(unittest.TestCase):
     initial_multiplier = 1
     limit_right = 100
     limit_left = -100
+    fps = 60
 
     def setUp(self):
         self.player = PlayerImpl(self.initial_x, self.initial_y,
                                 self.width, self.width,self.delta,
                                 self.health,self.initial_score, self.initial_multiplier, 
-                                self.limit_right, self.limit_left)
+                                self.limit_right, self.limit_left, self.fps)
     
     def test_inital_status(self):
         self.assertEqual(self.health, self.player.get_health_handler().current_health)
@@ -63,12 +64,12 @@ class TestPlayer(unittest.TestCase):
         self.assertNotEqual(self.initial_score, self.player.get_score().score)
     
     def test_damage(self):
-        test_enemy_projectile = EntityImpl(x=0, y=0, width=self.width, height=self.height, type=Entity.TypeArea.ENEMY_PROJECTILE, delta=self.delta)
-        test_enemy = EntityImpl(x=0, y=30, width=self.width, height=self.height, type=Entity.TypeArea.ENEMY, delta=self.delta)
+        test_enemy_projectile = EntityImpl(x = 0, y = 0, width = self.width, height = self.height, type = Entity.TypeArea.ENEMY_PROJECTILE, delta = self.delta)
+        test_enemy = EntityImpl(x = 0, y = 30, width = self.width, height = self.height, type = Entity.TypeArea.ENEMY, delta = self.delta)
         self.assertTrue(self.player.is_touched([test_enemy_projectile]))
         self.assertEqual(self.health - 1, self.player.get_health_handler().current_health)
         i = 0
-        while (i<30):
+        while (i < 5 * self.fps):
             self.assertFalse(self.player.is_touched([test_enemy_projectile]))
             i += 1
         self.assertFalse(self.player.is_touched([test_enemy]))
@@ -108,31 +109,22 @@ class TestPlayerStatusHandler(unittest.TestCase):
             i += 1
         self.assertEqual(PlayerStatus.Status.NORMAL, self.status_handler.status)
 
-    def test_slowing_effect(self):
-        """Test that the slowing effect from bat sound waves works correctly"""
-        from Avian_Blasters.model.character.player.player_status_handler import PlayerStatus
-        from Avian_Blasters.model.character.player.player_status_handler_impl import PlayerStatusImpl
-        
-        status_handler = PlayerStatusImpl(PlayerStatus.Status.NORMAL)
-        
-        # Initially should be normal
-        self.assertEqual(PlayerStatus.Status.NORMAL, status_handler.status)
-        
+    def test_slowing_effect(self):      
         # Apply slowing effect
-        status_handler.slow_down(10)
-        self.assertEqual(PlayerStatus.Status.SLOWED, status_handler.status)
+        self.status_handler.slow_down(10)
+        self.assertEqual(PlayerStatus.Status.SLOWED, self.status_handler.status)
         
         # Update several times and check that it eventually goes back to normal
         for _ in range(9):
-            status_handler.update()
-            self.assertEqual(PlayerStatus.Status.SLOWED, status_handler.status)
+            self.status_handler.update()
+            self.assertEqual(PlayerStatus.Status.SLOWED, self.status_handler.status)
         
         # After 10 updates, should be back to normal
-        status_handler.update()
-        self.assertEqual(PlayerStatus.Status.NORMAL, status_handler.status)
+        self.status_handler.update()
+        self.assertEqual(PlayerStatus.Status.NORMAL, self.status_handler.status)
 
     def test_change(self):
-        cooldown = 15
+        cooldown = 5
         self.status_handler.slow_down(cooldown)
         self.assertEqual(PlayerStatus.Status.SLOWED, self.status_handler.status)
         self.status_handler.invincibility(cooldown)

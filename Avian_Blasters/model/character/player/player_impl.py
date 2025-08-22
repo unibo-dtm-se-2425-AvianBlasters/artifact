@@ -14,13 +14,13 @@ from Avian_Blasters.model.item.projectile.projectile import Projectile
 from Avian_Blasters.model.item.projectile.projectile import ProjectileType
 from Avian_Blasters.model.item.projectile.projectile_factory import ProjectileFactory
 
-DEFAULT_COOLDOWN = 30
+DEFAULT_COOLDOWN = 5
 
 class PlayerImpl(CharacterImpl, Player):
     """PlayerImpl is an implementation of Player that takes advantage of
     the implementations present in CharacterImpl"""
     
-    def __init__(self, x : int, y : int, width : int, height : int, delta : int, health : int, initial_score : int, initial_multiplier : int, limit_right : int, limit_left : int):
+    def __init__(self, x : int, y : int, width : int, height : int, delta : int, health : int, initial_score : int, initial_multiplier : int, limit_right : int, limit_left : int, fps : int):
         super().__init__(x, y, width, height, Entity.TypeArea.PLAYER, delta, health)
         self._power_up_handler = PowerUpHandlerImpl(None)
         self._score = ScoreImpl(initial_score, initial_multiplier)
@@ -29,6 +29,7 @@ class PlayerImpl(CharacterImpl, Player):
         self._limit_r = limit_right
         self._limit_l = limit_left
         self._default_speed = delta
+        self._fps = fps
 
     def get_power_up_handler(self) -> PowerUpHandler:
         return self._power_up_handler
@@ -43,16 +44,16 @@ class PlayerImpl(CharacterImpl, Player):
         if self.__can_move(effective_movement):
             dx = effective_movement
         elif effective_movement > 0:
-            dx = (self._limit_r - self.get_area().get_position_x)/self._delta
+            dx = (self._limit_r - self.get_area().get_position_x) / self._delta
         elif effective_movement < 0:
-            dx = (self._limit_l - self.get_area().get_position_x)/self._delta
+            dx = (self._limit_l - self.get_area().get_position_x) / self._delta
         super().move(dx, dy, self.get_area().width, self.get_area().height)
 
     def __can_move(self, x : int) -> bool:
         if x > 0:
-            return self._limit_r > (x * self._delta + self.get_area().get_position_x + self.get_area().width/2)
+            return self._limit_r > (x * self._delta + self.get_area().get_position_x + self.get_area().width / 2)
         elif x < 0:
-            return self._limit_l < (x * self._delta + self.get_area().get_position_x - self.get_area().width/2)
+            return self._limit_l < (x * self._delta + self.get_area().get_position_x - self.get_area().width / 2)
         return True
 
     def __effective_movement(self, x : int) -> int:
@@ -75,13 +76,13 @@ class PlayerImpl(CharacterImpl, Player):
                         # Check if it's a sound wave projectile from bats
                         if hasattr(i, 'projectile_type') and i.projectile_type == ProjectileType.SOUND_WAVE:
                             # Sound waves don't deal damage but slow the player
-                            self._status_handler.slow_down(45)  # Slow for 45 steps
+                            self._status_handler.slow_down(DEFAULT_COOLDOWN * self._fps)
                         else:
                             # Regular damage from enemies or normal projectiles
                             damage = 3 if i.get_type == Entity.TypeArea.ENEMY else 1
                             self.get_health_handler().take_damage(damage)
                             if self.get_health_handler().current_health > 0:
-                                self._status_handler.invincibility(DEFAULT_COOLDOWN)
+                                self._status_handler.invincibility(DEFAULT_COOLDOWN * self._fps)
                         return True
         else:
             self._status_handler.update()
