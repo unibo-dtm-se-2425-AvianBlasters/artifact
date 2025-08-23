@@ -4,7 +4,7 @@ from Avian_Blasters.model.entity import Entity
 from Avian_Blasters.model.item.projectile.projectile import ProjectileType
 from Avian_Blasters.model.item.projectile.projectile_factory import ProjectileFactory
 
-PLAYER_COOLDOWN_STEPS = 5
+PLAYER_COOLDOWN_STEPS = 2
 PLAYER_PROJECTILE_WIDTH = 5
 PLAYER_PROJECTILE_HEIGHT = 5
 

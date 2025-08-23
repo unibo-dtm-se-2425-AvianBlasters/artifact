@@ -4,6 +4,7 @@ from typing import List
 from Avian_Blasters.controller.game_controller import GameController
 from Avian_Blasters.controller.input_handler import InputHandler
 from Avian_Blasters.controller.input_handler_impl import InputHandlerImpl
+from Avian_Blasters.model.item.projectile.projectile import Projectile, ProjectileType
 from Avian_Blasters.view.game_view import GameView
 from Avian_Blasters.view.game_view_impl import GameViewImpl
 from Avian_Blasters.model.world import World
@@ -106,6 +107,28 @@ class GameControllerImpl(GameController):
             status_handler = self._player.get_status()
             if hasattr(status_handler, 'update'):
                 status_handler.update()
+        
+        self._update_projectiles()
+
+    def _update_projectiles(self) -> None:
+        """Update the positions of all projectiles in the world"""
+        if not self._world:
+            return
+        
+        for projectile in self._world.get_projectiles():
+            if projectile.get_area().get_position_y + projectile.get_area().height < 0 or projectile.get_area().get_position_y > SCREEN_HEIGHT:
+                    projectile.destroy()
+            else:
+                if projectile.projectile_type == ProjectileType.NORMAL:
+                    if projectile.get_type == Entity.TypeArea.PLAYER_PROJECTILE:
+                        movement_y = -0.1
+                    else:
+                        movement_y = 0.1
+                else:
+                    movement_y = 0
+                projectile.move(0, movement_y, projectile.get_area().width, projectile.get_area().height)
+
+                
     
     def handle_input(self, actions: List[InputHandler.Action]) -> None:
         """Process input actions and update the game state accordingly"""
