@@ -3,7 +3,6 @@ from typing import Optional
 
 from Avian_Blasters.model.character.general_attack_handler_impl import GeneralAttackHandlerImpl
 from Avian_Blasters.model.entity import Entity
-from Avian_Blasters.model.item.item import Direction
 from Avian_Blasters.model.item.projectile.projectile import ProjectileType
 from Avian_Blasters.model.item.projectile.projectile_factory import ProjectileFactory
 
@@ -35,7 +34,6 @@ class EnemyAttackHandler(GeneralAttackHandlerImpl):
             projectile_type=self._projectile_type,
             x=enemy.x,
             y=enemy.y + max(1, enemy.height // 2),
-            direction=Direction.DOWN,
             width=5,
             height=5,
             type_area=Entity.TypeArea.ENEMY_PROJECTILE,

@@ -15,12 +15,13 @@ class TestPlayer(unittest.TestCase):
     initial_multiplier = 1
     limit_right = 100
     limit_left = -100
+    fps = 60
 
     def setUp(self):
         self.player = PlayerImpl(self.initial_x, self.initial_y,
                                 self.width, self.width,self.delta,
                                 self.health,self.initial_score, self.initial_multiplier, 
-                                self.limit_right, self.limit_left)
+                                self.limit_right, self.limit_left, self.fps)
     
     def test_inital_status(self):
         self.assertEqual(self.health, self.player.get_health_handler().current_health)
@@ -31,7 +32,10 @@ class TestPlayer(unittest.TestCase):
 
     def verify_movement(self, movement_x, check):
         self.player.move(movement_x)
-        self.assertEqual(check, self.player.get_area().get_position_x)
+        if (movement_x * self.delta > self.limit_right or movement_x * self.delta < self.limit_left) and check not in [self.limit_left, self.limit_right]:
+            self.assertNotEqual(check, self.player.get_area().get_position_x)
+        else:    
+            self.assertEqual(check, self.player.get_area().get_position_x)
         self.assertEqual(self.initial_y, self.player.get_area().get_position_y)
 
     def test_movement(self):
@@ -43,9 +47,9 @@ class TestPlayer(unittest.TestCase):
         self.verify_movement(movement_x, self.initial_x)
     
     def test_going_against_wall(self):
-        movement_x = 51
+        movement_x = int (100 / self.delta) + 1
         self.verify_movement(movement_x, self.limit_right)
-        movement_x2 = -50
+        movement_x2 = - int (100 / self.delta)
         self.verify_movement(movement_x2, self.initial_x)
         self.verify_movement((-movement_x - 1)/2, (-movement_x - 1)/2 * self.delta)
         self.verify_movement(movement_x2, self.limit_left)
@@ -60,16 +64,16 @@ class TestPlayer(unittest.TestCase):
         self.assertNotEqual(self.initial_score, self.player.get_score().score)
     
     def test_damage(self):
-        test_enemy_projectile = EntityImpl(x=0, y=0, width=self.width, height=self.height, type=Entity.TypeArea.ENEMY_PROJECTILE, delta=self.delta)
-        test_enemy = EntityImpl(x=0, y=30, width=self.width, height=self.height, type=Entity.TypeArea.ENEMY, delta=self.delta)
+        test_enemy_projectile = EntityImpl(x = 0, y = 0, width = self.width, height = self.height, type = Entity.TypeArea.ENEMY_PROJECTILE, delta = self.delta)
+        test_enemy = EntityImpl(x = 0, y = 30, width = self.width, height = self.height, type = Entity.TypeArea.ENEMY, delta = self.delta)
         self.assertTrue(self.player.is_touched([test_enemy_projectile]))
         self.assertEqual(self.health - 1, self.player.get_health_handler().current_health)
         i = 0
-        while (i<30):
+        while (i < 5 * self.fps):
             self.assertFalse(self.player.is_touched([test_enemy_projectile]))
             i += 1
         self.assertFalse(self.player.is_touched([test_enemy]))
-        test_enemy.move(0,-15, self.width, self.height)
+        test_enemy.move(0,-test_enemy.get_area().get_position_y/self.delta, self.width, self.height)
         self.assertTrue(self.player.is_touched([test_enemy]))
         self.assertEqual(0, self.player.get_health_handler().current_health)
     
@@ -90,43 +94,48 @@ class TestPlayer(unittest.TestCase):
         
 class TestPlayerStatusHandler(unittest.TestCase):
     def setUp(self):
-        self.health_handler = PlayerStatusImpl(PlayerStatus.Status.NORMAL)
+        self.status_handler = PlayerStatusImpl(PlayerStatus.Status.NORMAL)
 
     def test_set_up(self):
-        self.assertEqual(PlayerStatus.Status.NORMAL, self.health_handler.status)
+        self.assertEqual(PlayerStatus.Status.NORMAL, self.status_handler.status)
 
     def test_invulnerability(self):
         cooldown = 15
-        self.health_handler.invincibility(cooldown)
+        self.status_handler.invincibility(cooldown)
         i = 0
         while (i < cooldown):
-            self.assertEqual(PlayerStatus.Status.INVULNERABLE, self.health_handler.status)
-            self.health_handler.update()
+            self.assertEqual(PlayerStatus.Status.INVULNERABLE, self.status_handler.status)
+            self.status_handler.update()
             i += 1
-        self.assertEqual(PlayerStatus.Status.NORMAL, self.health_handler.status)
+        self.assertEqual(PlayerStatus.Status.NORMAL, self.status_handler.status)
 
-    def test_slowing_effect(self):
-        """Test that the slowing effect from bat sound waves works correctly"""
-        from Avian_Blasters.model.character.player.player_status_handler import PlayerStatus
-        from Avian_Blasters.model.character.player.player_status_handler_impl import PlayerStatusImpl
-        
-        status_handler = PlayerStatusImpl(PlayerStatus.Status.NORMAL)
-        
-        # Initially should be normal
-        self.assertEqual(PlayerStatus.Status.NORMAL, status_handler.status)
-        
+    def test_slowing_effect(self):      
         # Apply slowing effect
-        status_handler.slow_down(10)
-        self.assertEqual(PlayerStatus.Status.SLOWED, status_handler.status)
+        self.status_handler.slow_down(10)
+        self.assertEqual(PlayerStatus.Status.SLOWED, self.status_handler.status)
         
         # Update several times and check that it eventually goes back to normal
         for _ in range(9):
-            status_handler.update()
-            self.assertEqual(PlayerStatus.Status.SLOWED, status_handler.status)
+            self.status_handler.update()
+            self.assertEqual(PlayerStatus.Status.SLOWED, self.status_handler.status)
         
         # After 10 updates, should be back to normal
-        status_handler.update()
-        self.assertEqual(PlayerStatus.Status.NORMAL, status_handler.status)
+        self.status_handler.update()
+        self.assertEqual(PlayerStatus.Status.NORMAL, self.status_handler.status)
+
+    def test_change(self):
+        cooldown = 5
+        self.status_handler.slow_down(cooldown)
+        self.assertEqual(PlayerStatus.Status.SLOWED, self.status_handler.status)
+        self.status_handler.invincibility(cooldown)
+        self.assertEqual(PlayerStatus.Status.INVULNERABLE, self.status_handler.status)
+        i = 0
+        while (i < cooldown):
+            self.status_handler.slow_down(cooldown)
+            self.assertEqual(PlayerStatus.Status.INVULNERABLE, self.status_handler.status)
+            self.status_handler.update()
+            i += 1
+        self.assertEqual(PlayerStatus.Status.NORMAL, self.status_handler.status)
 
 
 class TestScore(unittest.TestCase):

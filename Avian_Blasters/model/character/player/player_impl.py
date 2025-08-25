@@ -14,13 +14,13 @@ from Avian_Blasters.model.item.projectile.projectile import Projectile
 from Avian_Blasters.model.item.projectile.projectile import ProjectileType
 from Avian_Blasters.model.item.projectile.projectile_factory import ProjectileFactory
 
-DEFAULT_COOLDOWN = 30
+DEFAULT_COOLDOWN = 5
 
 class PlayerImpl(CharacterImpl, Player):
     """PlayerImpl is an implementation of Player that takes advantage of
     the implementations present in CharacterImpl"""
     
-    def __init__(self, x : int, y : int, width : int, height : int, delta : int, health : int, initial_score : int, initial_multiplier : int, limit_right : int, limit_left : int):
+    def __init__(self, x : int, y : int, width : int, height : int, delta : int, health : int, initial_score : int, initial_multiplier : int, limit_right : int, limit_left : int, fps : int):
         super().__init__(x, y, width, height, Entity.TypeArea.PLAYER, delta, health)
         self._power_up_handler = PowerUpHandlerImpl(None)
         self._score = ScoreImpl(initial_score, initial_multiplier)
@@ -28,6 +28,8 @@ class PlayerImpl(CharacterImpl, Player):
         self._attack_handler = PlayerAttackHandler(ProjectileFactory(), PlayerAttackHandler.PLAYER_PROJECTILE_SPEED, ProjectileType.NORMAL, )
         self._limit_r = limit_right
         self._limit_l = limit_left
+        self._default_speed = delta
+        self._fps = fps
 
     def get_power_up_handler(self) -> PowerUpHandler:
         return self._power_up_handler
@@ -37,17 +39,22 @@ class PlayerImpl(CharacterImpl, Player):
     
     def move(self, x : int):
         effective_movement = self.__effective_movement(x)
-        
+        dx = 0
+        dy = 0
         if self.__can_move(effective_movement):
-            super().move(effective_movement, 0, self.get_area().width, self.get_area().height)
-        elif effective_movement>=0:
-            super().move((self._limit_r - self.get_area().get_position_x)//self._delta, 0, self.get_area().width, self.get_area().height)
-        else:
-            super().move((self._limit_l - self.get_area().get_position_x)//self._delta, 0, self.get_area().width, self.get_area().height)
-    
+            dx = effective_movement
+        elif effective_movement > 0:
+            dx = (self._limit_r - self.get_area().get_position_x) / self._delta
+        elif effective_movement < 0:
+            dx = (self._limit_l - self.get_area().get_position_x) / self._delta
+        super().move(dx, dy, self.get_area().width, self.get_area().height)
+
     def __can_move(self, x : int) -> bool:
-        return self._limit_r > (x * self._delta + self.get_area().get_position_x + self.get_area().width/2) and self._limit_l < (x * self._delta + self.get_area().get_position_x - self.get_area().width/2)
-        #(abs(x*self._delta) <= abs(self._limit_r - self.get_area().get_width/2 - self.get_area().get_position_x) and abs(x*self._delta) <= abs(self._limit_l - self.get_area().get_width/2) - self.get_area().get_position_x)
+        if x > 0:
+            return self._limit_r > (x * self._delta + self.get_area().get_position_x + self.get_area().width / 2)
+        elif x < 0:
+            return self._limit_l < (x * self._delta + self.get_area().get_position_x - self.get_area().width / 2)
+        return True
 
     def __effective_movement(self, x : int) -> int:
         # Apply movement reduction if player is slowed by bat sound waves
@@ -61,6 +68,7 @@ class PlayerImpl(CharacterImpl, Player):
         return self._score
     
     def is_touched(self, others: list[Entity]) -> bool:
+        self.__update()
         if self._status_handler.status != PlayerStatus.Status.INVULNERABLE:
             for i in others:
                 if i.get_type == Entity.TypeArea.ENEMY or i.get_type == Entity.TypeArea.ENEMY_PROJECTILE:
@@ -68,17 +76,16 @@ class PlayerImpl(CharacterImpl, Player):
                         # Check if it's a sound wave projectile from bats
                         if hasattr(i, 'projectile_type') and i.projectile_type == ProjectileType.SOUND_WAVE:
                             # Sound waves don't deal damage but slow the player
-                            self._status_handler.slow_down(45)  # Slow for 45 steps
+                            self._status_handler.slow_down(DEFAULT_COOLDOWN * self._fps)
                         else:
                             # Regular damage from enemies or normal projectiles
                             damage = 3 if i.get_type == Entity.TypeArea.ENEMY else 1
                             self.get_health_handler().take_damage(damage)
                             if self.get_health_handler().current_health > 0:
-                                self._status_handler.invincibility(DEFAULT_COOLDOWN)
+                                self._status_handler.invincibility(DEFAULT_COOLDOWN * self._fps)
                         return True
         else:
             self._status_handler.update()
-            return False
         return False
 
     def get_status(self) -> PlayerStatus:
@@ -86,3 +93,10 @@ class PlayerImpl(CharacterImpl, Player):
     
     def shoot(self) -> list[Projectile]:
         return self._attack_handler.try_attack(self)
+    
+    def __update(self):
+        if self.get_status().status == PlayerStatus.Status.SLOWED and self._delta != self._default_speed/2:
+            self.delta = int (self._default_speed/2)
+        elif self.get_status().status != PlayerStatus.Status.SLOWED and self._delta == self._default_speed/2:
+            self.delta = self._default_speed
+        

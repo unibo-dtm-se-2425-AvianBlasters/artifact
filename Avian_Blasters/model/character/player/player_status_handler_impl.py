@@ -15,22 +15,21 @@ class PlayerStatusImpl(PlayerStatus):
     def status(self, new_status : PlayerStatus.Status):
         self._status = new_status
     
-    def invincibility(self, cooldown):
-        if self._status != PlayerStatus.Status.INVULNERABLE:
-            self._status = PlayerStatus.Status.INVULNERABLE
-            self._cooldown = cooldown
+    def invincibility(self, cooldown : int):
+        self.__change_status(cooldown, PlayerStatus.Status.INVULNERABLE)
     
-    def slow_down(self, cooldown):
-        """Apply slowing effect from bat sound wave attack"""
-        if self._status == PlayerStatus.Status.NORMAL:
-            self._status = PlayerStatus.Status.SLOWED
-            self._cooldown = cooldown
-        elif self._status == PlayerStatus.Status.SLOWED:
-            # Extend the slowing effect if already slowed
-            self._cooldown = max(self._cooldown, cooldown)
+    def slow_down(self, cooldown : int):
+        self.__change_status(cooldown, PlayerStatus.Status.SLOWED)
     
     def update(self):
         if self._status != PlayerStatus.Status.NORMAL:
             self._cooldown -= 1
             if self._cooldown == 0:
                 self._status = PlayerStatus.Status.NORMAL
+    
+    def __change_status(self, cooldown : int, new_status : PlayerStatus.Status):
+        if self._status == PlayerStatus.Status.NORMAL or self._status != PlayerStatus.Status.INVULNERABLE:
+            self._status = new_status
+            self._cooldown = cooldown
+        elif self._status == new_status:
+            self._cooldown = max(self._cooldown, cooldown)

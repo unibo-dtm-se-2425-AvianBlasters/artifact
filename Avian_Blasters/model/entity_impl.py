@@ -28,3 +28,11 @@ class EntityImpl(Entity):
     
     def is_touched(self, other : Entity) -> bool:
         return self._area.overlap(other.get_area())
+    
+    @property
+    def delta(self) -> int:
+        return self._delta
+    
+    @delta.setter
+    def delta(self, new_delta : int):
+        self._delta = new_delta
