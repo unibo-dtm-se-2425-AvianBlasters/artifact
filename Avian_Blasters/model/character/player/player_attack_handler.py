@@ -4,7 +4,7 @@ from Avian_Blasters.model.entity import Entity
 from Avian_Blasters.model.item.projectile.projectile import ProjectileType
 from Avian_Blasters.model.item.projectile.projectile_factory import ProjectileFactory
 
-PLAYER_COOLDOWN_STEPS = 2
+PLAYER_COOLDOWN_STEPS = 30
 PLAYER_PROJECTILE_WIDTH = 5
 PLAYER_PROJECTILE_HEIGHT = 5
 
@@ -16,7 +16,6 @@ class PlayerAttackHandler(GeneralAttackHandlerImpl):
     def __init__(self, projectile_factory : ProjectileFactory, projectile_speed : int, projectile_type : ProjectileType, cooldown_steps: int = PLAYER_COOLDOWN_STEPS):
         super().__init__(projectile_factory, projectile_speed, cooldown_steps)
         self._number_of_projectiles = 1
-        self._projectile_factory = projectile_factory
         self._projectile_type = projectile_type
 
     @property
@@ -35,7 +34,7 @@ class PlayerAttackHandler(GeneralAttackHandlerImpl):
         return True
 
     def try_attack(self, player):
-        if not self._can_attack():
+        if not self._cooldown_handler.is_over():
             return []
         projectiles = []
         player_center_x = player.get_area().get_position_x 
