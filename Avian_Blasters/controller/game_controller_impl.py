@@ -107,6 +107,11 @@ class GameControllerImpl(GameController):
             status_handler = self._player.get_status()
             if hasattr(status_handler, 'update'):
                 status_handler.update()
+
+        if self._player and hasattr(self._player, 'player_attack_handler_get'):
+            attack_handler = self._player.player_attack_handler_get()
+            if hasattr(attack_handler, 'update'):
+                attack_handler.update()
         
         self._update_projectiles()
 
