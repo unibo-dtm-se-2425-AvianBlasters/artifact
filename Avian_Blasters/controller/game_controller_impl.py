@@ -7,6 +7,9 @@ from Avian_Blasters.controller.input_handler_impl import InputHandlerImpl
 from Avian_Blasters.model.item.power_up.power_up import PowerUpType
 from Avian_Blasters.model.item.power_up.power_up_impl import PowerUpImpl
 from Avian_Blasters.model.item.power_up.power_up_types.double_fire_power_up import DoubleFirePowerUp
+from Avian_Blasters.model.item.power_up.power_up import PowerUpType
+from Avian_Blasters.model.item.power_up.power_up_impl import PowerUpImpl
+from Avian_Blasters.model.item.power_up.power_up_types.double_fire_power_up import DoubleFirePowerUp
 from Avian_Blasters.model.item.projectile.projectile import Projectile, ProjectileType
 from Avian_Blasters.view.game_view import GameView
 from Avian_Blasters.view.game_view_impl import GameViewImpl
@@ -66,9 +69,14 @@ class GameControllerImpl(GameController):
             self._test_power_up = DoubleFirePowerUp(
                 x=50,  y= 20, width=5, height=5,
                 type=Entity.TypeArea.POWERUP, power_up_type=PowerUpType.DOUBLE_FIRE, is_timed=True, duration=5.0, delta=1)
+
+            self._test_power_up = DoubleFirePowerUp(
+                x=50,  y= 20, width=5, height=5,
+                type=Entity.TypeArea.POWERUP, power_up_type=PowerUpType.DOUBLE_FIRE, is_timed=True, duration=5.0, delta=1)
             # Create enemies in formation (like Space Invaders)
             entities = [self._player]
             entities.extend(self._create_enemy_formation())
+            entities.append(self._test_power_up)
             entities.append(self._test_power_up)
             
             # Create world with the player and enemies
@@ -121,6 +129,7 @@ class GameControllerImpl(GameController):
                 attack_handler.update()
         
         self._update_projectiles()
+        self._update_power_ups()
         self._update_power_ups()
 
     def _update_projectiles(self) -> None:
