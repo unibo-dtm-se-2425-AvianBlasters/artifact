@@ -58,7 +58,7 @@ class InvulnerabilityPowerUpTest(unittest.TestCase):
     def setUp(self):
         self.power_up = InvulnerabilityPowerUp(x=10, y=10, width=4, height=4, type=Entity.TypeArea.POWERUP, power_up_type=PowerUpType.INVULNERABILITY, is_timed=True, duration=10.0, delta=1)
         self.player = Mock()
-        self.player_status = PlayerStatusImpl(PlayerStatus.Status.NORMAL)
+        self.player_status = PlayerStatusImpl(PlayerStatus.Status.NORMAL, refresh_rate=60)
         self.player.get_status.return_value = self.player_status
 
     def test_initial_status(self):
@@ -148,7 +148,7 @@ class PowerUpHandlerTest(unittest.TestCase):
     def setUp(self):
         self.power_up_handler = PowerUpHandlerImpl(None)
         self.player = Mock()
-        self.player_status = PlayerStatusImpl(PlayerStatus.Status.NORMAL)
+        self.player_status = PlayerStatusImpl(PlayerStatus.Status.NORMAL, refresh_rate=60)
         self.player.get_status.return_value = self.player_status 
 
     def test_collect_power_up(self):

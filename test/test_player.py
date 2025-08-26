@@ -132,11 +132,9 @@ class TestPlayerStatusHandler(unittest.TestCase):
         self.assertEqual(PlayerStatus.Status.SLOWED, self.status_handler.status)
         self.status_handler.invincibility(cooldown)
         self.assertEqual(PlayerStatus.Status.INVULNERABLE, self.status_handler.status)
-        print(self.status_handler._cooldown.cooldown)
         i = 0
         while (i < cooldown * self.fps):
             self.status_handler.slow_down(cooldown)
-            print(self.status_handler._cooldown.cooldown)
             self.assertEqual(PlayerStatus.Status.INVULNERABLE, self.status_handler.status)
             self.status_handler.update()
             i += 1
