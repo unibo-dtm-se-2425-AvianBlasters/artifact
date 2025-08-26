@@ -27,6 +27,14 @@ class PowerUpImpl(PowerUp):
     def power_up_type(self) -> PowerUpType:
         return self._power_up_type
     
+    @property
+    def collected(self) -> bool:
+        return self._collected
+    
+    @collected.setter
+    def collected(self, value: bool):
+        self._collected = value
+    
     def is_collected(self, player_area : Area) -> bool:
         if self._collected:
             return True
@@ -34,6 +42,10 @@ class PowerUpImpl(PowerUp):
             self._collected = True 
             return True
         return False
+    
+    def move(self, movement_x, movement_y, width, height):
+        if self.active:
+            super().move(movement_x, movement_y, width, height)
     
     def apply_effect(self, player : Player):
         ...

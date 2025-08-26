@@ -13,14 +13,18 @@ class PowerUpHandlerImpl(PowerUpHandler):
        self._start_time = None
     
     def collect_power_up(self, power_up : PowerUp, player: Player):
-        if self._power_up_active:
-            self._power_up_active.remove_effect(player)
+        if not power_up.collected:
+            if self._power_up_active:
+                self._power_up_active.remove_effect(player)
+                self._power_up_active.collected = False
 
-        self._power_up_active = power_up
-        self._power_up_active.apply_effect(player)
-        if power_up.is_timed:
-            self._start_time = pygame.time.get_ticks()
-        self._power_up_active.destroy() #it destroys the item after applying the effect
+            self._power_up_active = power_up
+            self._power_up_active.collected = True
+            self._power_up_active.apply_effect(player)
+            if power_up.is_timed:
+                self._start_time = pygame.time.get_ticks()
+            self._power_up_active.destroy() #it destroys the item after applying the effect
+
     
     def player_update(self, player: Player):
         if self._power_up_active and self._power_up_active.is_timed:
