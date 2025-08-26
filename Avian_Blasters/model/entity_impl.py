@@ -7,6 +7,8 @@ class EntityImpl(Entity):
 
     def __init__(self, x : int, y : int, width : int, height : int, type : Entity.TypeArea, delta : int):
         self._area = AreaImpl(x, y, width, height)
+        if not isinstance(type, Entity.TypeArea):
+            raise ValueError("Every entity requires a definition of its area type!")
         self._type = type
         self._delta = delta
     

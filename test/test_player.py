@@ -20,7 +20,7 @@ class TestPlayer(unittest.TestCase):
     def setUp(self):
         self.player = PlayerImpl(self.initial_x, self.initial_y,
                                 self.width, self.width,self.delta,
-                                self.health,self.initial_score, self.initial_multiplier, 
+                                self.health, self.initial_score, self.initial_multiplier, 
                                 self.limit_right, self.limit_left, self.fps)
     
     def test_inital_status(self):
@@ -29,6 +29,13 @@ class TestPlayer(unittest.TestCase):
         self.assertEqual(self.initial_multiplier, self.player.get_score().multiplier)
         self.assertEqual(Entity.TypeArea.PLAYER, self.player.get_type)
         self.assertEqual(PlayerStatus.Status.NORMAL, self.player.get_status().status)
+    
+    def test_wrong_set_up(self):
+        with self.assertRaises(ValueError):
+            PlayerImpl(x = self.initial_x, y = self.initial_y, width = self.width, height = self.height,  delta = 1,
+                       health = self.health, initial_score = self.initial_score, initial_multiplier = self.initial_multiplier,
+                       limit_right = self.limit_left, limit_left = self.limit_left, fps = self.fps)
+
 
     def verify_movement(self, movement_x, check):
         self.player.move(movement_x)
@@ -79,6 +86,8 @@ class TestPlayer(unittest.TestCase):
         self.assertTrue(self.player.is_touched([test_enemy]))
         self.assertTrue(self.player.is_hurt())
         self.assertEqual(0, self.player.get_health_handler().current_health)
+        with self.assertRaises(ValueError):
+            self.player.is_touched(["Hello!"])
     
     def test_shoot(self):
         shots = self.player.shoot()
@@ -103,6 +112,13 @@ class TestPlayerStatusHandler(unittest.TestCase):
 
     def test_set_up(self):
         self.assertEqual(PlayerStatus.Status.NORMAL, self.status_handler.status)
+
+    def test_wrong_set_up(self):
+        with self.assertRaises(ValueError):
+            PlayerStatusImpl("INVALID", self.fps)
+        
+        with self.assertRaises(ValueError):
+            PlayerStatusImpl(PlayerStatus.Status.NORMAL, 0)
 
     def test_invulnerability(self):
         cooldown = 15
@@ -142,6 +158,10 @@ class TestPlayerStatusHandler(unittest.TestCase):
             self.status_handler.update()
             i += 1
         self.assertEqual(PlayerStatus.Status.NORMAL, self.status_handler.status)
+    
+    def test_wrong_change(self):
+        with self.assertRaises(ValueError):
+            self.status_handler.status ="INVALID"
 
 
 class TestScore(unittest.TestCase):
@@ -152,8 +172,18 @@ class TestScore(unittest.TestCase):
         self.assertEqual(0, self.score.score)
         self.assertEqual(1, self.score.multiplier)
     
+    def test_wrong_set_up(self):
+        #score must be >= 0
+        with self.assertRaises(ValueError):
+            ScoreImpl(-1, 1)
+        
+        #multiplier must be at least 1
+        with self.assertRaises(ValueError):
+            ScoreImpl(0, 0)
+    
     def test_add_points(self):
         self.addition(1000)
+        self.addition(-10000)
     
     def test_multiplier_change(self):
         initial_multiplier = self.score._multiplier
@@ -164,9 +194,15 @@ class TestScore(unittest.TestCase):
         self.score.multiplier = initial_multiplier
         self.assertNotEqual(new_multiplier, self.score.multiplier)
         self.addition(1000)
+        with self.assertRaises(Exception):
+            self.score.multiplier = 0
         
     def addition(self, addition : int):
         initial_score = self.score.score
         self.score.add_points(addition)
-        self.assertEqual(initial_score + addition * self.score.multiplier, self.score.score)
+        if initial_score + addition >= 0:
+            self.assertEqual(initial_score + addition * self.score.multiplier, self.score.score)
+        else:
+            self.assertEqual(0, self.score.score)
+
     

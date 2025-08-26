@@ -7,6 +7,8 @@ class AreaImpl(Area):
 
     def __init__(self, x : int, y : int, width : int, height : int):
         self._position = PositionImpl(x, y)
+        if width < 0 or height < 0:
+            raise ValueError("Width and Height must be bigger than zero")
         self._width = width
         self._height = height
         self._figure = self.__position_adjustment(x, y, width, height)
