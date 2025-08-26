@@ -2,40 +2,33 @@ import pygame
 from typing import Dict, Tuple, Optional
 from Avian_Blasters.view.sprite_manager import SpriteManager
 from Avian_Blasters.model.entity import Entity
+from Avian_Blasters.model.character.player import Player
 
-class SpriteManagerImpl(SpriteManager):
+class SpriteManagerPlayer(SpriteManager):
     """SpriteManagerImpl is a pygame implementation of SpriteManager"""
     
-    def __init__(self):
+    def __init__(self, player : Player):
         self._sprite_sheet: Optional[pygame.Surface] = None
-        self._sprites: Dict[Entity.TypeArea, list[pygame.Surface]] = {}
-        self._sprite_sizes: Dict[Entity.TypeArea, Tuple[int, int]] = {}
+        self._sprites: Dict[int, list[pygame.Surface]] = {}
+        self._sprite_sizes: Dict[int, Tuple[int, int]] = {}
         self._loaded = False
+        self._player = player
         
-        # Define sprite grid positions and sizes for each entity type
+        # Define sprite grid positions and sizes
         # Based on actual sprite sheet analysis - sprites found at (40-90, 40-70)
         self._sprite_definitions = {
-            Entity.TypeArea.PLAYER: {
-                'positions': [(24, 280, 64, 40), (124, 280, 64, 40)],  # Player sprites where we found green pixels
+            self._player.get_health_handler().current_health == 3: {
+                'positions': [(24, 18, 64, 40), (121, 18, 64, 40)],
                 'size': (16, 10)
             },
-            Entity.TypeArea.ENEMY: {
-                'positions': [(24, 24, 64, 44), (60, 40, 64, 40), (80, 40, 64, 40),  # birds
-                             (26, 304, 64, 44), (60, 60, 60, 40), (80, 60, 60, 40)],   # bats
+            self._player.get_health_handler().current_health == 2: {
+                'positions': [(10, 230, 90, 90), (10, 200, 100, 150)],
                 'size': (16, 10)
             },
-            Entity.TypeArea.PLAYER_PROJECTILE: {
-                'positions': [(100, 40, 4, 8), (100, 50, 4, 8)],  # Projectiles
-                'size': (4, 8)
+            self._player.get_health_handler().current_health == 1: {
+                'positions': [(10, 230, 90, 90), (10, 200, 100, 150)],
+                'size': (16, 10)
             },
-            Entity.TypeArea.ENEMY_PROJECTILE: {
-                'positions': [(100, 60, 4, 8), (100, 70, 4, 8)],  # Enemy projectiles
-                'size': (4, 8)
-            },
-            Entity.TypeArea.POWERUP: {
-                'positions': [(120, 40, 16, 16), (120, 60, 16, 16)],  # Power-ups
-                'size': (16, 16)
-            }
         }
     
     def load_sprites(self, sprite_sheet_path: str) -> bool:
@@ -86,10 +79,10 @@ class SpriteManagerImpl(SpriteManager):
         
         return sprites[variant]
     
-    def get_sprite_size(self, entity_type: Entity.TypeArea) -> Tuple[int, int]:
+    def get_sprite_size(self, health : int) -> Tuple[int, int]:
         """Get the size (width, height) of sprites for the specified entity type"""
-        if entity_type in self._sprite_sizes:
-            return self._sprite_sizes[entity_type]
+        if health in self._sprite_sizes:
+            return self._sprite_sizes[health]
     
     def is_loaded(self) -> bool:
         """Check if sprites have been successfully loaded"""
@@ -102,11 +95,9 @@ class SpriteManagerImpl(SpriteManager):
         
         # Use the same colors as before for fallback
         colors = {
-            Entity.TypeArea.PLAYER: (0, 255, 0),      # Green
-            Entity.TypeArea.ENEMY: (255, 0, 0),       # Red
-            Entity.TypeArea.PLAYER_PROJECTILE: (0, 0, 255),  # Blue
-            Entity.TypeArea.ENEMY_PROJECTILE: (128, 0, 128), # Purple
-            Entity.TypeArea.POWERUP: (255, 255, 0)    # Yellow
+            self._player.get_health_handler().current_health == 3: (0, 255, 0),      # Green
+            self._player.get_health_handler().current_health == 2: (255, 255, 0),    # Yellow
+            self._player.get_health_handler().current_health == 1: (255, 0, 0)       # Red
         }
         
         color = colors.get(entity_type, (255, 255, 255))

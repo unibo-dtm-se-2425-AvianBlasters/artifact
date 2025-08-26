@@ -50,9 +50,9 @@ class LaserPowerUpTest(unittest.TestCase):
 
     def test_apply_and_remove_effect(self):
         self.power_up.apply_effect(self.player)
-        self.player.player_attack_handler_get().set_projectile_type.assert_called_with(ProjectileType.LASER)
+        self.player.get_player_attack_handler().set_projectile_type.assert_called_with(ProjectileType.LASER)
         self.power_up.remove_effect(self.player)
-        self.player.player_attack_handler_get().set_projectile_type.assert_called_with(ProjectileType.NORMAL)
+        self.player.get_player_attack_handler().set_projectile_type.assert_called_with(ProjectileType.NORMAL)
 
 class InvulnerabilityPowerUpTest(unittest.TestCase):
     def setUp(self):
@@ -76,13 +76,13 @@ class DoubleFirePowerUpTest(unittest.TestCase):
         self.projectile_factory = ProjectileFactory()
         self.attack_handler = PlayerAttackHandler(self.projectile_factory, 3, ProjectileType.NORMAL)
         self.player = Mock()
-        self.player.player_attack_handler_get = Mock(return_value=self.attack_handler)
+        self.player.get_player_attack_handler = Mock(return_value=self.attack_handler)
 
     def test_apply_and_remove_effect(self):
         self.power_up.apply_effect(self.player)
-        self.assertEqual(self.player.player_attack_handler_get().number_of_projectiles, 2)
+        self.assertEqual(self.player.get_player_attack_handler().number_of_projectiles, 2)
         self.power_up.remove_effect(self.player)
-        self.assertEqual(self.player.player_attack_handler_get().number_of_projectiles, 1)
+        self.assertEqual(self.player.get_player_attack_handler().number_of_projectiles, 1)
 
 class HealthRecoveryPowerUpTest(unittest.TestCase):
     def setUp(self):

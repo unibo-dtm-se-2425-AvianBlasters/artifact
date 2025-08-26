@@ -9,7 +9,7 @@ class DoubleFirePowerUp(TimedPowerUp):
         super().__init__(x, y, width, height, type, power_up_type, is_timed, duration, delta)
 
     def apply_effect(self, player):
-        player.player_attack_handler_get().set_number_of_projectiles(2)
+        player.get_player_attack_handler().set_number_of_projectiles(2)
 
     def remove_effect(self, player):
-        player.player_attack_handler_get().set_number_of_projectiles(1)
+        player.get_player_attack_handler().set_number_of_projectiles(1)

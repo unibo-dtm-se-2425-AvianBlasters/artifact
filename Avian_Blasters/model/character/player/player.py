@@ -18,7 +18,9 @@ class Player(Character):
         which allows for opeartions linked to PowerUps"""
         ...
 
-    def player_attack_handler_get(self) -> PlayerAttackHandler:
+    def get_player_attack_handler(self) -> PlayerAttackHandler:
+        """A getter for the AttackHandler of the player, allowing
+        for their attacks"""
         ...
 
     def get_score(self) -> Score:
@@ -40,4 +42,10 @@ class Player(Character):
         """Checks if Player is touching other entities and
         handles damage/status changes related to the
         interactions with enemies and enemy projectiles"""
+        ...
+    
+    def is_hurt(self) -> bool:
+        """Returns true if the Player has been hurt from an
+        enemy attack and so its invulnerability is due to it being
+        damaged"""
         ...

@@ -70,11 +70,14 @@ class TestPlayer(unittest.TestCase):
         self.assertEqual(self.health - 1, self.player.get_health_handler().current_health)
         i = 0
         while (i < 5 * self.fps):
+            self.assertTrue(self.player.is_hurt())
             self.assertFalse(self.player.is_touched([test_enemy_projectile]))
             i += 1
         self.assertFalse(self.player.is_touched([test_enemy]))
+        self.assertFalse(self.player.is_hurt())
         test_enemy.move(0,-test_enemy.get_area().get_position_y/self.delta, self.width, self.height)
         self.assertTrue(self.player.is_touched([test_enemy]))
+        self.assertTrue(self.player.is_hurt())
         self.assertEqual(0, self.player.get_health_handler().current_health)
     
     def test_shoot(self):

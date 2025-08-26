@@ -30,11 +30,12 @@ class PlayerImpl(CharacterImpl, Player):
         self._limit_l = limit_left
         self._default_speed = delta
         self._fps = fps
+        self._is_hurt = False
 
     def get_power_up_handler(self) -> PowerUpHandler:
         return self._power_up_handler
     
-    def player_attack_handler_get(self) -> PlayerAttackHandler:
+    def get_player_attack_handler(self) -> PlayerAttackHandler:
         return self._attack_handler
     
     def move(self, x : int):
@@ -83,9 +84,12 @@ class PlayerImpl(CharacterImpl, Player):
                             self.get_health_handler().take_damage(damage)
                             if self.get_health_handler().current_health > 0:
                                 self._status_handler.invincibility(DEFAULT_COOLDOWN)
+                            self._is_hurt = True
                         return True
         else:
             self._status_handler.update()
+            if self._status_handler.status != PlayerStatus.Status.INVULNERABLE:
+                self._is_hurt = False
         return False
 
     def get_status(self) -> PlayerStatus:
@@ -99,4 +103,7 @@ class PlayerImpl(CharacterImpl, Player):
             self.delta = int (self._default_speed/2)
         elif self.get_status().status != PlayerStatus.Status.SLOWED and self._delta == self._default_speed/2:
             self.delta = self._default_speed
+
+    def is_hurt(self) -> bool:
+        return self._is_hurt
         

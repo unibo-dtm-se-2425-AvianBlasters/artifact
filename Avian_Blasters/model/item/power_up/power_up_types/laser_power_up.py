@@ -11,7 +11,7 @@ class LaserPowerUp(TimedPowerUp):
         super().__init__(x, y, width, height, type, power_up_type, is_timed, duration, delta)
 
     def apply_effect(self, player : Player):
-        player.player_attack_handler_get().set_projectile_type(ProjectileType.LASER)
+        player.get_player_attack_handler().set_projectile_type(ProjectileType.LASER)
 
     def remove_effect(self, player: Player):
-        player.player_attack_handler_get().set_projectile_type(ProjectileType.NORMAL)
+        player.get_player_attack_handler().set_projectile_type(ProjectileType.NORMAL)
