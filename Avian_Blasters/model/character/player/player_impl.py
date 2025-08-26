@@ -24,7 +24,7 @@ class PlayerImpl(CharacterImpl, Player):
         super().__init__(x, y, width, height, Entity.TypeArea.PLAYER, delta, health)
         self._power_up_handler = PowerUpHandlerImpl(None)
         self._score = ScoreImpl(initial_score, initial_multiplier)
-        self._status_handler = PlayerStatusImpl(PlayerStatus.Status.NORMAL)
+        self._status_handler = PlayerStatusImpl(PlayerStatus.Status.NORMAL, fps)
         self._attack_handler = PlayerAttackHandler(ProjectileFactory(), PlayerAttackHandler.PLAYER_PROJECTILE_SPEED, ProjectileType.NORMAL, )
         self._limit_r = limit_right
         self._limit_l = limit_left
@@ -76,13 +76,13 @@ class PlayerImpl(CharacterImpl, Player):
                         # Check if it's a sound wave projectile from bats
                         if hasattr(i, 'projectile_type') and i.projectile_type == ProjectileType.SOUND_WAVE:
                             # Sound waves don't deal damage but slow the player
-                            self._status_handler.slow_down(DEFAULT_COOLDOWN * self._fps)
+                            self._status_handler.slow_down(DEFAULT_COOLDOWN)
                         else:
                             # Regular damage from enemies or normal projectiles
                             damage = 3 if i.get_type == Entity.TypeArea.ENEMY else 1
                             self.get_health_handler().take_damage(damage)
                             if self.get_health_handler().current_health > 0:
-                                self._status_handler.invincibility(DEFAULT_COOLDOWN * self._fps)
+                                self._status_handler.invincibility(DEFAULT_COOLDOWN)
                         return True
         else:
             self._status_handler.update()

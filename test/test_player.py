@@ -93,8 +93,10 @@ class TestPlayer(unittest.TestCase):
 
         
 class TestPlayerStatusHandler(unittest.TestCase):
+    fps = 60
+
     def setUp(self):
-        self.status_handler = PlayerStatusImpl(PlayerStatus.Status.NORMAL)
+        self.status_handler = PlayerStatusImpl(PlayerStatus.Status.NORMAL, self.fps)
 
     def test_set_up(self):
         self.assertEqual(PlayerStatus.Status.NORMAL, self.status_handler.status)
@@ -103,24 +105,25 @@ class TestPlayerStatusHandler(unittest.TestCase):
         cooldown = 15
         self.status_handler.invincibility(cooldown)
         i = 0
-        while (i < cooldown):
+        while (i < cooldown * self.fps):
             self.assertEqual(PlayerStatus.Status.INVULNERABLE, self.status_handler.status)
             self.status_handler.update()
             i += 1
         self.assertEqual(PlayerStatus.Status.NORMAL, self.status_handler.status)
 
     def test_slowing_effect(self):      
-        # Apply slowing effect
-        self.status_handler.slow_down(10)
+        cooldown = 10
+        self.status_handler.slow_down(cooldown)
         self.assertEqual(PlayerStatus.Status.SLOWED, self.status_handler.status)
         
         # Update several times and check that it eventually goes back to normal
-        for _ in range(9):
-            self.status_handler.update()
+        i = 0
+        while (i < cooldown * self.fps):
             self.assertEqual(PlayerStatus.Status.SLOWED, self.status_handler.status)
+            self.status_handler.update()
+            i += 1
         
-        # After 10 updates, should be back to normal
-        self.status_handler.update()
+        # After cooldown * fps updates, should be back to normal
         self.assertEqual(PlayerStatus.Status.NORMAL, self.status_handler.status)
 
     def test_change(self):
@@ -129,9 +132,11 @@ class TestPlayerStatusHandler(unittest.TestCase):
         self.assertEqual(PlayerStatus.Status.SLOWED, self.status_handler.status)
         self.status_handler.invincibility(cooldown)
         self.assertEqual(PlayerStatus.Status.INVULNERABLE, self.status_handler.status)
+        print(self.status_handler._cooldown.cooldown)
         i = 0
-        while (i < cooldown):
+        while (i < cooldown * self.fps):
             self.status_handler.slow_down(cooldown)
+            print(self.status_handler._cooldown.cooldown)
             self.assertEqual(PlayerStatus.Status.INVULNERABLE, self.status_handler.status)
             self.status_handler.update()
             i += 1
