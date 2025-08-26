@@ -5,8 +5,9 @@ class CoolDownHandlerImpl(CoolDownHandler):
     CoolDownHandler interface"""
     
     def __init__(self, cooldown : int, refresh_rate : int):
-        self._cooldown = cooldown
         self._refresh_rate = refresh_rate
+        self._cooldown = cooldown
+        self._actual_countdown = self._cooldown * self._refresh_rate
 
     @property
     def cooldown(self) -> int:
@@ -15,6 +16,7 @@ class CoolDownHandlerImpl(CoolDownHandler):
     @cooldown.setter
     def cooldown(self, new_cooldown : int):
         self._cooldown = max(self._cooldown, new_cooldown)
+        self._actual_cooldown = self._cooldown * self._refresh_rate
     
     @property
     def refresh_rate(self) -> int:
@@ -22,7 +24,7 @@ class CoolDownHandlerImpl(CoolDownHandler):
     
     def update(self):
         if not self.is_over():
-            self._cooldown -= 1
+            self._actual_cooldown -= 1
     
     def is_over(self) -> bool:
-        return self._cooldown <= 0
+        return self._actual_cooldown <= 0
