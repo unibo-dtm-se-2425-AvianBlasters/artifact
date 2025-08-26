@@ -33,7 +33,7 @@ class SpriteManagerImpl(SpriteManager):
                 'size': (4, 8)
             },
             Entity.TypeArea.POWERUP: {
-                'positions': [(120, 40, 16, 16), (120, 60, 16, 16)],  # Power-ups
+                'positions': [(143, 28, 12, 40), (120, 40, 16, 16), (120, 60, 16, 16)],  # Power-ups
                 'size': (16, 16)
             }
         }
