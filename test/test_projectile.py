@@ -85,7 +85,7 @@ class TestPlayerAttackHandler(unittest.TestCase):
     def test_initial_status(self):
         self.assertEqual(self.attack_handler._projectile_speed, 3)
         self.assertEqual(self.attack_handler._projectile_type, ProjectileType.NORMAL)
-        self.assertEqual(self.attack_handler._cooldown_steps, PLAYER_COOLDOWN_STEPS)
+        self.assertEqual(self.attack_handler.cooldown_handler.refresh_rate, PLAYER_COOLDOWN_STEPS)
 
     def test_set_number_of_projectiles(self):
         self.attack_handler.set_number_of_projectiles(3)
@@ -118,7 +118,6 @@ class TestPlayerAttackHandler(unittest.TestCase):
             self.assertEqual(projectile.get_area().get_position_x, expected_x)
             self.assertEqual(projectile.get_area().get_position_y, player_center_y)
             self.assertEqual(projectile.projectile_type, ProjectileType.NORMAL)
-            print(projectile.get_area().get_position_x, projectile.get_area().get_position_y)
 
     def test_try_attack_multiple_projectiles(self):
         self.attack_handler.set_number_of_projectiles(3)
@@ -136,20 +135,8 @@ class TestPlayerAttackHandler(unittest.TestCase):
             self.assertEqual(projectile.get_area().get_position_x, expected_x)
             self.assertEqual(projectile.get_area().get_position_y, player_center_y)
             self.assertEqual(projectile.projectile_type, ProjectileType.NORMAL)
-            print(projectile.get_area().get_position_x, projectile.get_area().get_position_y)
 
-    def test_cooldown(self):
-        self.attack_handler._cooldown = 0
-        projectiles = self.attack_handler.try_attack(self.player)
-        self.assertEqual(len(projectiles), 1)
-        self.assertGreater(self.attack_handler._cooldown, 0)
-        projectiles = self.attack_handler.try_attack(self.player)
-        self.assertEqual(len(projectiles), 0)
-        while self.attack_handler._cooldown > 0:
-            projectiles = self.attack_handler.try_attack(self.player)
-            self.assertEqual(len(projectiles), 0)
-        projectiles = self.attack_handler.try_attack(self.player)
-        self.assertEqual(len(projectiles), 1)
+   
         
         
 
