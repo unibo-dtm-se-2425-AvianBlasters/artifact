@@ -12,7 +12,7 @@ class SpriteManagerPlayer(SpriteManager):
         self._sprites: Dict[int, list[pygame.Surface]] = {}
         self._sprite_sizes: Dict[int, Tuple[int, int]] = {}
         self._loaded = False
-        self._path = "assets/sprites/Car_V2.png"
+        self._path = "assets/sprites/Car_V3.png"
 
         
         # Define sprite grid positions and sizes
