@@ -11,6 +11,7 @@ class InputHandler:
         SHOOT = 3
         QUIT = 4
         NONE = 5
+        PAUSE = 6
     
     def handle_events(self) -> list['Action']:
         """Process pygame events and return list of actions"""

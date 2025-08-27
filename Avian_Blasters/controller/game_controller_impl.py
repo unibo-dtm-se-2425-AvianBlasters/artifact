@@ -28,6 +28,7 @@ class GameControllerImpl(GameController):
         self._clock = None
         self._running = False
         self._player: Player = None
+        self._paused = False
     
     def initialize(self) -> bool:
         """Initialize the game controller and its dependencies"""
@@ -89,12 +90,11 @@ class GameControllerImpl(GameController):
             actions = self._input_handler.handle_events()
             self.handle_input(actions)
             
-            # Update game state
-            self.update_game_state(delta_time)
-            
-            # Render
-            self._view.render_world(self._world)
-            self._view.update_display()
+            if not self._paused:
+                # Update game state
+                self.update_game_state(delta_time)
+                self._view.render_world(self._world)
+                self._view.update_display()
         
         self.cleanup()
     
@@ -112,11 +112,17 @@ class GameControllerImpl(GameController):
         for action in actions:
             if action == InputHandler.Action.QUIT:
                 self._running = False
-            elif action == InputHandler.Action.MOVE_LEFT and self._player:
+            elif action == InputHandler.Action.PAUSE:
+                self._paused = not self._paused
+                if self._paused:
+                    print("Pause")
+                else:
+                    print("Resumed")
+            elif action == InputHandler.Action.MOVE_LEFT and self._player and not self._paused:
                 self._player.move(-1)  # Move left
-            elif action == InputHandler.Action.MOVE_RIGHT and self._player:
+            elif action == InputHandler.Action.MOVE_RIGHT and self._player and not self._paused:
                 self._player.move(1)   # Move right
-            elif action == InputHandler.Action.SHOOT and self._player:
+            elif action == InputHandler.Action.SHOOT and self._player and not self._paused:
                 projectiles = self._player.shoot()
                 if projectiles:
                     self._world.add_projectiles(projectiles)
