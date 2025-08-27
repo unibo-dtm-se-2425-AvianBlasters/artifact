@@ -69,7 +69,7 @@ class SpriteManagerPlayer(SpriteManager):
             return False
     
     def get_sprite(self, player : Player, variant: int = 0) -> pygame.Surface:
-        """Get a sprite surface for the specified entity type and variant"""
+        """Get a sprite surface for the specified player and variant"""
         health = player.get_health_handler().current_health
         if not self._loaded or health not in self._sprites:
             # Return a fallback colored rectangle if sprites aren't loaded

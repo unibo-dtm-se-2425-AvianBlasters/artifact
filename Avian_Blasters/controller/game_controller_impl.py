@@ -88,7 +88,7 @@ class GameControllerImpl(GameController):
             return
         
         print("Starting Avian Blasters...")
-        print("Controls: Arrow keys or A/D to move, Space to shoot, Escape to quit")
+        print("Controls: Arrow keys or A/D to move, Space to shoot, Right Shift to pause, Escape to quit")
         
         while self._running:
             # Calculate delta time
