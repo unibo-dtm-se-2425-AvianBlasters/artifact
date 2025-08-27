@@ -3,8 +3,10 @@ from typing import List, Dict
 from Avian_Blasters.view.game_view import GameView
 from Avian_Blasters.view.sprite_manager import SpriteManager
 from Avian_Blasters.view.sprite_manager_impl import SpriteManagerImpl
+from Avian_Blasters.view.sprite_manager_player import SpriteManagerPlayer
 from Avian_Blasters.view.ui_renderer import UIRenderer
 from Avian_Blasters.view.ui_renderer_impl import UIRendererImpl
+from Avian_Blasters.model.character.player.player import Player
 from Avian_Blasters.model.world import World, WORLD_WIDTH, WORLD_HEIGHT
 from Avian_Blasters.model.entity import Entity
 
@@ -22,7 +24,9 @@ class GameViewImpl(GameView):
         self._scale_x = 1.0
         self._scale_y = 1.0
         self._sprite_manager: SpriteManager = SpriteManagerImpl()
+        self._sprite_manager_player = SpriteManagerPlayer()
         self._ui_renderer: UIRenderer = UIRendererImpl()
+        self._cooldown_animation = 0
     
     def initialize(self, width: int, height: int, title: str) -> bool:
         """Initialize the pygame display and return success status"""
@@ -41,7 +45,7 @@ class GameViewImpl(GameView):
             sprite_path = "assets/sprites.png"
             if not self._sprite_manager.load_sprites(sprite_path):
                 print(f"Warning: Failed to load sprites from {sprite_path}, using fallback rectangles")
-            
+            self._sprite_manager_player.load_sprites()
             # Initialize UI renderer
             if not self._ui_renderer.initialize():
                 print("Warning: Failed to initialize UI renderer")
@@ -58,7 +62,12 @@ class GameViewImpl(GameView):
         # Render all entities
         entities = world.get_all_entities()
         for entity in entities:
-            self.render_entity(entity)
+            if self._cooldown_animation < 30 or entity.get_type not in [Entity.TypeArea.PLAYER, Entity.TypeArea.ENEMY]:
+                self.render_entity(entity)
+            elif self._cooldown_animation < 60:
+                self.render_entity_with_variant(entity, 1)
+                if self._cooldown_animation == 59:
+                    self._cooldown_animation = 0
         
         # Render UI elements
         players = world.get_players()
@@ -68,6 +77,8 @@ class GameViewImpl(GameView):
             self._ui_renderer.render_score(self._screen, player, 10, 10)
             # Render health below score
             self._ui_renderer.render_health(self._screen, player, 10, 30)
+        
+        self._cooldown_animation += 1
     
     def render_entity(self, entity: Entity) -> None:
         """Render a single entity to the screen"""
@@ -85,6 +96,9 @@ class GameViewImpl(GameView):
         # Get sprite for this entity with proper error handling
         try:
             sprite = self._sprite_manager.get_sprite(entity.get_type)
+
+            if isinstance(entity, Player):
+                sprite = self._sprite_manager_player.get_sprite(entity)
             
             # Scale sprite to match world size
             sprite_width = int(area.width * self._scale_x)
@@ -141,6 +155,10 @@ class GameViewImpl(GameView):
         
         # Get sprite for this entity with specific variant
         sprite = self._sprite_manager.get_sprite(entity.get_type, variant)
+
+        if isinstance(entity, Player):
+            sprite = self._sprite_manager_player.get_sprite(entity, variant)
+
         
         # Scale sprite to match world size
         sprite_width = int(area.width * self._scale_x)
