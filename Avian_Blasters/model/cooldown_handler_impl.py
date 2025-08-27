@@ -5,8 +5,12 @@ class CoolDownHandlerImpl(CoolDownHandler):
     CoolDownHandler interface"""
     
     def __init__(self, cooldown : int, refresh_rate : int):
-        self._cooldown = cooldown
+        if not isinstance(refresh_rate, int) or refresh_rate <= 0:
+            raise ValueError("The refresh rate must be a postive integer!")
         self._refresh_rate = refresh_rate
+        if not isinstance(cooldown, int) or cooldown < 0:
+            raise ValueError("The cooldown must be a postive integer!")
+        self._cooldown = cooldown * self._refresh_rate
 
     @property
     def cooldown(self) -> int:
@@ -14,7 +18,9 @@ class CoolDownHandlerImpl(CoolDownHandler):
     
     @cooldown.setter
     def cooldown(self, new_cooldown : int):
-        self._cooldown = max(self._cooldown, new_cooldown)
+        if (new_cooldown < 0):
+            raise ValueError("The cooldown must be a positive integer!")
+        self._cooldown = max(self._cooldown, new_cooldown * self._refresh_rate)
     
     @property
     def refresh_rate(self) -> int:

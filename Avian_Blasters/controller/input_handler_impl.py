@@ -18,6 +18,8 @@ class InputHandlerImpl(InputHandler):
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     actions.append(InputHandler.Action.SHOOT)
+                elif event.key == pygame.K_RSHIFT:
+                    actions.append(InputHandler.Action.PAUSE)
                 elif event.key == pygame.K_ESCAPE:
                     actions.append(InputHandler.Action.QUIT)
         

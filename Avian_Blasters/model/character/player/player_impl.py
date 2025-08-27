@@ -24,20 +24,25 @@ class PlayerImpl(CharacterImpl, Player):
         super().__init__(x, y, width, height, Entity.TypeArea.PLAYER, delta, health)
         self._power_up_handler = PowerUpHandlerImpl(None)
         self._score = ScoreImpl(initial_score, initial_multiplier)
-        self._status_handler = PlayerStatusImpl(PlayerStatus.Status.NORMAL)
+        self._status_handler = PlayerStatusImpl(PlayerStatus.Status.NORMAL, fps)
         self._attack_handler = PlayerAttackHandler(ProjectileFactory(), PlayerAttackHandler.PLAYER_PROJECTILE_SPEED, ProjectileType.NORMAL, )
+        if limit_right <= limit_left:
+            raise ValueError("The right limit must be bigger than the left one!")
         self._limit_r = limit_right
         self._limit_l = limit_left
         self._default_speed = delta
         self._fps = fps
+        self._is_hurt = False
 
     def get_power_up_handler(self) -> PowerUpHandler:
         return self._power_up_handler
     
-    def player_attack_handler_get(self) -> PlayerAttackHandler:
+    def get_player_attack_handler(self) -> PlayerAttackHandler:
         return self._attack_handler
     
     def move(self, x : int):
+        if not isinstance(x, int):
+            raise ValueError("X must be a positive integer!")
         effective_movement = self.__effective_movement(x)
         dx = 0
         dy = 0
@@ -71,21 +76,26 @@ class PlayerImpl(CharacterImpl, Player):
         self.__update()
         if self._status_handler.status != PlayerStatus.Status.INVULNERABLE:
             for i in others:
+                if not isinstance(i, Entity):
+                    raise ValueError("A list of Entity objects must be used!")
                 if i.get_type == Entity.TypeArea.ENEMY or i.get_type == Entity.TypeArea.ENEMY_PROJECTILE:
                     if super().is_touched(i):
                         # Check if it's a sound wave projectile from bats
                         if hasattr(i, 'projectile_type') and i.projectile_type == ProjectileType.SOUND_WAVE:
                             # Sound waves don't deal damage but slow the player
-                            self._status_handler.slow_down(DEFAULT_COOLDOWN * self._fps)
+                            self._status_handler.slow_down(DEFAULT_COOLDOWN)
                         else:
                             # Regular damage from enemies or normal projectiles
                             damage = 3 if i.get_type == Entity.TypeArea.ENEMY else 1
                             self.get_health_handler().take_damage(damage)
                             if self.get_health_handler().current_health > 0:
-                                self._status_handler.invincibility(DEFAULT_COOLDOWN * self._fps)
+                                self._status_handler.invincibility(DEFAULT_COOLDOWN)
+                            self._is_hurt = True
                         return True
         else:
             self._status_handler.update()
+            if self._status_handler.status != PlayerStatus.Status.INVULNERABLE:
+                self._is_hurt = False
         return False
 
     def get_status(self) -> PlayerStatus:
@@ -99,4 +109,7 @@ class PlayerImpl(CharacterImpl, Player):
             self.delta = int (self._default_speed/2)
         elif self.get_status().status != PlayerStatus.Status.SLOWED and self._delta == self._default_speed/2:
             self.delta = self._default_speed
+
+    def is_hurt(self) -> bool:
+        return self._is_hurt
         
