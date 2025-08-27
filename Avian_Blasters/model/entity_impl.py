@@ -10,6 +10,8 @@ class EntityImpl(Entity):
         if not isinstance(type, Entity.TypeArea):
             raise ValueError("Every entity requires a definition of its area type!")
         self._type = type
+        if not isinstance(delta, int):
+            raise ValueError("Delta must be an integer!")
         self._delta = delta
     
     def get_area(self) -> Area:
@@ -29,6 +31,8 @@ class EntityImpl(Entity):
     #    self.move(self, movement_x * self._delta, movement_y * self._delta, self._area.get_width, self._area.get_height)
     
     def is_touched(self, other : Entity) -> bool:
+        if not isinstance(other, Entity):
+            raise ValueError("An Entity must be used here!")
         return self._area.overlap(other.get_area())
     
     @property
@@ -37,4 +41,7 @@ class EntityImpl(Entity):
     
     @delta.setter
     def delta(self, new_delta : int):
-        self._delta = new_delta
+        if isinstance(new_delta, int):
+            self._delta = new_delta
+        else:
+            raise Exception("Delta must be a integer value!")

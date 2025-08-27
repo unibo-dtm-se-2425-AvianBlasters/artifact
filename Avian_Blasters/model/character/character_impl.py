@@ -10,6 +10,8 @@ class CharacterImpl(EntityImpl, Character):
 
     def __init__(self, x : int, y : int, width : int, height : int, type : Entity.TypeArea, delta : int, health : int):
         super().__init__(x, y, width, height, type, delta)
+        if not isinstance(health, int):
+            raise ValueError("Health must be a positive integer!")
         self._health_handler = HealthHandlerImpl(health)
         self._max_health = health
     

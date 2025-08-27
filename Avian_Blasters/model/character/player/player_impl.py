@@ -41,6 +41,8 @@ class PlayerImpl(CharacterImpl, Player):
         return self._attack_handler
     
     def move(self, x : int):
+        if not isinstance(x, int):
+            raise ValueError("X must be a positive integer!")
         effective_movement = self.__effective_movement(x)
         dx = 0
         dy = 0

@@ -28,7 +28,7 @@ class ScoreImpl(Score):
     
     @multiplier.setter
     def multiplier(self, multiplier : int):
-        if multiplier >= 1 and isinstance(multiplier, int):
+        if isinstance(multiplier, int) and multiplier >= 1:
             self._multiplier = multiplier
         else:
             raise Exception("The multiplier must be a postive integer!")
