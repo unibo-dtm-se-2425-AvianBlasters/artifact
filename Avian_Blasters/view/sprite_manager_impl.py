@@ -20,7 +20,7 @@ class SpriteManagerImpl(SpriteManager):
                 'size': (16, 10)
             },
             Entity.TypeArea.ENEMY: {
-                'positions': [(24, 24, 64, 44), (60, 40, 64, 40), (80, 40, 64, 40),  # birds
+                'positions': [(26, 24, 64, 44), (120, 24, 64, 44), (80, 40, 64, 40),  # birds
                              (26, 304, 64, 44), (60, 60, 60, 40), (80, 60, 60, 40)],   # bats
                 'size': (16, 10)
             },
