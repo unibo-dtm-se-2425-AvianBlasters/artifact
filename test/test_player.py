@@ -58,7 +58,7 @@ class TestPlayer(unittest.TestCase):
         self.verify_movement(movement_x, self.limit_right)
         movement_x2 = - int (100 / self.delta)
         self.verify_movement(movement_x2, self.initial_x)
-        self.verify_movement((-movement_x - 1)/2, (-movement_x - 1)/2 * self.delta)
+        self.verify_movement(int((-movement_x - 1)/2), int((-movement_x - 1)/2) * self.delta)
         self.verify_movement(movement_x2, self.limit_left)
         movement_x3 = 300
         self.verify_movement(movement_x3, self.limit_right)
