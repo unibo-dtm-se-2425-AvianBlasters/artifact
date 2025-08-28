@@ -131,6 +131,7 @@ class GameControllerImpl(GameController):
         for projectile in self._world.get_projectiles():
             if projectile.get_area().get_position_y <= 0 or projectile.get_area().get_position_y >= SCREEN_HEIGHT:
                     projectile.destroy()
+                    self._world.remove_entity(projectile)
             else:
                 if projectile.projectile_type == ProjectileType.NORMAL:
                     if projectile.get_type == Entity.TypeArea.PLAYER_PROJECTILE:
@@ -150,10 +151,12 @@ class GameControllerImpl(GameController):
             for power_up in self._world.get_power_ups():
                 if power_up.get_area().get_position_y > SCREEN_HEIGHT:
                     power_up.destroy()
+                    self._world.remove_entity(power_up)
                 else:
                     power_up.move(0, 1, power_up.get_area().width, power_up.get_area().height)
                     if self._player.get_area().overlap(power_up.get_area()):
                         power_up_handler.collect_power_up(power_up, self._player)
+                        self._world.remove_entity(power_up)
             if hasattr(power_up_handler, 'player_update'):
                     power_up_handler.player_update(self._player)         
     
