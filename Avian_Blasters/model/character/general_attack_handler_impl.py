@@ -32,7 +32,7 @@ class GeneralAttackHandlerImpl(GeneralAttackHandler):
         return []
         
     def _reset_cooldown(self):
-        self._cooldown_handler.cooldown = self._cooldown_handler.refresh_rate
+        self._cooldown_handler.cooldown = 1
 
     def update(self):
         self._cooldown_handler.update()
