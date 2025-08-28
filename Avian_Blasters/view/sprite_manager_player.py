@@ -3,6 +3,7 @@ from typing import Dict, Tuple, Optional
 from Avian_Blasters.view.sprite_manager import SpriteManager
 from Avian_Blasters.model.entity import Entity
 from Avian_Blasters.model.character.player import Player
+import os
 
 class SpriteManagerPlayer(SpriteManager):
     """SpriteManagerImpl is a pygame implementation of SpriteManager"""
@@ -12,7 +13,7 @@ class SpriteManagerPlayer(SpriteManager):
         self._sprites: Dict[int, list[pygame.Surface]] = {}
         self._sprite_sizes: Dict[int, Tuple[int, int]] = {}
         self._loaded = False
-        self._path = "assets/sprites/Car_V3.png"
+        self._path = 'assets' + os.sep + 'sprites' + os.sep + 'Car_V3.png'
 
         
         # Define sprite grid positions and sizes

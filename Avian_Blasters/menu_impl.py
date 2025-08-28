@@ -3,10 +3,13 @@ from Avian_Blasters.controller.game_controller import GameController
 from Avian_Blasters.controller.game_controller_impl import GameControllerImpl
 import pygame
 import pygame_menu
+import pygame_menu.events
+import pygame_menu.widgets
 from tkinter import *
 from tkinter.ttk import *
 
 MENU : pygame_menu.Menu = None
+SCORE_MENU: pygame_menu.Menu = None
 DIFFICULTY = [2]
 NAME = [""]
 FPS = [60]
@@ -50,12 +53,17 @@ class MainMenuImpl(MainMenu):
         pygame.init()    
         
     def initiate(self):
-        surface = pygame.display.set_mode((self._width/2, self._height/2))
+        surface = pygame.display.set_mode((self._width/2, self._height/2), pygame.RESIZABLE)
         MENU = pygame_menu.Menu("Avian Blasters", self._width/2, self._height/2, center_content=True)
+        SCORE_MENU = pygame_menu.Menu('Best Scores', self._width/2, self._height/2)
+        SCORE_MENU.add.button('Go Back', pygame_menu.events.BACK)
+        table = pygame_menu.widgets.Table(3, 20)
+
         
         MENU.add.text_input('Name :', default='', onchange=set_name)
         MENU.add.button('Play', play)
         MENU.add.selector('Difficulty :', [('Hard as nails', 1), ('Typical ride', 2), ('Easy peasy', 3)], default=2, onchange=set_difficulty)
         MENU.add.selector('FPS :', [('Smooth 60', 60), ('Typical 30', 30), ('Rough 15', 15)], default=0, onchange=set_fps)
+        MENU.add.button('Scoreboard', SCORE_MENU)
         MENU.add.button('Quit', pygame_menu.events.EXIT)
         MENU.mainloop(surface)
