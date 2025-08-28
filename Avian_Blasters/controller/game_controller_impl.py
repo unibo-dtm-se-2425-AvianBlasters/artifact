@@ -115,8 +115,8 @@ class GameControllerImpl(GameController):
             if hasattr(status_handler, 'update'):
                 status_handler.update()
 
-        if self._player and hasattr(self._player, 'player_attack_handler_get'):
-            attack_handler = self._player.player_attack_handler_get()
+        if self._player and hasattr(self._player, 'get_player_attack_handler'):
+            attack_handler = self._player.get_player_attack_handler()
             if hasattr(attack_handler, 'update'):
                 attack_handler.update()
         
@@ -129,7 +129,7 @@ class GameControllerImpl(GameController):
             return
         
         for projectile in self._world.get_projectiles():
-            if projectile.get_area().get_position_y + projectile.get_area().height < 0 or projectile.get_area().get_position_y > SCREEN_HEIGHT:
+            if projectile.get_area().get_position_y <= 0 or projectile.get_area().get_position_y >= SCREEN_HEIGHT:
                     projectile.destroy()
             else:
                 if projectile.projectile_type == ProjectileType.NORMAL:
@@ -151,7 +151,7 @@ class GameControllerImpl(GameController):
                 if power_up.get_area().get_position_y > SCREEN_HEIGHT:
                     power_up.destroy()
                 else:
-                    power_up.move(0, 0.2, power_up.get_area().width, power_up.get_area().height)
+                    power_up.move(0, 1, power_up.get_area().width, power_up.get_area().height)
                     if self._player.get_area().overlap(power_up.get_area()):
                         power_up_handler.collect_power_up(power_up, self._player)
             if hasattr(power_up_handler, 'player_update'):
