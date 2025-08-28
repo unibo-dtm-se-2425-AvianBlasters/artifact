@@ -47,3 +47,6 @@ class World:
     
     def add_projectiles(self, projectiles : list[Projectile]):
         """Adds a list of projectiles to the one contained in World"""
+
+    def remove_entity(self, entity: Entity):
+        """Removes an entity from World"""
