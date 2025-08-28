@@ -44,6 +44,10 @@ class WorldImpl(World):
     def add_projectiles(self, projectiles : list[Projectile]):
         self.add_entities(projectiles)
 
+    def remove_entity(self, entity: Entity):
+        if entity in self._entities:
+            self._entities.remove(entity)
+
     def __getter(self, class_type : Type) -> list[Entity]:
         self.__cleaner()
         result_list = []

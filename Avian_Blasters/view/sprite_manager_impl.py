@@ -25,15 +25,15 @@ class SpriteManagerImpl(SpriteManager):
                 'size': (16, 10)
             },
             Entity.TypeArea.PLAYER_PROJECTILE: {
-                'positions': [(100, 40, 4, 8), (100, 50, 4, 8)],  # Projectiles
-                'size': (4, 8)
+                'positions': [(224, 292, 12, 20)],  # Projectiles
+                'size': (12, 20)
             },
             Entity.TypeArea.ENEMY_PROJECTILE: {
-                'positions': [(100, 60, 4, 8), (100, 70, 4, 8)],  # Enemy projectiles
+                'positions': [(213, 33, 12, 20), (100, 70, 4, 8)],  # Enemy projectiles
                 'size': (4, 8)
             },
             Entity.TypeArea.POWERUP: {
-                'positions': [(120, 40, 16, 16), (120, 60, 16, 16)],  # Power-ups
+                'positions': [(143, 28, 12, 40), (120, 40, 16, 16), (120, 60, 16, 16)],  # Power-ups
                 'size': (16, 16)
             }
         }

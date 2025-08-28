@@ -4,6 +4,10 @@ from typing import List
 from Avian_Blasters.controller.game_controller import GameController
 from Avian_Blasters.controller.input_handler import InputHandler
 from Avian_Blasters.controller.input_handler_impl import InputHandlerImpl
+from Avian_Blasters.model.item.power_up.power_up import PowerUpType
+from Avian_Blasters.model.item.power_up.power_up_impl import PowerUpImpl
+from Avian_Blasters.model.item.power_up.power_up_types.double_fire_power_up import DoubleFirePowerUp
+from Avian_Blasters.model.item.projectile.projectile import Projectile, ProjectileType
 from Avian_Blasters.view.game_view import GameView
 from Avian_Blasters.view.game_view_impl import GameViewImpl
 from Avian_Blasters.model.world import World
@@ -58,10 +62,14 @@ class GameControllerImpl(GameController):
                 limit_left=5,     # Near left edge
                 fps = TARGET_FPS
             )
-            
+
+            self._test_power_up = DoubleFirePowerUp(
+                x=50,  y= 20, width=5, height=5,
+                type=Entity.TypeArea.POWERUP, power_up_type=PowerUpType.DOUBLE_FIRE, is_timed=True, duration=5.0, delta=1)
             # Create enemies in formation (like Space Invaders)
             entities = [self._player]
             entities.extend(self._create_enemy_formation())
+            entities.append(self._test_power_up)
             
             # Create world with the player and enemies
             self._world = WorldImpl(entities)
@@ -106,6 +114,51 @@ class GameControllerImpl(GameController):
             status_handler = self._player.get_status()
             if hasattr(status_handler, 'update'):
                 status_handler.update()
+
+        if self._player and hasattr(self._player, 'get_player_attack_handler'):
+            attack_handler = self._player.get_player_attack_handler()
+            if hasattr(attack_handler, 'update'):
+                attack_handler.update()
+        
+        self._update_projectiles()
+        self._update_power_ups()
+
+    def _update_projectiles(self) -> None:
+        """Update the positions of all projectiles in the world"""
+        if not self._world:
+            return
+        
+        for projectile in self._world.get_projectiles():
+            if projectile.get_area().get_position_y <= 0 or projectile.get_area().get_position_y >= SCREEN_HEIGHT:
+                    projectile.destroy()
+                    self._world.remove_entity(projectile)
+            else:
+                if projectile.projectile_type == ProjectileType.NORMAL:
+                    if projectile.get_type == Entity.TypeArea.PLAYER_PROJECTILE:
+                        movement_y = -0.1
+                    else:
+                        movement_y = 0.1
+                else:
+                    movement_y = 0
+                projectile.move(0, movement_y, projectile.get_area().width, projectile.get_area().height)
+
+    def _update_power_ups(self) -> None:
+        if not self._world:
+            return
+        
+        if self._player and hasattr(self._player, 'get_power_up_handler'):
+            power_up_handler = self._player.get_power_up_handler()
+            for power_up in self._world.get_power_ups():
+                if power_up.get_area().get_position_y > SCREEN_HEIGHT:
+                    power_up.destroy()
+                    self._world.remove_entity(power_up)
+                else:
+                    power_up.move(0, 1, power_up.get_area().width, power_up.get_area().height)
+                    if self._player.get_area().overlap(power_up.get_area()):
+                        power_up_handler.collect_power_up(power_up, self._player)
+                        self._world.remove_entity(power_up)
+            if hasattr(power_up_handler, 'player_update'):
+                    power_up_handler.player_update(self._player)         
     
     def handle_input(self, actions: List[InputHandler.Action]) -> None:
         """Process input actions and update the game state accordingly"""
