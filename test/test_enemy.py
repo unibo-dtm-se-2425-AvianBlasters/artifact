@@ -63,8 +63,8 @@ class TestEnemyHealthHandler(unittest.TestCase):
 class TestAttackHandlers(unittest.TestCase):
     def setUp(self):
         self.factory = ProjectileFactory()
-        self.always_attack_handler = EnemyAttackHandler(self.factory, fire_chance=1.0, cooldown_steps=0)
-        self.never_attack_handler = EnemyAttackHandler(self.factory, fire_chance=0.0, cooldown_steps=0)
+        self.always_attack_handler = EnemyAttackHandler(self.factory, fire_chance=1.0, cooldown_steps=20)
+        self.never_attack_handler = EnemyAttackHandler(self.factory, fire_chance=0.0, cooldown_steps=20)
         self.cooldown_handler = EnemyAttackHandler(self.factory, fire_chance=1.0, cooldown_steps=3)
 
     def test_always_attack(self):
@@ -96,14 +96,14 @@ class TestAttackHandlers(unittest.TestCase):
         self.assertEqual(1, len(projectiles2))
 
     def test_bird_attack_handler(self):
-        bird_handler = BirdAttackHandler(self.factory, fire_chance=1.0, cooldown_steps=0)
+        bird_handler = BirdAttackHandler(self.factory, fire_chance=1.0, cooldown_steps=20)
         enemy = EnemyImpl(x=100, y=200, width=20, height=16, speed=3, max_health=5)
         
         projectiles = bird_handler.try_attack(enemy)
         self.assertEqual(1, len(projectiles))
 
     def test_bat_attack_handler(self):
-        bat_handler = BatAttackHandler(self.factory, fire_chance=1.0, cooldown_steps=0)
+        bat_handler = BatAttackHandler(self.factory, fire_chance=1.0, cooldown_steps=20)
         enemy = EnemyImpl(x=80, y=150, width=18, height=14, speed=4, max_health=3)
         
         projectiles = bat_handler.try_attack(enemy)
@@ -144,7 +144,7 @@ class TestEnemyImpl(unittest.TestCase):
     def test_attack_delegation(self):
         # Set up enemy with guaranteed attack
         factory = ProjectileFactory()
-        always_attack = EnemyAttackHandler(factory, fire_chance=1.0, cooldown_steps=0)
+        always_attack = EnemyAttackHandler(factory, fire_chance=1.0, cooldown_steps=20)
         enemy = EnemyImpl(
             x=75, y=100, width=16, height=12, speed=2, max_health=10,
             attack_handler=always_attack
@@ -153,11 +153,18 @@ class TestEnemyImpl(unittest.TestCase):
         projectile = enemy.attack()
         self.assertIsNotNone(projectile)
         
-        # Test shoot() alias
+        for _ in range(20):
+            projectile2 = enemy.shoot()
+            self.assertIsNone(projectile2)
+        
         projectile2 = enemy.shoot()
         self.assertIsNotNone(projectile2)
         
-        # Test new shoot_all() method
+        for _ in range(20):
+            projectile2 = enemy.shoot()
+            self.assertIsNone(projectile2)
+        
+        # Test shoot_all() method
         projectiles = enemy.shoot_all()
         self.assertEqual(1, len(projectiles))
 

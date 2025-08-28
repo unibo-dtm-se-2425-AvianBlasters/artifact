@@ -20,8 +20,8 @@ class EnemyAttackHandler(GeneralAttackHandlerImpl):
         
     def _can_attack(self) -> bool:
         """Check if the handler is ready to attack and roll for fire chance"""
-        if self._cooldown > 0:
-            self._cooldown -= 1
+        if not self._cooldown_handler.is_over():
+            self._cooldown_handler.update()
             return False
         return random.random() <= self._fire_chance
         
@@ -29,19 +29,18 @@ class EnemyAttackHandler(GeneralAttackHandlerImpl):
         """Try to attack and return a list of projectiles"""
         if not self._can_attack():
             return []
-            
-        projectile = self._projectile_factory.create_projectile(
-            projectile_type=self._projectile_type,
-            x=enemy.x,
-            y=enemy.y + max(1, enemy.height // 2),
-            width=5,
-            height=5,
-            type_area=Entity.TypeArea.ENEMY_PROJECTILE,
-            delta=self._projectile_speed
-        )
-        
-        self._reset_cooldown()
-        return [projectile]
+        else:    
+            projectile = self._projectile_factory.create_projectile(
+                projectile_type=self._projectile_type,
+                x=enemy.x,
+                y=enemy.y + max(1, enemy.height // 2),
+                width=5,
+                height=5,
+                type_area=Entity.TypeArea.ENEMY_PROJECTILE,
+                delta=self._projectile_speed
+            )
+            self._reset_cooldown()
+            return [projectile]
 
 
 class BirdAttackHandler(EnemyAttackHandler):

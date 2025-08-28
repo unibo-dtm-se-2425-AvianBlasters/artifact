@@ -6,4 +6,4 @@ from Avian_Blasters.model.character.player.power_up_handler import PowerUpHandle
 from Avian_Blasters.model.character.player.power_up_handler_impl import PowerUpHandlerImpl
 from Avian_Blasters.model.character.player.score import Score
 from Avian_Blasters.model.character.player.score_impl import ScoreImpl
-from Avian_Blasters.model.character.player.player_attack_handler import PlayerAttackHandler
+from Avian_Blasters.model.character.player.player_attack_handler import PlayerAttackHandler, PLAYER_COOLDOWN_STEPS

@@ -28,36 +28,38 @@ class PlayerAttackHandler(GeneralAttackHandlerImpl):
         self._number_of_projectiles = number_of_projectiles
 
     def _can_attack(self) -> bool:
-        if self._cooldown > 0:
-            self._cooldown -= 1
+        if not self.cooldown_handler.is_over():
+            self.cooldown_handler.update()
             return False
-        return True
+        else:
+            return True
 
     def try_attack(self, player):
-        if not self._cooldown_handler.is_over():
+        if not self._can_attack():
             return []
-        projectiles = []
-        player_center_x = player.get_area().get_position_x 
-        player_center_y = player.get_area().get_position_y 
-        offset = 20
-        total_width = (self._number_of_projectiles - 1) * offset
-        start_x = player_center_x - total_width // 2 
-        for i in range(self._number_of_projectiles):
-            if self._number_of_projectiles == 1:
-                projectile_x = player_center_x
-            else:
-                projectile_x = start_x + i * offset
-            projectile = self._projectile_factory.create_projectile(
-                projectile_type=self._projectile_type,
-                x=projectile_x,
-                y=player_center_y,
-                width=PLAYER_PROJECTILE_WIDTH, 
-                height=PLAYER_PROJECTILE_HEIGHT,
-                type_area=Entity.TypeArea.PLAYER_PROJECTILE,
-                delta=self.PLAYER_PROJECTILE_SPEED
-            )
-            projectiles.append(projectile)
-        self._reset_cooldown()
-        return projectiles
+        else:
+            projectiles = []
+            player_center_x = player.get_area().get_position_x 
+            player_center_y = player.get_area().get_position_y 
+            offset = 20
+            total_width = (self._number_of_projectiles - 1) * offset
+            start_x = player_center_x - total_width // 2 
+            for i in range(self._number_of_projectiles):
+                if self._number_of_projectiles == 1:
+                    projectile_x = player_center_x
+                else:
+                    projectile_x = start_x + i * offset
+                projectile = self._projectile_factory.create_projectile(
+                    projectile_type=self._projectile_type,
+                    x=projectile_x,
+                    y=player_center_y,
+                    width=PLAYER_PROJECTILE_WIDTH, 
+                    height=PLAYER_PROJECTILE_HEIGHT,
+                    type_area=Entity.TypeArea.PLAYER_PROJECTILE,
+                    delta=self.PLAYER_PROJECTILE_SPEED
+                )
+                projectiles.append(projectile)
+            self._reset_cooldown()
+            return projectiles
                 
                 
