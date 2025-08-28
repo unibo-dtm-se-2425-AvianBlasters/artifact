@@ -25,7 +25,7 @@ TARGET_FPS = 60
 class GameControllerImpl(GameController):
     """GameControllerImpl is the main implementation of GameController"""
     
-    def __init__(self):
+    def __init__(self, difficulty : int, name : str, fps : int):
         self._world: World = None
         self._view: GameView = None
         self._input_handler: InputHandler = None
@@ -33,6 +33,9 @@ class GameControllerImpl(GameController):
         self._running = False
         self._player: Player = None
         self._paused = False
+        self._name = name
+        self._difficulty = difficulty
+        self._fps = fps
     
     def initialize(self) -> bool:
         """Initialize the game controller and its dependencies"""
@@ -41,13 +44,13 @@ class GameControllerImpl(GameController):
             self._clock = pygame.time.Clock()
             
             # Initialize view
-            self._view = GameViewImpl()
+            self._view = GameViewImpl(self._fps)
             if not self._view.initialize(SCREEN_WIDTH, SCREEN_HEIGHT, GAME_TITLE):
                 return False
             
             # Initialize input handler
             self._input_handler = InputHandlerImpl()
-            
+
             # Initialize world with a test player
             self._player = PlayerImpl(
                 x=60,  # Center of world width
@@ -55,12 +58,12 @@ class GameControllerImpl(GameController):
                 width=8,  # Larger width for better visibility
                 height=5, # Larger height for better visibility
                 delta=2,  # Movement speed
-                health=3,
+                health=self._difficulty,
                 initial_score=0,
                 initial_multiplier=1,
                 limit_right=115,  # Near right edge
                 limit_left=5,     # Near left edge
-                fps = TARGET_FPS
+                fps = self._fps
             )
 
             self._test_power_up = DoubleFirePowerUp(
@@ -92,7 +95,7 @@ class GameControllerImpl(GameController):
         
         while self._running:
             # Calculate delta time
-            delta_time = self._clock.tick(TARGET_FPS) / 1000.0
+            delta_time = self._clock.tick(self._fps) / 1000.0
             
             # Handle input
             actions = self._input_handler.handle_events()

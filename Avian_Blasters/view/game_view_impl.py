@@ -17,7 +17,7 @@ WHITE = (255, 255, 255)
 class GameViewImpl(GameView):
     """GameViewImpl is a pygame implementation of GameView"""
     
-    def __init__(self):
+    def __init__(self, fps : int):
         self._screen = None
         self._screen_width = 0
         self._screen_height = 0
@@ -27,6 +27,7 @@ class GameViewImpl(GameView):
         self._sprite_manager_player = SpriteManagerPlayer()
         self._ui_renderer: UIRenderer = UIRendererImpl()
         self._cooldown_animation = 0
+        self._fps = fps
     
     def initialize(self, width: int, height: int, title: str) -> bool:
         """Initialize the pygame display and return success status"""
@@ -62,11 +63,11 @@ class GameViewImpl(GameView):
         # Render all entities
         entities = world.get_all_entities()
         for entity in entities:
-            if self._cooldown_animation < 30 or entity.get_type not in [Entity.TypeArea.PLAYER, Entity.TypeArea.ENEMY]:
+            if self._cooldown_animation < self._fps//2 or entity.get_type not in [Entity.TypeArea.PLAYER, Entity.TypeArea.ENEMY]:
                 self.render_entity(entity)
-            elif self._cooldown_animation < 60:
+            elif self._cooldown_animation < self._fps:
                 self.render_entity_with_variant(entity, 1)
-                if self._cooldown_animation == 59:
+                if self._cooldown_animation == self._fps - 1:
                     self._cooldown_animation = 0
         
         # Render UI elements
