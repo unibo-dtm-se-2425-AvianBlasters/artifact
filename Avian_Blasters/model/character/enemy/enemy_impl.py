@@ -7,9 +7,11 @@ from Avian_Blasters.model.character.general_attack_handler import GeneralAttackH
 from Avian_Blasters.model.character.enemy.attack_handler_impl import EnemyAttackHandler
 from Avian_Blasters.model.item.projectile.projectile import Projectile
 from Avian_Blasters.model.item.projectile.projectile_factory import ProjectileFactory
+from Avian_Blasters.model.character.character_impl import CharacterImpl
+from Avian_Blasters.model.entity import Entity
 
 
-class EnemyImpl(Enemy):
+class EnemyImpl(CharacterImpl, Enemy):
     """ Base class for all enemies in the game. It provides basic movement, attack, and health handling. """
     def __init__(
         self,
@@ -22,34 +24,33 @@ class EnemyImpl(Enemy):
         attack_handler: Optional[GeneralAttackHandler] = None,
         health_handler: Optional[HealthHandler] = None,
     ) -> None:
-        self._x = x
-        self._y = y
-        self._width = width
-        self._height = height
-        self._speed = speed
-        self._health_handler: HealthHandler = health_handler or HealthHandlerImpl(
-            max_health
-        )
+        # Initialize parent class with proper Entity.TypeArea
+        super().__init__(x, y, width, height, Entity.TypeArea.ENEMY, speed, max_health)
+        # Override health_handler if provided
+        if health_handler:
+            self._health_handler = health_handler
+        # Set up attack handler
         self._attack_handler: GeneralAttackHandler = attack_handler or EnemyAttackHandler(ProjectileFactory())
 
     @property
     def x(self) -> int:
-        return self._x  
+        return self.get_area().get_position_x
 
     @property
     def y(self) -> int:
-        return self._y
+        return self.get_area().get_position_y
 
     @property
     def width(self) -> int:
-        return self._width
+        return self.get_area().width
 
     @property
     def height(self) -> int:
-        return self._height
+        return self.get_area().height
 
     def move(self) -> None:
-        self._y += self._speed
+        # Call the EntityImpl's move method with appropriate parameters
+        super().move(0, 1, self.width, self.height)
 
     def attack(self) -> Optional[Projectile]:
         projectiles = self._attack_handler.try_attack(self)
@@ -65,9 +66,6 @@ class EnemyImpl(Enemy):
     def get_health(self) -> int:
         return self._health_handler.current_health
 
-    def shoot(self) -> Optional[Projectile]:
-        return self.attack()
-
-    def shoot_all(self) -> list[Projectile]:
-        """New method that returns all projectiles from an attack"""
+    def shoot(self) -> list[Projectile]:
+        # Override Character's shoot method to use our attack handler
         return self._attack_handler.try_attack(self)
