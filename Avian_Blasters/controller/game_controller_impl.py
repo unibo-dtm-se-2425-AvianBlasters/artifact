@@ -18,6 +18,7 @@ from Avian_Blasters.model.world_impl import WorldImpl
 from Avian_Blasters.model.character.player.player import Player
 from Avian_Blasters.model.character.player.player_impl import PlayerImpl
 from Avian_Blasters.model.entity import Entity
+from Avian_Blasters.scoreboard_impl import ScoreboardImpl
 
 # Game constants
 SCREEN_WIDTH = 800
@@ -36,9 +37,10 @@ class GameControllerImpl(GameController):
         self._running = False
         self._player: Player = None
         self._paused = False
-        self._name = name
+        self._name = name.replace(',', ' ').lstrip().rstrip()
         self._difficulty = difficulty
         self._fps = fps
+        self._scoreboard = ScoreboardImpl()
     
     def initialize(self) -> bool:
         """Initialize the game controller and its dependencies"""
@@ -97,7 +99,6 @@ class GameControllerImpl(GameController):
         
         print("Starting Avian Blasters...")
         print("Controls: Arrow keys or A/D to move, Space to shoot, Right Shift to pause, Escape to quit")
-        print("Controls: Arrow keys or A/D to move, Space to shoot, Right Shift to pause, Escape to quit")
         
         while self._running:
             # Calculate delta time
@@ -113,6 +114,10 @@ class GameControllerImpl(GameController):
                 self._view.render_world(self._world)
                 self._view.update_display()
         
+        name = self._name
+        points = self._world.get_players()[0].get_score().score
+        difficulty = self._difficulty
+        self._scoreboard.add_score([name, points, difficulty])
         self.cleanup()
     
     def update_game_state(self, delta_time: float) -> None:
