@@ -17,9 +17,16 @@ class Bat(EnemyImpl):
         self._target_x = player_x
 
     def move(self) -> None:
+        # Calculate horizontal movement based on target
+        x_movement = 0
         if self._target_x is not None:
-            if self._x < self._target_x:
-                self._x += self._speed
-            elif self._x > self._target_x:
-                self._x -= self._speed
-        self._y += max(1, self._speed // 2)
+            if self.x < self._target_x:
+                x_movement = self._speed
+            elif self.x > self._target_x:
+                x_movement = -self._speed
+        
+        # Calculate vertical movement
+        y_movement = max(1, self._speed // 2)
+        
+        # Use the parent class's move method to update position
+        super().move(x_movement, y_movement, self.width, self.height)

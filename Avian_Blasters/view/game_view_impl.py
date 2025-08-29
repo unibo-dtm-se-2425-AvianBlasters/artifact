@@ -4,9 +4,11 @@ from Avian_Blasters.view.game_view import GameView
 from Avian_Blasters.view.sprite_manager import SpriteManager
 from Avian_Blasters.view.sprite_manager_impl import SpriteManagerImpl
 from Avian_Blasters.view.sprite_manager_player import SpriteManagerPlayer
+from Avian_Blasters.view.sprite_manager_enemy import SpriteManagerEnemy
 from Avian_Blasters.view.ui_renderer import UIRenderer
 from Avian_Blasters.view.ui_renderer_impl import UIRendererImpl
 from Avian_Blasters.model.character.player.player import Player
+from Avian_Blasters.model.character.enemy.enemy import Enemy
 from Avian_Blasters.model.world import World, WORLD_WIDTH, WORLD_HEIGHT
 from Avian_Blasters.model.entity import Entity
 
@@ -25,6 +27,7 @@ class GameViewImpl(GameView):
         self._scale_y = 1.0
         self._sprite_manager: SpriteManager = SpriteManagerImpl()
         self._sprite_manager_player = SpriteManagerPlayer()
+        self._sprite_manager_enemy = SpriteManagerEnemy()
         self._ui_renderer: UIRenderer = UIRendererImpl()
         self._cooldown_animation = 0
         self._fps = fps
@@ -47,6 +50,7 @@ class GameViewImpl(GameView):
             if not self._sprite_manager.load_sprites(sprite_path):
                 print(f"Warning: Failed to load sprites from {sprite_path}, using fallback rectangles")
             self._sprite_manager_player.load_sprites()
+            self._sprite_manager_enemy.load_sprites()
             # Initialize UI renderer
             if not self._ui_renderer.initialize():
                 print("Warning: Failed to initialize UI renderer")
@@ -100,6 +104,8 @@ class GameViewImpl(GameView):
 
             if isinstance(entity, Player):
                 sprite = self._sprite_manager_player.get_sprite(entity)
+            elif isinstance(entity, Enemy):
+                sprite = self._sprite_manager_enemy.get_sprite_for_enemy(entity)
             
             # Scale sprite to match world size
             sprite_width = int(area.width * self._scale_x)
@@ -159,6 +165,8 @@ class GameViewImpl(GameView):
 
         if isinstance(entity, Player):
             sprite = self._sprite_manager_player.get_sprite(entity, variant)
+        elif isinstance(entity, Enemy):
+            sprite = self._sprite_manager_enemy.get_sprite_for_enemy(entity, variant)
 
         
         # Scale sprite to match world size
