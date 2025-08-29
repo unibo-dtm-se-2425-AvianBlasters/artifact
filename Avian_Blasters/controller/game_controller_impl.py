@@ -70,13 +70,9 @@ class GameControllerImpl(GameController):
                 x=50,  y= 20, width=5, height=5,
                 type=Entity.TypeArea.POWERUP, power_up_type=PowerUpType.DOUBLE_FIRE, is_timed=True, duration=5.0, delta=1)
 
-            self._test_power_up = DoubleFirePowerUp(
-                x=50,  y= 20, width=5, height=5,
-                type=Entity.TypeArea.POWERUP, power_up_type=PowerUpType.DOUBLE_FIRE, is_timed=True, duration=5.0, delta=1)
             # Create enemies in formation (like Space Invaders)
             entities = [self._player]
             entities.extend(self._create_enemy_formation())
-            entities.append(self._test_power_up)
             entities.append(self._test_power_up)
             
             # Create world with the player and enemies
@@ -129,7 +125,6 @@ class GameControllerImpl(GameController):
                 attack_handler.update()
         
         self._update_projectiles()
-        self._update_power_ups()
         self._update_power_ups()
 
     def _update_projectiles(self) -> None:
