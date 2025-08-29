@@ -25,7 +25,11 @@ class Bird(EnemyImpl):
         self._phase = 0.0
 
     def move(self) -> None:
+        # Call parent move method first to update y position
         super().move()
+        # Then handle wave-like horizontal movement
         self._phase += self._wave_frequency
         offset = int(self._wave_amplitude * math.sin(self._phase))
-        self._x = self._base_x + offset
+        # Update position using area's position
+        new_x = self._base_x + offset
+        super().move(new_x - self.x, 0, self.width, self.height)

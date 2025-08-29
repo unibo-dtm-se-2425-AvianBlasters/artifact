@@ -91,17 +91,18 @@ class TestPlayer(unittest.TestCase):
     
     def test_shoot(self):
         shots = self.player.shoot()
-        for i in shots:
-            self.assertEqual(ProjectileType.NORMAL, i.projectile_type)
+        for shot in shots:
+            self.assertEqual(ProjectileType.NORMAL, shot.projectile_type)
         i=0
-        while (i < 5):
+        while (i < PLAYER_COOLDOWN_STEPS):
             shots = self.player.shoot()
-            for i in shots:
-                self.assertEqual(None, i)
+            for shot in shots:
+                self.assertEqual(None, shot)
             i += 1
         shots = self.player.shoot()
-        for i in shots:
-            self.assertEqual(ProjectileType.NORMAL, i.projectile_type)
+        self.assertFalse(len(shots) <= 0)
+        for shot in shots:
+            self.assertEqual(ProjectileType.NORMAL, shot.projectile_type)
 
         
 class TestPlayerStatusHandler(unittest.TestCase):
