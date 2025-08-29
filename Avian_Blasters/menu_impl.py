@@ -1,6 +1,7 @@
 from Avian_Blasters.menu import MainMenu
 from Avian_Blasters.controller.game_controller import GameController
 from Avian_Blasters.controller.game_controller_impl import GameControllerImpl
+from Avian_Blasters.scoreboard_impl import ScoreboardImpl
 import pygame
 import pygame_menu
 import pygame_menu.events
@@ -57,7 +58,10 @@ class MainMenuImpl(MainMenu):
         MENU = pygame_menu.Menu("Avian Blasters", self._width/2, self._height/2, center_content=True)
         SCORE_MENU = pygame_menu.Menu('Best Scores', self._width/2, self._height/2)
         SCORE_MENU.add.button('Go Back', pygame_menu.events.BACK)
-        table = pygame_menu.widgets.Table(3, 20)
+        #table = pygame_menu.widgets.Table(3, 20)
+        scoreboard = ScoreboardImpl()
+        #table.add_row()
+
 
         
         MENU.add.text_input('Name :', default='', onchange=set_name)

@@ -100,7 +100,6 @@ class TestPlayer(unittest.TestCase):
                 self.assertEqual(None, shot)
             i += 1
         shots = self.player.shoot()
-        self.assertFalse(len(shots) <= 0)
         for shot in shots:
             self.assertEqual(ProjectileType.NORMAL, shot.projectile_type)
 

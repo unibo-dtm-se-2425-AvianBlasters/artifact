@@ -14,6 +14,8 @@ class ScoreboardImpl(Scoreboard):
         with open(self._file_path, 'r') as file:
             lines = file.readlines()
         
+        file.close()
+        
         scoreboard : list[tuple[str, int, int]] = []
 
         if not isinstance(number_of_scores, int):
@@ -44,6 +46,8 @@ class ScoreboardImpl(Scoreboard):
                 if isinstance(score[2], int):
                     difficulty = self.__difficulty(score[2])
                 file.writelines(name + "," + str(points) + "," + difficulty + "\n")
+        
+        file.close()
     
     def __difficulty(self, difficulty : int) -> str:
         str = "EASY"
@@ -77,6 +81,7 @@ class ScoreboardImpl(Scoreboard):
     
     def __check_if_scoreboard_exists(self):
         try:
-            open(self._file_path, 'r')
+            file = open(self._file_path, 'r')
+            file.close()
         except FileNotFoundError:
             self.reset_scoreboard()
