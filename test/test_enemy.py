@@ -1,29 +1,12 @@
 import unittest
-import sys
-import os
+from Avian_Blasters.model.character.enemy.bird import Bird
+from Avian_Blasters.model.character.enemy.bat import Bat
+from Avian_Blasters.model.character.enemy.enemy_impl import EnemyImpl
+from Avian_Blasters.model.character.enemy.attack_handler_impl import EnemyAttackHandler, BirdAttackHandler, BatAttackHandler
+from Avian_Blasters.model.character.health_handler_impl import HealthHandlerImpl
+from Avian_Blasters.model.item.projectile.projectile_factory import ProjectileFactory
+from Avian_Blasters.model.character.enemy.enemy_factory import create_enemy_formation
 
-# Add the necessary paths to sys.path to handle relative imports
-project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-character_path = os.path.join(project_root, 'Avian_Blasters', 'model', 'character')
-enemy_path = os.path.join(character_path, 'enemy')
-model_path = os.path.join(project_root, 'Avian_Blasters', 'model')
-item_path = os.path.join(model_path, 'item', 'projectile')
-
-sys.path.insert(0, character_path)
-sys.path.insert(0, enemy_path)
-sys.path.insert(0, model_path)
-sys.path.insert(0, item_path)
-
-from bird import Bird
-from bat import Bat
-from enemy_impl import EnemyImpl
-from health_handler_impl import HealthHandlerImpl
-from attack_handler_impl import (
-    EnemyAttackHandler,
-    BirdAttackHandler,
-    BatAttackHandler,
-)
-from projectile_factory import ProjectileFactory
 
 
 class TestEnemyHealthHandler(unittest.TestCase):
@@ -270,6 +253,12 @@ class TestBat(unittest.TestCase):
         final_distance = abs(self.bat.x - target_x)
         self.assertLess(final_distance, distances[0])
 
+class TestEnemyFactory(unittest.TestCase):
+    def test_create_enemy_formation(self):
+        enemies = create_enemy_formation()
+        self.assertEqual(len(enemies), 30)  # Total number of enemies
+        self.assertIsInstance(enemies[0], Bird)
+        self.assertIsInstance(enemies[-1], Bat)    
 
 if __name__ == "__main__":
     unittest.main()
