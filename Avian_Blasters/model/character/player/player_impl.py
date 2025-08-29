@@ -10,6 +10,7 @@ from Avian_Blasters.model.character.player.power_up_handler_impl import PowerUpH
 from Avian_Blasters.model.character.player.score import Score
 from Avian_Blasters.model.character.player.score_impl import ScoreImpl
 from Avian_Blasters.model.character.player.player_attack_handler import PlayerAttackHandler
+from Avian_Blasters.model.character.enemy.enemy import Enemy
 from Avian_Blasters.model.item.projectile.projectile import Projectile
 from Avian_Blasters.model.item.projectile.projectile import ProjectileType
 from Avian_Blasters.model.item.projectile.projectile_factory import ProjectileFactory
@@ -92,11 +93,30 @@ class PlayerImpl(CharacterImpl, Player):
                                 self._status_handler.invincibility(DEFAULT_COOLDOWN)
                             self._is_hurt = True
                         return True
+                    elif i.get_type == Entity.TypeArea.ENEMY and self.__check_if_enemy_crossed(i):
+                        self.__instant_defeat()
+                        return True
         else:
             self._status_handler.update()
             if self._status_handler.status != PlayerStatus.Status.INVULNERABLE:
                 self._is_hurt = False
+            for i in others:
+                if not isinstance(i, Entity):
+                    raise ValueError("A list of Entity objects must be used!")
+                if i.get_type == Entity.TypeArea.ENEMY:
+                    if self.__check_if_enemy_crossed(i):
+                        self.__instant_defeat()
+                        return True
         return False
+
+    def __check_if_enemy_crossed(self, enemy : Enemy) -> bool:
+        return enemy.get_area().get_position_y <= self.get_area().get_position_y
+    
+    def __instant_defeat(self):
+        damage = 3
+        self.get_health_handler().take_damage(damage)
+        print("Oh no! The Avians have reached the car. Maaaaan... Game Over!")
+                        
 
     def get_status(self) -> PlayerStatus:
         return self._status_handler

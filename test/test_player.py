@@ -3,6 +3,7 @@ from Avian_Blasters.model.character.player import *
 from Avian_Blasters.model.entity import Entity
 from Avian_Blasters.model.entity_impl import EntityImpl
 from Avian_Blasters.model.item.projectile.projectile import ProjectileType
+from Avian_Blasters.model.item.power_up.power_up_factory import PowerUpFactory
 
 class TestPlayer(unittest.TestCase):
     initial_x = 0
@@ -88,6 +89,19 @@ class TestPlayer(unittest.TestCase):
         self.assertEqual(0, self.player.get_health_handler().current_health)
         with self.assertRaises(ValueError):
             self.player.is_touched(["Hello!"])
+
+    def test_enemy_reaching_player_height(self):
+        test_enemy = EntityImpl(x = 100, y = 30, width = self.width, height = self.height, type = Entity.TypeArea.ENEMY, delta = self.delta)
+        test_enemy.move(0, -30, self.width, self.height)
+        self.assertTrue(self.player.is_touched([test_enemy]))
+        self.assertEqual(0, self.player.get_health_handler().current_health)
+
+    def test_enemy_reaching_player_height_while_invulnerable(self):
+        test_enemy = EntityImpl(x = 100, y = 30, width = self.width, height = self.height, type = Entity.TypeArea.ENEMY, delta = self.delta)
+        test_enemy.move(0, -30, self.width, self.height)
+        self.player.get_status().invincibility(300)
+        self.assertTrue(self.player.is_touched([test_enemy]))
+        self.assertEqual(0, self.player.get_health_handler().current_health)
     
     def test_shoot(self):
         shots = self.player.shoot()
