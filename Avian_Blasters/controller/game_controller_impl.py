@@ -14,7 +14,7 @@ from Avian_Blasters.model.item.projectile.projectile import Projectile, Projecti
 from Avian_Blasters.view.game_view import GameView
 from Avian_Blasters.view.game_view_impl import GameViewImpl
 from Avian_Blasters.model.world import World
-from Avian_Blasters.model.world_impl import WorldImpl
+from Avian_Blasters.model.world_impl import WORLD_HEIGHT, WORLD_WIDTH, WorldImpl
 from Avian_Blasters.model.character.player.player import Player
 from Avian_Blasters.model.character.player.player_impl import PlayerImpl
 from Avian_Blasters.model.entity import Entity
@@ -135,8 +135,43 @@ class GameControllerImpl(GameController):
             if hasattr(attack_handler, 'update'):
                 attack_handler.update()
         
+        self._update_enemies()
         self._update_projectiles()
         self._update_power_ups()
+
+    def _update_enemies(self) -> None:
+        """Update the positions and behavior of all enemies in the world"""
+        if not self._world:
+            return
+        
+        # Update existing enemies
+        for enemy in self._world.get_enemies():
+            # Only remove enemies that have fallen off the bottom of the screen
+            # Allow horizontal movement off-screen since birds will bounce back
+            if enemy.get_area().get_position_y > WORLD_HEIGHT:
+                # Remove enemies that have moved off the bottom of the screen
+                self._world.remove_entity(enemy)
+            else:
+                # Set target for bats to move toward player
+                from Avian_Blasters.model.character.enemy.bat import Bat
+                players = self._world.get_players()
+                if isinstance(enemy, Bat) and players:
+                    player = players[0]
+                    # Set movement target
+                    enemy.set_target_x(player.get_area().get_position_x)
+                    # Set attack handler player position for distance checking
+                    enemy._attack_handler.set_player_position(
+                        player.get_area().get_position_x,
+                        player.get_area().get_position_y
+                    )
+                
+                # Update enemy position
+                enemy.move()
+                
+                # Handle enemy attacks (random firing)
+                projectiles = enemy.shoot()
+                if projectiles:
+                    self._world.add_projectiles(projectiles)
 
     def _update_projectiles(self) -> None:
         """Update the positions of all projectiles in the world"""
@@ -148,13 +183,14 @@ class GameControllerImpl(GameController):
                     projectile.destroy()
                     self._world.remove_entity(projectile)
             else:
+                # Use projectile's built-in speed (delta) for proper movement
                 if projectile.projectile_type == ProjectileType.NORMAL:
                     if projectile.get_type == Entity.TypeArea.PLAYER_PROJECTILE:
-                        movement_y = -0.1
+                        movement_y = -1  # Player projectiles move up
                     else:
-                        movement_y = 0.1
+                        movement_y = 1   # Enemy projectiles move down
                 else:
-                    movement_y = 0
+                    movement_y = 1   # Other projectile types move down
                 projectile.move(0, movement_y, projectile.get_area().width, projectile.get_area().height)
 
     def _update_power_ups(self) -> None:
@@ -250,3 +286,40 @@ class GameControllerImpl(GameController):
             self._view.cleanup()
         print("Game ended. Thanks for playing!")
     
+    def _create_enemy_formation(self) -> List[Entity]:
+        """Create a single green bird and a bat for testing movement"""
+        from Avian_Blasters.model.character.enemy.bird import Bird
+        from Avian_Blasters.model.character.enemy.bat import Bat
+        
+        enemies = []
+        
+        # Spawn only one green bird for testing
+        # Start at left side of screen, move right while falling slowly
+        bird = Bird(
+            x=10,  # Start near left edge
+            y=10,  # Start near top
+            width=4, 
+            height=4, 
+            speed=1, 
+            health=3,  # Green variant
+            horizontal_speed=0.5,  # Move right at moderate speed
+            vertical_speed=0.01,    # Fall slowly downward
+            screen_width=WORLD_WIDTH,   # Use game world coordinates, not pixel coordinates
+            screen_height=WORLD_HEIGHT
+        )
+        enemies.append(bird)
+        
+        # Add a bat with similar positioning but offset to avoid collision
+        bat = Bat(
+            x=50,  # Start more to the right than bird
+            y=10,  # Same starting height
+            width=4, 
+            height=4, 
+            speed=1, 
+            health=3,
+            horizontal_speed=0.3,  # Smooth horizontal chase speed
+            vertical_speed=0.15    # Slow falling speed
+        )
+        enemies.append(bat)
+        
+        return enemies

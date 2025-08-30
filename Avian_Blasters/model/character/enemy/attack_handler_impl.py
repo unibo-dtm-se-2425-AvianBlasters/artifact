@@ -47,15 +47,56 @@ class BirdAttackHandler(EnemyAttackHandler):
     """Birds drop standard bullets downward"""
     
     def __init__(self, projectile_factory: ProjectileFactory, fire_chance: float = 0.06, 
-                 cooldown_steps: int = 18, projectile_speed: int = 5):
+                 cooldown_steps: int = 60, projectile_speed: int = 1):
         super().__init__(projectile_factory, fire_chance, cooldown_steps, projectile_speed)
 
 
 class BatAttackHandler(EnemyAttackHandler):
-    """Bats fire sound waves that slow down the player"""
+    """Bats fire sound waves that slow down the player when close enough"""
     
-    def __init__(self, projectile_factory: ProjectileFactory, fire_chance: float = 0.04, 
+    def __init__(self, projectile_factory: ProjectileFactory, fire_chance: float = 0.08, 
                  cooldown_steps: int = 30, projectile_speed: int = 2):
         super().__init__(projectile_factory, fire_chance, cooldown_steps, projectile_speed)
         # Use sound wave projectiles that disrupt player movement
         self._projectile_type = ProjectileType.SOUND_WAVE
+        self._player_position = None
+        
+    def set_player_position(self, player_x: int, player_y: int):
+        """Set the current player position for distance checking"""
+        self._player_position = (player_x, player_y)
+        
+    def _can_attack(self, enemy) -> bool:
+        """Check if the handler is ready to attack and if close enough to player"""
+        if not self._cooldown_handler.is_over():
+            self._cooldown_handler.update()
+            return False
+            
+        # Check if we have player position information
+        if self._player_position is None:
+            return False
+            
+        # Calculate vertical distance to player
+        player_x, player_y = self._player_position
+        vertical_distance = abs(enemy.y - player_y)
+        
+        # Only attack if within 10 units vertically and pass random chance
+        if vertical_distance <= 10:
+            return random.random() <= self._fire_chance
+        return False
+        
+    def try_attack(self, enemy):
+        """Try to attack and return a list of projectiles"""
+        if not self._can_attack(enemy):
+            return []
+        else:    
+            projectile = self._projectile_factory.create_projectile(
+                projectile_type=self._projectile_type,
+                x=enemy.x,
+                y=enemy.y + max(1, enemy.height // 2),
+                width=5,
+                height=5,
+                type_area=Entity.TypeArea.ENEMY_PROJECTILE,
+                delta=self._projectile_speed
+            )
+            self._reset_cooldown()
+            return [projectile]
