@@ -78,7 +78,7 @@ class GameControllerImpl(GameController):
 
             # Create enemies in formation (like Space Invaders)
             entities = [self._player]
-            entities.extend(self._create_enemy_formation())
+            # entities.extend(self._create_enemy_formation())
             
             entities.append(self._test_power_up)
             
