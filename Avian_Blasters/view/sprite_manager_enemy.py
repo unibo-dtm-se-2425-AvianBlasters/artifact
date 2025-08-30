@@ -32,7 +32,7 @@ class SpriteManagerEnemy(SpriteManager):
             (121, 18, 64, 40),  # Bat variant 2
         ]
     
-    def load_sprites(self, sprite_sheet_path: str = None) -> bool:
+    def load_sprites(self) -> bool:
         """Load sprites from the Bird and Bat sprite sheet files"""
         try:
             # Load Bird sprite sheet

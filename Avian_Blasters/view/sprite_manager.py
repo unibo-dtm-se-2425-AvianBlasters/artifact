@@ -5,7 +5,7 @@ from Avian_Blasters.model.entity import Entity
 class SpriteManager:
     """SpriteManager defines the interface for loading and managing game sprites"""
     
-    def load_sprites(self, sprite_sheet_path: str) -> bool:
+    def load_sprites(self) -> bool:
         """Load sprites from the sprite sheet file"""
         ...
     

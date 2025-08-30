@@ -1,10 +1,14 @@
 import pygame
 from typing import List, Dict
+from Avian_Blasters.model.item.power_up.power_up import PowerUp
+from Avian_Blasters.model.item.projectile.projectile import Projectile, ProjectileType
 from Avian_Blasters.view.game_view import GameView
 from Avian_Blasters.view.sprite_manager import SpriteManager
 from Avian_Blasters.view.sprite_manager_impl import SpriteManagerImpl
 from Avian_Blasters.view.sprite_manager_player import SpriteManagerPlayer
 from Avian_Blasters.view.sprite_manager_enemy import SpriteManagerEnemy
+from Avian_Blasters.view.sprite_manager_power_up import SpriteManagerPowerUp
+from Avian_Blasters.view.sprite_manager_projectile import SpriteManagerProjectile
 from Avian_Blasters.view.ui_renderer import UIRenderer
 from Avian_Blasters.view.ui_renderer_impl import UIRendererImpl
 from Avian_Blasters.model.character.player.player import Player
@@ -25,9 +29,14 @@ class GameViewImpl(GameView):
         self._screen_height = 0
         self._scale_x = 1.0
         self._scale_y = 1.0
-        self._sprite_manager: SpriteManager = SpriteManagerImpl()
-        self._sprite_manager_player = SpriteManagerPlayer()
-        self._sprite_manager_enemy = SpriteManagerEnemy()
+        self._sprite_managers: Dict[Entity.TypeArea, SpriteManager] = {
+            Entity.TypeArea.PLAYER: SpriteManagerPlayer(),
+            Entity.TypeArea.ENEMY: SpriteManagerEnemy(),
+            Entity.TypeArea.PLAYER_PROJECTILE: SpriteManagerProjectile(),
+            Entity.TypeArea.ENEMY_PROJECTILE: SpriteManagerProjectile(),
+            Entity.TypeArea.POWERUP: SpriteManagerPowerUp()
+        }
+        self._default_sprite_manager = SpriteManagerImpl()
         self._ui_renderer: UIRenderer = UIRendererImpl()
         self._cooldown_animation = 0
         self._fps = fps
@@ -46,11 +55,9 @@ class GameViewImpl(GameView):
             self._scale_y = height / WORLD_HEIGHT
             
             # Load sprites
-            sprite_path = "assets/sprites.png"
-            if not self._sprite_manager.load_sprites(sprite_path):
-                print(f"Warning: Failed to load sprites from {sprite_path}, using fallback rectangles")
-            self._sprite_manager_player.load_sprites()
-            self._sprite_manager_enemy.load_sprites()
+            for manager in self._sprite_managers.values():
+                if not manager.load_sprites():
+                    print("Warning: Failed to load some sprites, using fallback.")
             # Initialize UI renderer
             if not self._ui_renderer.initialize():
                 print("Warning: Failed to initialize UI renderer")
@@ -84,8 +91,14 @@ class GameViewImpl(GameView):
             self._ui_renderer.render_health(self._screen, player, 10, 30)
         
         self._cooldown_animation += 1
-    
+
     def render_entity(self, entity: Entity) -> None:
+        self.render_entity_generic(entity)
+
+    def render_entity_with_variant(self, entity: Entity, variant: int) -> None:
+        self.render_entity_generic(entity, variant)
+    
+    def render_entity_generic(self, entity: Entity, variant: int = 0) -> None:
         """Render a single entity to the screen"""
         if self._screen is None:
             return
@@ -100,16 +113,31 @@ class GameViewImpl(GameView):
         
         # Get sprite for this entity with proper error handling
         try:
-            sprite = self._sprite_manager.get_sprite(entity.get_type)
 
             if isinstance(entity, Player):
-                sprite = self._sprite_manager_player.get_sprite(entity)
+                sprite = self._sprite_managers[Entity.TypeArea.PLAYER].get_sprite(entity)
             elif isinstance(entity, Enemy):
-                sprite = self._sprite_manager_enemy.get_sprite_for_enemy(entity)
-            
-            # Scale sprite to match world size
-            sprite_width = int(area.width * self._scale_x)
-            sprite_height = int(area.height * self._scale_y)
+                sprite = self._sprite_managers[Entity.TypeArea.ENEMY].get_sprite_for_enemy(entity)
+            elif isinstance(entity, Projectile):
+                sprite = self._sprite_managers[Entity.TypeArea.PLAYER_PROJECTILE].get_sprite(entity)
+            elif isinstance(entity, PowerUp):
+                sprite = self._sprite_managers[Entity.TypeArea.POWERUP].get_sprite(entity)
+            else:
+                sprite = self._default_sprite_manager.get_sprite(entity.get_type)
+
+            if isinstance(entity, Projectile):
+                if entity.projectile_type == ProjectileType.NORMAL:
+                    sprite_width = int(area.width * self._scale_x * 0.6)
+                    sprite_height = int(area.height * self._scale_y * 0.6)
+                elif entity.projectile_type == ProjectileType.LASER:
+                    sprite_width = int(area.width * self._scale_x * 0.3)
+                    sprite_height = int(area.height * self._scale_y * 2.0)
+                else:
+                    sprite_width = int(area.width * self._scale_x)
+                    sprite_height = int(area.height * self._scale_y)
+            else:
+                sprite_width = int(area.width * self._scale_x)
+                sprite_height = int(area.height * self._scale_y)
             
             # Scale the sprite if needed
             if sprite.get_size() != (sprite_width, sprite_height):
@@ -149,40 +177,6 @@ class GameViewImpl(GameView):
             rect = pygame.Rect(sprite_x, sprite_y, sprite_width, sprite_height)
             pygame.draw.rect(self._screen, color, rect)
     
-    def render_entity_with_variant(self, entity: Entity, variant: int) -> None:
-        """Render a single entity with a specific sprite variant"""
-        if self._screen is None:
-            return
-            
-        area = entity.get_area()
-        
-        # Convert world coordinates to screen coordinates
-        screen_x = int(area.get_position_x * self._scale_x)
-        screen_y = int(area.get_position_y * self._scale_y)
-        
-        # Get sprite for this entity with specific variant
-        sprite = self._sprite_manager.get_sprite(entity.get_type, variant)
-
-        if isinstance(entity, Player):
-            sprite = self._sprite_manager_player.get_sprite(entity, variant)
-        elif isinstance(entity, Enemy):
-            sprite = self._sprite_manager_enemy.get_sprite_for_enemy(entity, variant)
-
-        
-        # Scale sprite to match world size
-        sprite_width = int(area.width * self._scale_x)
-        sprite_height = int(area.height * self._scale_y)
-        
-        # Scale the sprite if needed
-        if sprite.get_size() != (sprite_width, sprite_height):
-            sprite = pygame.transform.scale(sprite, (sprite_width, sprite_height))
-        
-        # Calculate position (centered)
-        sprite_x = screen_x - sprite_width // 2
-        sprite_y = screen_y - sprite_height // 2
-        
-        # Blit the sprite to the screen
-        self._screen.blit(sprite, (sprite_x, sprite_y))
     
     def clear_screen(self) -> None:
         """Clear the screen with background color"""

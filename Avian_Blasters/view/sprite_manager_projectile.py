@@ -21,11 +21,11 @@ class SpriteManagerProjectile(SpriteManager):
         self._sprite_definitions = {
             "PLAYER_NORMAL": {
                 'positions': [(28, 28, 12, 20)],
-                'size': (6, 10)
+                'size': (12, 20)
             },
             "ENEMY_NORMAL": {
                 'positions': [(83, 28, 12, 20)],
-                'size': (6, 10)
+                'size': (12, 20)
             },
             "SOUND_WAVE": {
                 'positions': [(136, 18, 60, 40)],
@@ -114,9 +114,9 @@ class SpriteManagerProjectile(SpriteManager):
         
 
     def _get_key(self, projectile: Projectile)-> str:
-        projectile_type = projectile.get_projectile_type()
-        if projectile_type == ProjectileType.PLAYER_NORMAL:
-            if projectile.get_type() == Entity.TypeArea.PLAYER_PROJECTILE:
+        projectile_type = projectile.projectile_type
+        if projectile_type == ProjectileType.NORMAL:
+            if projectile.get_type == Entity.TypeArea.PLAYER_PROJECTILE:
                 return "PLAYER_NORMAL"
             else:
                 return "ENEMY_NORMAL"
@@ -126,3 +126,4 @@ class SpriteManagerProjectile(SpriteManager):
             return "LASER"  
         else:
             return "PLAYER_NORMAL"
+        
