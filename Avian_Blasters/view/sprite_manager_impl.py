@@ -29,7 +29,7 @@ class SpriteManagerImpl(SpriteManager):
                 'size': (12, 20)
             },
             Entity.TypeArea.ENEMY_PROJECTILE: {
-                'positions': [(213, 33, 12, 20), (100, 70, 4, 8)],  # Enemy projectiles
+                'positions': [(213, 33, 12, 20), (100, 70, 4, 8)],  # Enemy projectiles - bird and bat
                 'size': (4, 8)
             },
             Entity.TypeArea.POWERUP: {
