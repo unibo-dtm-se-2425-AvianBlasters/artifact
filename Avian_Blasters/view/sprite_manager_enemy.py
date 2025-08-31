@@ -21,7 +21,7 @@ class SpriteManagerEnemy(SpriteManager):
         # Define sprite definitions for Bird (similar to player approach)
         self._bird_sprite_definitions = {
             3: {
-                'positions': [(24, 18, 64, 44), (114, 18, 64, 44)],
+                'positions': [(28, 27, 64, 40), (118, 27, 64, 40)],
                 'size': (16, 10)
             },
             2: {
