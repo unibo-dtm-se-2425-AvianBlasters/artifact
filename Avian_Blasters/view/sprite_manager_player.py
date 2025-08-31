@@ -86,6 +86,9 @@ class SpriteManagerPlayer(SpriteManager):
         """Get the size (width, height) of sprites for the specified health"""
         if health in self._sprite_sizes:
             return self._sprite_sizes[health]
+        
+        # return default size
+        return (16, 10)
     
     def is_loaded(self) -> bool:
         """Check if sprites have been successfully loaded"""

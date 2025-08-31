@@ -7,9 +7,6 @@ from Avian_Blasters.controller.input_handler_impl import InputHandlerImpl
 from Avian_Blasters.model.item.power_up.power_up import PowerUpType
 from Avian_Blasters.model.item.power_up.power_up_impl import PowerUpImpl
 from Avian_Blasters.model.item.power_up.power_up_types.double_fire_power_up import DoubleFirePowerUp
-from Avian_Blasters.model.item.power_up.power_up import PowerUpType
-from Avian_Blasters.model.item.power_up.power_up_impl import PowerUpImpl
-from Avian_Blasters.model.item.power_up.power_up_types.double_fire_power_up import DoubleFirePowerUp
 from Avian_Blasters.model.item.projectile.projectile import Projectile, ProjectileType
 from Avian_Blasters.view.game_view import GameView
 from Avian_Blasters.view.game_view_impl import GameViewImpl
@@ -19,7 +16,6 @@ from Avian_Blasters.model.character.player.player import Player
 from Avian_Blasters.model.character.player.player_impl import PlayerImpl
 from Avian_Blasters.model.entity import Entity
 from Avian_Blasters.model.character.enemy.enemy_factory import create_enemy_formation
-from Avian_Blasters.scoreboard_impl import ScoreboardImpl
 
 # Game constants
 SCREEN_WIDTH = 800
@@ -38,10 +34,9 @@ class GameControllerImpl(GameController):
         self._running = False
         self._player: Player = None
         self._paused = False
-        self._name = name.replace(',', ' ').lstrip().rstrip()
+        self._name = name
         self._difficulty = difficulty
         self._fps = fps
-        self._scoreboard = ScoreboardImpl()
     
     def initialize(self) -> bool:
         """Initialize the game controller and its dependencies"""
@@ -75,11 +70,9 @@ class GameControllerImpl(GameController):
             self._test_power_up = DoubleFirePowerUp(
                 x=50,  y= 20, width=5, height=5,
                 type=Entity.TypeArea.POWERUP, power_up_type=PowerUpType.DOUBLE_FIRE, is_timed=True, duration=5.0, delta=1)
-
             # Create enemies in formation (like Space Invaders)
             entities = [self._player]
-            # entities.extend(self._create_enemy_formation())
-            
+            entities.extend(create_enemy_formation())  # Use the imported function
             entities.append(self._test_power_up)
             
             # Create world with the player and enemies
@@ -115,10 +108,6 @@ class GameControllerImpl(GameController):
                 self._view.render_world(self._world)
                 self._view.update_display()
         
-        name = self._name
-        points = self._world.get_players()[0].get_score().score
-        difficulty = self._difficulty
-        self._scoreboard.add_score([name, points, difficulty])
         self.cleanup()
     
     def update_game_state(self, delta_time: float) -> None:
@@ -138,6 +127,8 @@ class GameControllerImpl(GameController):
         self._update_enemies()
         self._update_projectiles()
         self._update_power_ups()
+        self._check_collisions()
+        self._check_game_over()
 
     def _update_enemies(self) -> None:
         """Update the positions and behavior of all enemies in the world"""
@@ -209,52 +200,40 @@ class GameControllerImpl(GameController):
                         power_up_handler.collect_power_up(power_up, self._player)
                         self._world.remove_entity(power_up)
             if hasattr(power_up_handler, 'player_update'):
-                    power_up_handler.player_update(self._player)         
-
-        if self._player and hasattr(self._player, 'get_player_attack_handler'):
-            attack_handler = self._player.get_player_attack_handler()
-            if hasattr(attack_handler, 'update'):
-                attack_handler.update()
-        
-        self._update_projectiles()
-        self._update_power_ups()
-
-    def _update_projectiles(self) -> None:
-        """Update the positions of all projectiles in the world"""
-        if not self._world:
+                power_up_handler.player_update(self._player)         
+    
+    def _check_collisions(self) -> None:
+        """Check for collisions between player and enemy entities/projectiles"""
+        if not self._world or not self._player:
             return
         
+        # Get all entities that can damage the player (enemies and enemy projectiles)
+        enemy_entities = []
+        enemy_entities.extend(self._world.get_enemies())
+        
+        # Get enemy projectiles specifically
         for projectile in self._world.get_projectiles():
-            if projectile.get_area().get_position_y <= 0 or projectile.get_area().get_position_y >= SCREEN_HEIGHT:
-                    projectile.destroy()
-                    self._world.remove_entity(projectile)
-            else:
-                if projectile.projectile_type == ProjectileType.NORMAL:
-                    if projectile.get_type == Entity.TypeArea.PLAYER_PROJECTILE:
-                        movement_y = -0.1
-                    else:
-                        movement_y = 0.1
-                else:
-                    movement_y = 0
-                projectile.move(0, movement_y, projectile.get_area().width, projectile.get_area().height)
+            if projectile.get_type == Entity.TypeArea.ENEMY_PROJECTILE:
+                enemy_entities.append(projectile)
+        
+        player_was_hit = self._player.is_touched(enemy_entities)
+        if player_was_hit:
+            print(f"Player was hit: {player_was_hit}")
+        
+        # Remove enemy projectiles that hit the player (after damage is processed)
+        for projectile in self._world.get_projectiles()[:]:  # Use slice copy to avoid modification during iteration
+            if (projectile.get_type == Entity.TypeArea.ENEMY_PROJECTILE and 
+                self._player.get_area().overlap(projectile.get_area())):
+                self._world.remove_entity(projectile)
 
-    def _update_power_ups(self) -> None:
-        if not self._world:
+    def _check_game_over(self) -> None:
+        """Check if the game should end (player is dead)"""
+        if not self._player:
             return
         
-        if self._player and hasattr(self._player, 'get_power_up_handler'):
-            power_up_handler = self._player.get_power_up_handler()
-            for power_up in self._world.get_power_ups():
-                if power_up.get_area().get_position_y > SCREEN_HEIGHT:
-                    power_up.destroy()
-                    self._world.remove_entity(power_up)
-                else:
-                    power_up.move(0, 1, power_up.get_area().width, power_up.get_area().height)
-                    if self._player.get_area().overlap(power_up.get_area()):
-                        power_up_handler.collect_power_up(power_up, self._player)
-                        self._world.remove_entity(power_up)
-            if hasattr(power_up_handler, 'player_update'):
-                    power_up_handler.player_update(self._player)         
+        if self._player.get_health_handler().is_dead():
+            print(f"Game Over! {self._name}'s final score: {self._player.get_score().score}")
+            self._running = False
     
     def handle_input(self, actions: List[InputHandler.Action]) -> None:
         """Process input actions and update the game state accordingly"""
