@@ -14,7 +14,7 @@ from Avian_Blasters.model.item.projectile.projectile import Projectile, Projecti
 from Avian_Blasters.view.game_view import GameView
 from Avian_Blasters.view.game_view_impl import GameViewImpl
 from Avian_Blasters.model.world import World
-from Avian_Blasters.model.world_impl import WorldImpl
+from Avian_Blasters.model.world_impl import WORLD_HEIGHT, WorldImpl
 from Avian_Blasters.model.character.player.player import Player
 from Avian_Blasters.model.character.player.player_impl import PlayerImpl
 from Avian_Blasters.model.entity import Entity
@@ -78,7 +78,7 @@ class GameControllerImpl(GameController):
 
             # Create enemies in formation (like Space Invaders)
             entities = [self._player]
-            # entities.extend(self._create_enemy_formation())
+            entities.extend(create_enemy_formation())
             
             entities.append(self._test_power_up)
             
@@ -135,6 +135,7 @@ class GameControllerImpl(GameController):
             if hasattr(attack_handler, 'update'):
                 attack_handler.update()
         
+        self._update_enemies()
         self._update_projectiles()
         self._update_power_ups()
 
@@ -218,7 +219,41 @@ class GameControllerImpl(GameController):
                         power_up_handler.collect_power_up(power_up, self._player)
                         self._world.remove_entity(power_up)
             if hasattr(power_up_handler, 'player_update'):
-                    power_up_handler.player_update(self._player)         
+                    power_up_handler.player_update(self._player)
+    
+    def _update_enemies(self) -> None:
+        """Update the positions and behavior of all enemies in the world"""
+        if not self._world:
+            return
+        
+        # Update existing enemies
+        for enemy in self._world.get_enemies():
+            # Only remove enemies that have fallen off the bottom of the screen
+            # Allow horizontal movement off-screen since birds will bounce back
+            if enemy.get_area().get_position_y > WORLD_HEIGHT:
+                # Remove enemies that have moved off the bottom of the screen
+                self._world.remove_entity(enemy)
+            else:
+                # Set target for bats to move toward player
+                from Avian_Blasters.model.character.enemy.bat import Bat
+                players = self._world.get_players()
+                if isinstance(enemy, Bat) and players:
+                    player = players[0]
+                    # Set movement target
+                    enemy.set_target_x(player.get_area().get_position_x)
+                    # Set attack handler player position for distance checking
+                    enemy._attack_handler.set_player_position(
+                        player.get_area().get_position_x,
+                        player.get_area().get_position_y
+                    )
+                
+                # Update enemy position
+                enemy.move()
+                
+                # Handle enemy attacks (random firing)
+                projectiles = enemy.shoot()
+                if projectiles:
+                    self._world.add_projectiles(projectiles)
     
     def handle_input(self, actions: List[InputHandler.Action]) -> None:
         """Process input actions and update the game state accordingly"""
