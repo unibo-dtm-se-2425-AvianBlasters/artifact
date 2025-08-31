@@ -1,5 +1,5 @@
 scikit-learn==1.4.1.post1
 pandas==2.2.1
 pygame==2.6.1
-pygame_menu==4.2.7
+pygame_menu==4.5.2
 
