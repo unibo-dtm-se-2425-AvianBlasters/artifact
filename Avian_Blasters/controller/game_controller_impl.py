@@ -149,7 +149,7 @@ class GameControllerImpl(GameController):
                     projectile.destroy()
                     self._world.remove_entity(projectile)
             else:
-                if projectile.projectile_type == ProjectileType.NORMAL:
+                if projectile.projectile_type in [ProjectileType.NORMAL, ProjectileType.SOUND_WAVE]:
                     if projectile.get_type == Entity.TypeArea.PLAYER_PROJECTILE:
                         movement_y = -1
                     else:
@@ -194,7 +194,7 @@ class GameControllerImpl(GameController):
                     projectile.destroy()
                     self._world.remove_entity(projectile)
             else:
-                if projectile.projectile_type == ProjectileType.NORMAL:
+                if projectile.projectile_type in [ProjectileType.NORMAL, ProjectileType.SOUND_WAVE]:
                     if projectile.get_type == Entity.TypeArea.PLAYER_PROJECTILE:
                         movement_y = -1
                     else:
