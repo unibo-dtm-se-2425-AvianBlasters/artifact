@@ -151,9 +151,9 @@ class GameControllerImpl(GameController):
             else:
                 if projectile.projectile_type == ProjectileType.NORMAL:
                     if projectile.get_type == Entity.TypeArea.PLAYER_PROJECTILE:
-                        movement_y = -0.1
+                        movement_y = -1
                     else:
-                        movement_y = 0.1
+                        movement_y = 1
                 else:
                     movement_y = 0
                 projectile.move(0, movement_y, projectile.get_area().width, projectile.get_area().height)
@@ -196,9 +196,9 @@ class GameControllerImpl(GameController):
             else:
                 if projectile.projectile_type == ProjectileType.NORMAL:
                     if projectile.get_type == Entity.TypeArea.PLAYER_PROJECTILE:
-                        movement_y = -0.1
+                        movement_y = -1
                     else:
-                        movement_y = 0.1
+                        movement_y = 1
                 else:
                     movement_y = 0
                 projectile.move(0, movement_y, projectile.get_area().width, projectile.get_area().height)
