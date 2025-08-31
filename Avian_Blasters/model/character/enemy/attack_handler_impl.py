@@ -6,6 +6,8 @@ from Avian_Blasters.model.entity import Entity
 from Avian_Blasters.model.item.projectile.projectile import ProjectileType
 from Avian_Blasters.model.item.projectile.projectile_factory import ProjectileFactory
 
+ENEMY_PROJECTILE_WIDTH = 5
+ENEMY_PROJECTILE_HEIGHT = 5
 
 class EnemyAttackHandler(GeneralAttackHandlerImpl):
     """Base enemy attack handler that extends the general attack handler"""
@@ -34,8 +36,8 @@ class EnemyAttackHandler(GeneralAttackHandlerImpl):
                 projectile_type=self._projectile_type,
                 x=enemy.x,
                 y=enemy.y + max(1, enemy.height // 2),
-                width=5,
-                height=5,
+                width=ENEMY_PROJECTILE_WIDTH,
+                height=ENEMY_PROJECTILE_HEIGHT,
                 type_area=Entity.TypeArea.ENEMY_PROJECTILE,
                 delta=self._projectile_speed
             )
@@ -93,8 +95,8 @@ class BatAttackHandler(EnemyAttackHandler):
                 projectile_type=self._projectile_type,
                 x=enemy.x,
                 y=enemy.y + max(1, enemy.height // 2),
-                width=5,
-                height=5,
+                width=ENEMY_PROJECTILE_WIDTH,
+                height=ENEMY_PROJECTILE_HEIGHT,
                 type_area=Entity.TypeArea.ENEMY_PROJECTILE,
                 delta=self._projectile_speed
             )
