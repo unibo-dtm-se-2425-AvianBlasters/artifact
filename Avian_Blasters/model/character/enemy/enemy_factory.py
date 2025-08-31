@@ -17,8 +17,8 @@ def create_enemy_formation() -> List[Entity]:
         bird = Bird(
             x=10,  # Start near left edge
             y=10,  # Start near top
-            width=4, 
-            height=4, 
+            width=8, 
+            height=5, 
             speed=1, 
             health=3,  # Green variant
             horizontal_speed=0.5,  # Move right at moderate speed
@@ -32,8 +32,8 @@ def create_enemy_formation() -> List[Entity]:
         bat = Bat(
             x=50,  # Start more to the right than bird
             y=10,  # Same starting height
-            width=4, 
-            height=4, 
+            width=8, 
+            height=5, 
             speed=1, 
             health=3,
             horizontal_speed=0.3,  # Smooth horizontal chase speed
