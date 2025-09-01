@@ -1,8 +1,8 @@
 import pygame
 from typing import Dict, Tuple, Optional
 from Avian_Blasters.view.sprite_manager import SpriteManager
-from Avian_Blasters.model.entity import Entity
 from Avian_Blasters.model.character.player import Player
+from Avian_Blasters.model.character.player.player_status_handler import PlayerStatus
 import os
 
 class SpriteManagerPlayer(SpriteManager):
@@ -18,6 +18,14 @@ class SpriteManagerPlayer(SpriteManager):
         # Define sprite grid positions and sizes
         # Based on actual sprite sheet analysis - sprites found at (40-90, 40-70)
         self._sprite_definitions = {
+            5: {
+                'positions': [(23, 307, 64, 40), (120, 307, 64, 40)],
+                'size': (16, 10)
+            }, 
+            4: {
+                'positions': [(23, 249, 64, 40), (120, 249, 64, 40)],
+                'size': (16, 10)
+            },
             3: {
                 'positions': [(24, 18, 64, 40), (121, 18, 64, 40)],
                 'size': (16, 10)
@@ -70,15 +78,19 @@ class SpriteManagerPlayer(SpriteManager):
     
     def get_sprite(self, player : Player, variant: int = 0) -> pygame.Surface:
         """Get a sprite surface for the specified player and variant"""
-        health = player.get_health_handler().current_health
+        image = player.get_health_handler().current_health
         if player.is_hurt():
-            health = 0
+            image = 0
+        elif player.get_status().status == PlayerStatus.Status.INVULNERABLE:
+            image = 5
+        elif player.get_power_up_handler().get_current_power_up() is not None:
+            image = 4
 
-        if not self._loaded or health not in self._sprites:
+        if not self._loaded or image not in self._sprites:
             # Return a fallback colored rectangle if sprites aren't loaded
-            return self._create_fallback_sprite(health)
+            return self._create_fallback_sprite(image)
         
-        sprites = self._sprites[health]
+        sprites = self._sprites[image]
         if variant >= len(sprites):
             variant = 0  # Use first sprite as fallback
         
@@ -98,8 +110,9 @@ class SpriteManagerPlayer(SpriteManager):
         width, height = self.get_sprite_size(current_health)
         surface = pygame.Surface((width, height))
         
-        # Use the same colors as before for fallback
         colors = {
+            5: (0, 0, 255),      # Blue
+            4: (255, 69, 0),       # Orange
             3: (0, 255, 0),      # Green
             2: (255, 255, 0),    # Yellow
             1: (255, 0, 0),      # Red
