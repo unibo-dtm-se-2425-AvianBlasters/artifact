@@ -122,9 +122,13 @@ class GameControllerImpl(GameController):
         self.cleanup()
     
     def update_game_state(self, delta_time: float) -> None:
-        """Update the game world state based on elapsed time"""
-        # Basic game state updates would go here
-        # For now, just update player status if needed
+        """Update the game world state based on elapsed time"""        
+        self._update_player()
+        self._update_enemies()
+        self._update_projectiles()
+        self._update_power_ups()
+
+    def _update_player(self) -> None:
         if self._player and hasattr(self._player, 'get_status'):
             status_handler = self._player.get_status()
             if hasattr(status_handler, 'update'):
@@ -135,9 +139,9 @@ class GameControllerImpl(GameController):
             if hasattr(attack_handler, 'update'):
                 attack_handler.update()
         
-        self._update_enemies()
-        self._update_projectiles()
-        self._update_power_ups()
+        self._player.is_touched(self._world.get_projectiles() + self._world.get_enemies())
+        if self._player.get_health_handler().current_health <= 0:
+            self._running = False
 
     def _update_projectiles(self) -> None:
         """Update the positions of all projectiles in the world"""
