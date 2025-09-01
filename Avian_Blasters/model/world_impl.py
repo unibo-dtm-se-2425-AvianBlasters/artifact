@@ -48,6 +48,11 @@ class WorldImpl(World):
         if entity in self._entities:
             self._entities.remove(entity)
 
+    def remove_destroyed_items(self):
+        for i in self._entities[:]:
+            if hasattr(i, 'active') and not i.active:
+                self._entities.remove(i)
+
     def __getter(self, class_type : Type) -> list[Entity]:
         self.__cleaner()
         result_list = []
