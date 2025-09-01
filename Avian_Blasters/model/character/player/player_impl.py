@@ -110,7 +110,7 @@ class PlayerImpl(CharacterImpl, Player):
         return False
 
     def __check_if_enemy_crossed(self, enemy : Enemy) -> bool:
-        return enemy.get_area().get_position_y <= self.get_area().get_position_y
+        return enemy.get_area().get_position_y == self.get_area().get_position_y
     
     def __instant_defeat(self):
         damage = 3
