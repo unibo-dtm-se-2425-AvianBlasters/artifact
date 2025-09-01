@@ -14,8 +14,7 @@ class SpriteManagerPlayer(SpriteManager):
         self._sprite_sizes: Dict[int, Tuple[int, int]] = {}
         self._loaded = False
         self._path = 'assets' + os.sep + 'sprites' + os.sep + 'Car_V3.png'
-
-        
+    
         # Define sprite grid positions and sizes
         # Based on actual sprite sheet analysis - sprites found at (40-90, 40-70)
         self._sprite_definitions = {
@@ -31,6 +30,10 @@ class SpriteManagerPlayer(SpriteManager):
                 'positions': [(24, 134, 64, 40), (121, 134, 64, 40)],
                 'size': (16, 10)
             },
+            0: {
+                'positions': [(24, 191, 64, 40), (121, 191, 64, 40)],
+                'size': (16, 10)
+            }
         }
     
     def load_sprites(self) -> bool:
@@ -41,8 +44,6 @@ class SpriteManagerPlayer(SpriteManager):
             if self._sprite_sheet is None:
                 return False
             
-
-            
             # Extract individual sprites for each entity type
             for entity_type, definition in self._sprite_definitions.items():
                 sprites = []
@@ -50,9 +51,7 @@ class SpriteManagerPlayer(SpriteManager):
                     x, y, width, height = pos
                     sprite_rect = pygame.Rect(x, y, width, height)
                     sprite = self._sprite_sheet.subsurface(sprite_rect)
-                    
-
-                    
+                          
                     # Convert sprite to proper format with alpha channel
                     sprite_copy = sprite.copy().convert_alpha()
                     
@@ -72,6 +71,9 @@ class SpriteManagerPlayer(SpriteManager):
     def get_sprite(self, player : Player, variant: int = 0) -> pygame.Surface:
         """Get a sprite surface for the specified player and variant"""
         health = player.get_health_handler().current_health
+        if player.is_hurt():
+            health = 0
+
         if not self._loaded or health not in self._sprites:
             # Return a fallback colored rectangle if sprites aren't loaded
             return self._create_fallback_sprite(health)
@@ -100,7 +102,8 @@ class SpriteManagerPlayer(SpriteManager):
         colors = {
             3: (0, 255, 0),      # Green
             2: (255, 255, 0),    # Yellow
-            1: (255, 0, 0)       # Red
+            1: (255, 0, 0),      # Red
+            0: (255, 255, 255)   # White 
         }
         
         color = colors.get(current_health, (255, 255, 255))
