@@ -27,13 +27,6 @@ class PlayerAttackHandler(GeneralAttackHandlerImpl):
             raise ValueError("Number of projectiles must be at least 1")
         self._number_of_projectiles = number_of_projectiles
 
-    def _can_attack(self) -> bool:
-        if not self.cooldown_handler.is_over():
-            self.cooldown_handler.update()
-            return False
-        else:
-            return True
-
     def try_attack(self, player):
         if not self._cooldown_handler.is_over():
             return []
@@ -49,10 +42,14 @@ class PlayerAttackHandler(GeneralAttackHandlerImpl):
                     projectile_x = player_center_x
                 else:
                     projectile_x = start_x + i * offset
+                if self._projectile_type == ProjectileType.LASER:
+                    projectile_y = player_center_y - (90 // 2) - player.get_area().height // 2
+                else: 
+                    projectile_y = player_center_y
                 projectile = self._projectile_factory.create_projectile(
                     projectile_type=self._projectile_type,
                     x=projectile_x,
-                    y=player_center_y,
+                    y=projectile_y,
                     width=PLAYER_PROJECTILE_WIDTH, 
                     height=PLAYER_PROJECTILE_HEIGHT,
                     type_area=Entity.TypeArea.PLAYER_PROJECTILE,

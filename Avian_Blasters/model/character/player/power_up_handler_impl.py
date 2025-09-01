@@ -10,7 +10,8 @@ class PowerUpHandlerImpl(PowerUpHandler):
     
     def __init__(self, power_up_active : PowerUp | None):
        self._power_up_active = power_up_active
-       self._start_time = None
+       self._last_update_time = None
+       self._time_elapsed = 0.0
     
     def collect_power_up(self, power_up : PowerUp, player: Player):
         if not power_up.collected:
@@ -22,18 +23,27 @@ class PowerUpHandlerImpl(PowerUpHandler):
             self._power_up_active.collected = True
             self._power_up_active.apply_effect(player)
             if power_up.is_timed:
-                self._start_time = pygame.time.get_ticks()
+                self._time_elapsed = 0.0
+                self._last_update_time = pygame.time.get_ticks()
             self._power_up_active.destroy() #it destroys the item after applying the effect
 
     
-    def player_update(self, player: Player):
+    def player_update(self, player: Player, paused: bool = False):
         if self._power_up_active and self._power_up_active.is_timed:
-            current_time = pygame.time.get_ticks()
-            time_elapsed = (current_time - self._start_time) / 1000.0
-            if time_elapsed >= self._power_up_active.duration:
-                self._power_up_active.remove_effect(player)
-                self._power_up_active = None
-                self._start_time = None
+            if not paused:
+                current_time = pygame.time.get_ticks()
+                self._time_elapsed += (current_time - self._last_update_time) / 1000.0
+                self._last_update_time = current_time
+                if self._time_elapsed >= self._power_up_active.duration:
+                    self._power_up_active.remove_effect(player)
+                    self._power_up_active = None
+                    self._last_update_time = None
+                    self._time_elapsed = 0.0
+            else:
+                self._last_update_time = pygame.time.get_ticks()
     
     def get_current_power_up(self) -> PowerUp | None:
         return self._power_up_active
+    
+    def is_expired(self) -> bool:
+        return self._power_up_active is None

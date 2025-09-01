@@ -108,7 +108,6 @@ class GameViewImpl(GameView):
         # Convert world coordinates to screen coordinates
         screen_x = int(area.get_position_x * self._scale_x)
         screen_y = int(area.get_position_y * self._scale_y)
-        
 
         
         # Get sprite for this entity with proper error handling
@@ -125,20 +124,9 @@ class GameViewImpl(GameView):
             else:
                 sprite = self._default_sprite_manager.get_sprite(entity.get_type)
 
-            if isinstance(entity, Projectile):
-                if entity.projectile_type == ProjectileType.NORMAL:
-                    sprite_width = int(area.width * self._scale_x * 0.6)
-                    sprite_height = int(area.height * self._scale_y * 0.6)
-                elif entity.projectile_type == ProjectileType.LASER:
-                    sprite_width = int(area.width * self._scale_x * 0.3)
-                    sprite_height = int(area.height * self._scale_y * 2.0)
-                else:
-                    sprite_width = int(area.width * self._scale_x)
-                    sprite_height = int(area.height * self._scale_y)
-            else:
-                sprite_width = int(area.width * self._scale_x)
-                sprite_height = int(area.height * self._scale_y)
-            
+            sprite_width = int(area.width * self._scale_x)
+            sprite_height = int(area.height * self._scale_y)
+        
             # Scale the sprite if needed
             if sprite.get_size() != (sprite_width, sprite_height):
                 sprite = pygame.transform.scale(sprite, (sprite_width, sprite_height))

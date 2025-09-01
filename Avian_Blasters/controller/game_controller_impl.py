@@ -10,6 +10,7 @@ from Avian_Blasters.model.item.power_up.power_up_types.double_fire_power_up impo
 from Avian_Blasters.model.item.power_up.power_up import PowerUpType
 from Avian_Blasters.model.item.power_up.power_up_impl import PowerUpImpl
 from Avian_Blasters.model.item.power_up.power_up_types.double_fire_power_up import DoubleFirePowerUp
+from Avian_Blasters.model.item.power_up.power_up_types.laser_power_up import LaserPowerUp
 from Avian_Blasters.model.item.projectile.projectile import Projectile, ProjectileType
 from Avian_Blasters.view.game_view import GameView
 from Avian_Blasters.view.game_view_impl import GameViewImpl
@@ -72,9 +73,9 @@ class GameControllerImpl(GameController):
                 fps = self._fps
             )
 
-            self._test_power_up = DoubleFirePowerUp(
+            self._test_power_up = LaserPowerUp(
                 x=50,  y= 20, width=5, height=5,
-                type=Entity.TypeArea.POWERUP, power_up_type=PowerUpType.DOUBLE_FIRE, is_timed=True, duration=5.0, delta=1)
+                type=Entity.TypeArea.POWERUP, power_up_type=PowerUpType.LASER, is_timed=True, duration=5.0, delta=1)
 
             # Create enemies in formation (like Space Invaders)
             entities = [self._player]
@@ -137,6 +138,7 @@ class GameControllerImpl(GameController):
         
         self._update_projectiles()
         self._update_power_ups()
+        self._world.remove_destroyed_items()
 
     def _update_projectiles(self) -> None:
         """Update the positions of all projectiles in the world"""
@@ -146,16 +148,19 @@ class GameControllerImpl(GameController):
         for projectile in self._world.get_projectiles():
             if projectile.get_area().get_position_y <= 0 or projectile.get_area().get_position_y >= SCREEN_HEIGHT:
                     projectile.destroy()
-                    self._world.remove_entity(projectile)
             else:
-                if projectile.projectile_type == ProjectileType.NORMAL:
+                if projectile.projectile_type == ProjectileType.LASER:
+                    if self._player.get_power_up_handler().is_expired():
+                        projectile.destroy()
+                    movement_x = self._player.get_area().get_position_x
+                    movement_y = 0
+                else:
                     if projectile.get_type == Entity.TypeArea.PLAYER_PROJECTILE:
                         movement_y = -0.1
                     else:
                         movement_y = 0.1
-                else:
-                    movement_y = 0
-                projectile.move(0, movement_y, projectile.get_area().width, projectile.get_area().height)
+                    movement_x = 0
+                projectile.move(movement_x, movement_y, projectile.get_area().width, projectile.get_area().height)
 
     def _update_power_ups(self) -> None:
         if not self._world:
@@ -173,52 +178,12 @@ class GameControllerImpl(GameController):
                         power_up_handler.collect_power_up(power_up, self._player)
                         self._world.remove_entity(power_up)
             if hasattr(power_up_handler, 'player_update'):
-                    power_up_handler.player_update(self._player)         
+                    power_up_handler.player_update(self._player, self._paused)         
 
         if self._player and hasattr(self._player, 'get_player_attack_handler'):
             attack_handler = self._player.get_player_attack_handler()
             if hasattr(attack_handler, 'update'):
-                attack_handler.update()
-        
-        self._update_projectiles()
-        self._update_power_ups()
-
-    def _update_projectiles(self) -> None:
-        """Update the positions of all projectiles in the world"""
-        if not self._world:
-            return
-        
-        for projectile in self._world.get_projectiles():
-            if projectile.get_area().get_position_y <= 0 or projectile.get_area().get_position_y >= SCREEN_HEIGHT:
-                    projectile.destroy()
-                    self._world.remove_entity(projectile)
-            else:
-                if projectile.projectile_type == ProjectileType.NORMAL:
-                    if projectile.get_type == Entity.TypeArea.PLAYER_PROJECTILE:
-                        movement_y = -0.1
-                    else:
-                        movement_y = 0.1
-                else:
-                    movement_y = 0
-                projectile.move(0, movement_y, projectile.get_area().width, projectile.get_area().height)
-
-    def _update_power_ups(self) -> None:
-        if not self._world:
-            return
-        
-        if self._player and hasattr(self._player, 'get_power_up_handler'):
-            power_up_handler = self._player.get_power_up_handler()
-            for power_up in self._world.get_power_ups():
-                if power_up.get_area().get_position_y > SCREEN_HEIGHT:
-                    power_up.destroy()
-                    self._world.remove_entity(power_up)
-                else:
-                    power_up.move(0, 1, power_up.get_area().width, power_up.get_area().height)
-                    if self._player.get_area().overlap(power_up.get_area()):
-                        power_up_handler.collect_power_up(power_up, self._player)
-                        self._world.remove_entity(power_up)
-            if hasattr(power_up_handler, 'player_update'):
-                    power_up_handler.player_update(self._player)         
+                attack_handler.update()         
     
     def handle_input(self, actions: List[InputHandler.Action]) -> None:
         """Process input actions and update the game state accordingly"""

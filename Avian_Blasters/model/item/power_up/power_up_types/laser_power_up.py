@@ -8,7 +8,7 @@ from Avian_Blasters.model.item.projectile.projectile import ProjectileType
 
 class LaserPowerUp(TimedPowerUp):
     def __init__(self, x: int, y: int, width: int, height: int, type: Entity.TypeArea, power_up_type: PowerUpType, is_timed: bool, duration: float, delta: int):
-        super().__init__(x, y, width, height, type, power_up_type, is_timed, duration, delta)
+        super().__init__(x, y, width, height, type, power_up_type, duration, is_timed, delta)
 
     def apply_effect(self, player : Player):
         player.get_player_attack_handler().set_projectile_type(ProjectileType.LASER)
