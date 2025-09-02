@@ -6,7 +6,7 @@ from Avian_Blasters.model.item.projectile.projectile_factory import ProjectileFa
 
 
 class Bird(EnemyImpl):
-    """ Bird is an enemy that moves in a wave-like pattern and drops bullets downward. """
+    """ Bird is an enemy that bounces horizontally between screen edges while falling downward. """
     def __init__(
         self,
         x: int,
@@ -15,21 +15,48 @@ class Bird(EnemyImpl):
         height: int,
         speed: int,
         health: int,
-        wave_amplitude: int = 20,
-        wave_frequency: float = 0.15,
+        horizontal_speed: float = 1.0,
+        vertical_speed: float = 0.3,
+        screen_width: int = 800,
+        screen_height: int = 600,
     ) -> None:
         super().__init__(x, y, width, height, speed, health, attack_handler=BirdAttackHandler(ProjectileFactory()))
-        self._base_x = x
-        self._wave_amplitude = max(0, wave_amplitude)
-        self._wave_frequency = max(0.0, wave_frequency)
-        self._phase = 0.0
+        self._horizontal_speed = max(0.0, horizontal_speed)
+        self._vertical_speed = max(0.0, vertical_speed)
+        self._screen_width = screen_width
+        self._screen_height = screen_height
+        # Direction: 1 for right, -1 for left
+        self._horizontal_direction = 1
+        # Accumulate fractional movement for sub-pixel speeds
+        self._horizontal_accumulator = 0.0
+        self._vertical_accumulator = 0.0
 
     def move(self) -> None:
-        # Call parent move method first to update y position
-        super().move()
-        # Then handle wave-like horizontal movement
-        self._phase += self._wave_frequency
-        offset = int(self._wave_amplitude * math.sin(self._phase))
-        # Update position using area's position
-        new_x = self._base_x + offset
-        super().move(new_x - self.x, 0, self.width, self.height)
+        # Get current position using the same method as player
+        current_x = self.get_area().get_position_x
+        current_y = self.get_area().get_position_y
+        
+        # Check for boundaries and change direction if needed
+        # Bounce off right edge (bird's right edge hits screen edge)
+        if current_x + self.width >= self._screen_width:
+            self._horizontal_direction = -1  # Change to moving left
+        # Bounce off left edge (use game world left boundary)
+        elif current_x <= 1:  # Match player's left limit
+            self._horizontal_direction = 1   # Change to moving right
+        
+        # Accumulate fractional movement for smooth sub-pixel speeds
+        self._horizontal_accumulator += self._horizontal_speed * self._horizontal_direction
+        self._vertical_accumulator += self._vertical_speed
+        
+        # Extract integer movement and keep fractional part
+        dx = int(self._horizontal_accumulator)
+        dy = int(self._vertical_accumulator)
+        
+        # Keep the fractional parts for next frame
+        self._horizontal_accumulator -= dx
+        self._vertical_accumulator -= dy
+        
+        # Only move if there's actual movement to apply
+        if dx != 0 or dy != 0:
+            from Avian_Blasters.model.entity_impl import EntityImpl
+            EntityImpl.move(self, dx, dy, self.get_area().width, self.get_area().height)

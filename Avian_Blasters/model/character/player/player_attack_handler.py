@@ -1,4 +1,3 @@
-import pygame
 from Avian_Blasters.model.character.general_attack_handler_impl import GeneralAttackHandlerImpl
 from Avian_Blasters.model.entity import Entity
 from Avian_Blasters.model.item.projectile.projectile import ProjectileType
@@ -11,10 +10,10 @@ PLAYER_PROJECTILE_HEIGHT = 5
 class PlayerAttackHandler(GeneralAttackHandlerImpl):
     """PlayerAttackHandler is an implementation of GeneralAttackHandler used to handle
     the attacks that have to be performed by the player character"""
-    PLAYER_PROJECTILE_SPEED = 3
+    PLAYER_PROJECTILE_SPEED = 1
 
     def __init__(self, projectile_factory : ProjectileFactory, projectile_speed : int, projectile_type : ProjectileType, cooldown_steps: int = PLAYER_COOLDOWN_STEPS):
-        super().__init__(projectile_factory, projectile_speed, cooldown_steps)
+        super().__init__(projectile_factory=projectile_factory, projectile_speed=projectile_speed, cooldown_steps=cooldown_steps)
         self._number_of_projectiles = 1
         self._projectile_type = projectile_type
 

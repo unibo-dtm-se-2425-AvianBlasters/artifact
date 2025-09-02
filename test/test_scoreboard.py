@@ -5,6 +5,7 @@ class TestScoreboard(unittest.TestCase):
 
     def setUp(self):
         self._scoreboard = ScoreboardImpl()
+        self._scoreboard.reset_scoreboard()
 
     def test_get_scores(self):
         scores = self._scoreboard.get_scores(15)
