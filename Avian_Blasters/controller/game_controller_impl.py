@@ -5,13 +5,8 @@ from Avian_Blasters.controller.game_controller import GameController
 from Avian_Blasters.controller.input_handler import InputHandler
 from Avian_Blasters.controller.input_handler_impl import InputHandlerImpl
 from Avian_Blasters.model.item.power_up.power_up import PowerUpType
-from Avian_Blasters.model.item.power_up.power_up_impl import PowerUpImpl
-from Avian_Blasters.model.item.power_up.power_up_types.double_fire_power_up import DoubleFirePowerUp
-from Avian_Blasters.model.item.power_up.power_up import PowerUpType
-from Avian_Blasters.model.item.power_up.power_up_impl import PowerUpImpl
-from Avian_Blasters.model.item.power_up.power_up_types.double_fire_power_up import DoubleFirePowerUp
 from Avian_Blasters.model.item.power_up.power_up_types.laser_power_up import LaserPowerUp
-from Avian_Blasters.model.item.projectile.projectile import Projectile, ProjectileType
+from Avian_Blasters.model.item.projectile.projectile import ProjectileType
 from Avian_Blasters.view.game_view import GameView
 from Avian_Blasters.view.game_view_impl import GameViewImpl
 from Avian_Blasters.model.world import World
@@ -116,10 +111,11 @@ class GameControllerImpl(GameController):
                 self._view.render_world(self._world)
                 self._view.update_display()
         
-        name = self._name
-        points = self._world.get_players()[0].get_score().score
-        difficulty = self._difficulty
-        self._scoreboard.add_score([name, points, difficulty])
+        if (self._name != ''):
+            name = self._name
+            points = self._world.get_players()[0].get_score().score
+            difficulty = self._difficulty
+            self._scoreboard.add_score([name, points, difficulty])
         print("Oh no! The Avians have reached the car. Maaaaan... Game Over!")
         self.cleanup()
     

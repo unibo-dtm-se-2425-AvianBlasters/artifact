@@ -119,6 +119,8 @@ class GameViewImpl(GameView):
                 sprite = self._sprite_managers[Entity.TypeArea.ENEMY].get_sprite_for_enemy(entity, variant)
             elif isinstance(entity, Projectile):
                 sprite = self._sprite_managers[Entity.TypeArea.PLAYER_PROJECTILE].get_sprite(entity, variant)
+            elif isinstance(entity, PowerUp):
+                sprite = self._sprite_managers[Entity.TypeArea.POWERUP].get_sprite(entity, variant)
             else:
                 sprite = self._default_sprite_manager.get_sprite(entity.get_type, variant)
 
