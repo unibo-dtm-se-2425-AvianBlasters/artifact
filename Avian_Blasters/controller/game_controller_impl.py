@@ -120,6 +120,7 @@ class GameControllerImpl(GameController):
         points = self._world.get_players()[0].get_score().score
         difficulty = self._difficulty
         self._scoreboard.add_score([name, points, difficulty])
+        print("Oh no! The Avians have reached the car. Maaaaan... Game Over!")
         self.cleanup()
     
     def update_game_state(self, delta_time: float) -> None:
