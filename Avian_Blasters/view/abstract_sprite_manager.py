@@ -1,7 +1,6 @@
 import pygame
 from typing import Dict, Tuple, Optional, Any
 from Avian_Blasters.view.sprite_manager import SpriteManager
-from Avian_Blasters.model.entity import Entity
 
 class AbstractSpriteManager(SpriteManager):
     """AbstractSpriteManager is a partial implementation

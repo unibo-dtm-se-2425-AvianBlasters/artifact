@@ -4,7 +4,7 @@ from Avian_Blasters.model.item.power_up.power_up import PowerUp
 from Avian_Blasters.model.item.projectile.projectile import Projectile, ProjectileType
 from Avian_Blasters.view.game_view import GameView
 from Avian_Blasters.view.sprite_manager import SpriteManager
-from Avian_Blasters.view.sprite_manager_impl import SpriteManagerImpl
+from Avian_Blasters.view.default_sprite_manager import DefaultSpriteManager
 from Avian_Blasters.view.sprite_manager_player import SpriteManagerPlayer
 from Avian_Blasters.view.sprite_manager_enemy import SpriteManagerEnemy
 from Avian_Blasters.view.sprite_manager_power_up import SpriteManagerPowerUp
@@ -36,7 +36,7 @@ class GameViewImpl(GameView):
             Entity.TypeArea.ENEMY_PROJECTILE: SpriteManagerProjectile(),
             Entity.TypeArea.POWERUP: SpriteManagerPowerUp()
         }
-        self._default_sprite_manager = SpriteManagerImpl()
+        self._default_sprite_manager = DefaultSpriteManager()
         self._ui_renderer: UIRenderer = UIRendererImpl()
         self._cooldown_animation = 0
         self._fps = fps
@@ -119,8 +119,6 @@ class GameViewImpl(GameView):
                 sprite = self._sprite_managers[Entity.TypeArea.ENEMY].get_sprite_for_enemy(entity, variant)
             elif isinstance(entity, Projectile):
                 sprite = self._sprite_managers[Entity.TypeArea.PLAYER_PROJECTILE].get_sprite(entity, variant)
-            elif isinstance(entity, PowerUp):
-                sprite = self._sprite_managers[Entity.TypeArea.POWERUP].get_sprite(entity, variant)
             else:
                 sprite = self._default_sprite_manager.get_sprite(entity.get_type, variant)
 
