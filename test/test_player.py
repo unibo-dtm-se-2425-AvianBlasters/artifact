@@ -90,14 +90,14 @@ class TestPlayer(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.player.is_touched(["Hello!"])
 
-    def test_enemy_reaching_player_height(self):
-        test_enemy = EntityImpl(x = 100, y = 30, width = self.width, height = self.height, type = Entity.TypeArea.ENEMY, delta = self.delta)
+    def test_enemy_reaching_player(self):
+        test_enemy = EntityImpl(x = 0, y = 30, width = self.width, height = self.height, type = Entity.TypeArea.ENEMY, delta = self.delta)
         test_enemy.move(0, -30/self.delta, self.width, self.height)
         self.assertTrue(self.player.is_touched([test_enemy]))
         self.assertEqual(0, self.player.get_health_handler().current_health)
 
     def test_enemy_reaching_player_height_while_invulnerable(self):
-        test_enemy = EntityImpl(x = 100, y = 30, width = self.width, height = self.height, type = Entity.TypeArea.ENEMY, delta = self.delta)
+        test_enemy = EntityImpl(x = 0, y = 30, width = self.width, height = self.height, type = Entity.TypeArea.ENEMY, delta = self.delta)
         test_enemy.move(0, -30/self.delta, self.width, self.height)
         self.player.get_status().invincibility(300)
         self.assertTrue(self.player.is_touched([test_enemy]))

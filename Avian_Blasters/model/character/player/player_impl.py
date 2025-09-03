@@ -110,13 +110,11 @@ class PlayerImpl(CharacterImpl, Player):
         return False
 
     def __check_if_enemy_crossed(self, enemy : Enemy) -> bool:
-        return enemy.get_area().get_position_y == self.get_area().get_position_y
+        return super().is_touched(enemy)
     
     def __instant_defeat(self):
         damage = 3
-        self.get_health_handler().take_damage(damage)
-        print("Oh no! The Avians have reached the car. Maaaaan... Game Over!")
-                        
+        self.get_health_handler().take_damage(damage)                        
 
     def get_status(self) -> PlayerStatus:
         return self._status_handler
