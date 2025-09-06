@@ -1,11 +1,13 @@
 import pygame
 import time
+import random
 from typing import List
 from Avian_Blasters.controller.game_controller import GameController
 from Avian_Blasters.controller.input_handler import InputHandler
 from Avian_Blasters.controller.input_handler_impl import InputHandlerImpl
 from Avian_Blasters.model.item.power_up.power_up import PowerUpType
 from Avian_Blasters.model.item.power_up.power_up_types.laser_power_up import LaserPowerUp
+from Avian_Blasters.model.item.power_up.power_up_factory import PowerUpFactory
 from Avian_Blasters.model.item.projectile.projectile import ProjectileType
 from Avian_Blasters.view.game_view import GameView
 from Avian_Blasters.view.game_view_impl import GameViewImpl
@@ -38,6 +40,11 @@ class GameControllerImpl(GameController):
         self._difficulty = difficulty
         self._fps = fps
         self._scoreboard = ScoreboardImpl()
+        self._power_up_factory = PowerUpFactory()
+        
+        # Enemy spawning system
+        self._enemy_spawn_timer = 0.0
+        self._enemy_spawn_interval = 8.0  # Spawn new wave every 5 seconds
     
     def initialize(self) -> bool:
         """Initialize the game controller and its dependencies"""
@@ -122,7 +129,7 @@ class GameControllerImpl(GameController):
     def update_game_state(self, delta_time: float) -> None:
         """Update the game world state based on elapsed time"""        
         self._update_player()
-        self._update_enemies()
+        self._update_enemies(delta_time)
         self._update_projectiles()
         self._update_power_ups()
         self._world.remove_destroyed_items()
@@ -188,39 +195,88 @@ class GameControllerImpl(GameController):
             if hasattr(attack_handler, 'update'):
                 attack_handler.update()         
     
-    def _update_enemies(self) -> None:
+    def _update_enemies(self, delta_time: float) -> None:
         """Update the positions and behavior of all enemies in the world"""
         if not self._world:
             return
         
+        # Handle continuous enemy spawning
+        self._handle_enemy_spawning(delta_time)
+        
         # Update existing enemies
+        enemies_to_remove = []
         for enemy in self._world.get_enemies():
-            # Only remove enemies that have fallen off the bottom of the screen
-            # Allow horizontal movement off-screen since birds will bounce back
             if enemy.get_area().get_position_y > WORLD_HEIGHT:
-                # Remove enemies that have moved off the bottom of the screen
-                self._world.remove_entity(enemy)
+                enemies_to_remove.append(enemy)
+            elif enemy.is_dead():
+                enemies_to_remove.append(enemy)
             else:
-                # Set target for bats to move toward player
+                previous_health = enemy.get_health
+                collision_occurred = enemy.is_touched(self._world.get_projectiles())
+                
+                if collision_occurred and self._player:
+                    enemy_died = enemy.is_dead()
+                    
+                    if enemy_died:
+                        self._try_drop_power_up(enemy.get_area().get_position_x, enemy.get_area().get_position_y)
+                    
+                    points = 10 if enemy_died else 5
+                    self._player.get_score().add_points(points)
+                
                 from Avian_Blasters.model.character.enemy.bat import Bat
                 players = self._world.get_players()
                 if isinstance(enemy, Bat) and players:
                     player = players[0]
-                    # Set movement target
-                    enemy.set_target_x(player.get_area().get_position_x)
-                    # Set attack handler player position for distance checking
+                    enemy.set_player_position(
+                        player.get_area().get_position_x,
+                        player.get_area().get_position_y
+                    )
                     enemy._attack_handler.set_player_position(
                         player.get_area().get_position_x,
                         player.get_area().get_position_y
                     )
                 
-                # Update enemy position
                 enemy.move()
                 
-                # Handle enemy attacks (random firing)
                 projectiles = enemy.shoot()
                 if projectiles:
                     self._world.add_projectiles(projectiles)
+        
+        for enemy in enemies_to_remove:
+            self._world.remove_entity(enemy)
+    
+    def _handle_enemy_spawning(self, delta_time: float) -> None:
+        self._enemy_spawn_timer += delta_time
+        if self._enemy_spawn_timer >= self._enemy_spawn_interval:
+            new_enemies = create_enemy_formation()
+            if new_enemies:
+                self._world.add_enemies(new_enemies)
+            self._enemy_spawn_timer = 0.0
+    
+    def _try_drop_power_up(self, enemy_x: int, enemy_y: int) -> None:
+        # 20% chance to drop a power-up
+        if random.random() < 0.20:
+            # Choose a random power-up type
+            available_power_ups = [
+                PowerUpType.LASER,
+                PowerUpType.INVULNERABILITY, 
+                PowerUpType.DOUBLE_FIRE,
+                PowerUpType.HEALTH_RECOVERY
+            ]
+            power_up_type = random.choice(available_power_ups)
+            
+            # Create power-up at enemy's position
+            power_up = self._power_up_factory.create_power_up(
+                power_up_type=power_up_type,
+                x=enemy_x,
+                y=enemy_y, 
+                width=5,
+                height=5,
+                type_area=Entity.TypeArea.POWERUP
+            )
+            
+            # Add power-up to the world
+            self._world.add_power_ups([power_up])
     
     def handle_input(self, actions: List[InputHandler.Action]) -> None:
         """Process input actions and update the game state accordingly"""
