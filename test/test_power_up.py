@@ -14,6 +14,7 @@ from Avian_Blasters.model.item.power_up.power_up_types.double_fire_power_up impo
 from Avian_Blasters.model.item.power_up.power_up_types.health_recovery_power_up import HealthRecoveryPowerUp
 from Avian_Blasters.model.item.power_up.power_up_types.invulnerability_power_up import InvulnerabilityPowerUp
 from Avian_Blasters.model.item.power_up.power_up_types.laser_power_up import LaserPowerUp
+from Avian_Blasters.model.item.power_up.projectile_power_up import ProjectilePowerUp
 from Avian_Blasters.model.item.projectile.projectile import ProjectileType
 from Avian_Blasters.model.item.projectile.projectile_factory import ProjectileFactory
 
@@ -42,6 +43,22 @@ class TestPowerUp(unittest.TestCase):
         player_area = AreaImpl(20, 20, 5, 5)
         self.assertFalse(self.power_up.is_collected(player_area))
         self.assertFalse(self.power_up._collected)
+
+class ProjectilePowerUpTest(unittest.TestCase):
+    def setUp(self):
+        self.power_up = ProjectilePowerUp(x=10, y=10, width=5, height=5, type=Entity.TypeArea.POWERUP, power_up_type=PowerUpType.LASER, duration=10.0, is_timed=True, delta=1)
+        self.player = Mock()
+        self.projectile_1 = Mock()
+        self.projectile_2 = Mock()
+
+    def test_add_and_remove_projectiles(self):
+        self.power_up.add_projectile(self.projectile_1)
+        self.power_up.add_projectile(self.projectile_2)
+        self.assertEqual(2, len(self.power_up._projectiles))
+        self.power_up.remove_effect(self.player)
+        self.projectile_1.destroy.assert_called_once()
+        self.projectile_2.destroy.assert_called_once()
+        self.assertEqual(0, len(self.power_up._projectiles))
 
 class LaserPowerUpTest(unittest.TestCase):
     def setUp(self):
