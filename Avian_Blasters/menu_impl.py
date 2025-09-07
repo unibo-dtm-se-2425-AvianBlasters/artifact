@@ -100,6 +100,7 @@ class MainMenuImpl(MainMenu):
             controller.run()
         else:
             print("Failed to initialize game. Please check your pygame installation.")
+        self._surface = pygame.display.set_mode((self._width/2, self._height/2), pygame.RESIZABLE)
     
     def _set_difficulty(self, value : tuple[any, int], selection : any) -> None:
         selected, index = value

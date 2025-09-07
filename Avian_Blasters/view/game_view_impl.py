@@ -181,4 +181,5 @@ class GameViewImpl(GameView):
     
     def cleanup(self) -> None:
         """Cleanup pygame resources"""
-        pygame.quit()
+        #pygame.quit()
+        self._screen = None
