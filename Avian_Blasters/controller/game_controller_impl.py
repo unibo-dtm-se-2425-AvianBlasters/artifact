@@ -71,15 +71,9 @@ class GameControllerImpl(GameController):
                 fps = self._fps
             )
 
-            self._test_power_up = LaserPowerUp(
-                x=50,  y= 20, width=5, height=5,
-                type=Entity.TypeArea.POWERUP, power_up_type=PowerUpType.LASER, is_timed=True, duration=5.0, delta=1)
-
             # Create enemies in formation (like Space Invaders)
             entities = [self._player]
             entities.extend(create_enemy_formation())
-            
-            entities.append(self._test_power_up)
             
             # Create world with the player and enemies
             self._world = WorldImpl(entities)
@@ -175,12 +169,10 @@ class GameControllerImpl(GameController):
             for power_up in self._world.get_power_ups():
                 if power_up.get_area().get_position_y > SCREEN_HEIGHT:
                     power_up.destroy()
-                    self._world.remove_entity(power_up)
                 else:
                     power_up.move(0, 1, power_up.get_area().width, power_up.get_area().height)
                     if self._player.get_area().overlap(power_up.get_area()):
                         power_up_handler.collect_power_up(power_up, self._player)
-                        self._world.remove_entity(power_up)
             if hasattr(power_up_handler, 'player_update'):
                     power_up_handler.player_update(self._player, self._paused)         
 
