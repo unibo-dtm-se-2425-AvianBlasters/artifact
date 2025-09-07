@@ -6,7 +6,13 @@ from Avian_Blasters.model.item.projectile.projectile_factory import ProjectileFa
 
 
 class Bird(EnemyImpl):
-    """ Bird is an enemy that bounces horizontally between screen edges while falling downward. """
+    """ Bird is an enemy that moves in formation like Space Invaders. """
+    
+    # Class variables for formation movement
+    _formation_direction = 1  # 1 for right, -1 for left
+    _formation_horizontal_speed = 0.03
+    _formation_vertical_speed = 0.02
+    
     def __init__(
         self,
         x: int,
@@ -21,32 +27,27 @@ class Bird(EnemyImpl):
         screen_height: int = 600,
     ) -> None:
         super().__init__(x, y, width, height, speed, health, attack_handler=BirdAttackHandler(ProjectileFactory()))
-        self._horizontal_speed = max(0.0, horizontal_speed)
-        self._vertical_speed = max(0.0, vertical_speed)
         self._screen_width = screen_width
         self._screen_height = screen_height
-        # Direction: 1 for right, -1 for left
-        self._horizontal_direction = 1
         # Accumulate fractional movement for sub-pixel speeds
         self._horizontal_accumulator = 0.0
         self._vertical_accumulator = 0.0
 
+    @classmethod
+    def set_formation_direction(cls, direction: int) -> None:
+        """Set the direction for the entire formation"""
+        cls._formation_direction = direction
+
+    @classmethod
+    def get_formation_direction(cls) -> int:
+        """Get the current formation direction"""
+        return cls._formation_direction
+
     def move(self) -> None:
-        # Get current position using the same method as player
-        current_x = self.get_area().get_position_x
-        current_y = self.get_area().get_position_y
-        
-        # Check for boundaries and change direction if needed
-        # Bounce off right edge (bird's right edge hits screen edge)
-        if current_x + self.width >= self._screen_width:
-            self._horizontal_direction = -1  # Change to moving left
-        # Bounce off left edge (use game world left boundary)
-        elif current_x <= 1:  # Match player's left limit
-            self._horizontal_direction = 1   # Change to moving right
-        
-        # Accumulate fractional movement for smooth sub-pixel speeds
-        self._horizontal_accumulator += self._horizontal_speed * self._horizontal_direction
-        self._vertical_accumulator += self._vertical_speed
+        """Move as part of formation - no individual boundary checking"""
+        # Use formation movement speed and direction
+        self._horizontal_accumulator += Bird._formation_horizontal_speed * Bird._formation_direction
+        self._vertical_accumulator += Bird._formation_vertical_speed
         
         # Extract integer movement and keep fractional part
         dx = int(self._horizontal_accumulator)
