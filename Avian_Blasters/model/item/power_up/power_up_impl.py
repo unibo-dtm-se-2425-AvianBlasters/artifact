@@ -8,6 +8,9 @@ from Avian_Blasters.model.item.power_up.power_up import PowerUp, PowerUpType
 
 
 class PowerUpImpl(PowerUp):
+
+    """ PowerUpImpl is an implementation of the PowerUp interface """
+
     def __init__(self, x: int, y: int, width: int, height: int, type: Entity.TypeArea, power_up_type: PowerUpType, is_timed: bool = False, duration: float | None = None, delta: int = DEFAULT_DELTA):
         super().__init__(x, y, width, height, type, delta)
         self._power_up_type = power_up_type

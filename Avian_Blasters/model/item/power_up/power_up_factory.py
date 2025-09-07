@@ -10,6 +10,8 @@ from Avian_Blasters.model.item.power_up.power_up_types.laser_power_up import Las
 
 class PowerUpFactory:
 
+    """ PowerUpFactory is a factory class that creates power-up instances based on the given type"""
+
     _available_types = {
         PowerUpType.LASER: (LaserPowerUp, True, 10.0),
         PowerUpType.INVULNERABILITY: (InvulnerabilityPowerUp, True, 10.0),

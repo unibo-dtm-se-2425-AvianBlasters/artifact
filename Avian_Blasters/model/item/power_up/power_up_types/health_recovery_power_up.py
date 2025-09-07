@@ -7,6 +7,9 @@ from Avian_Blasters.model.item.power_up.power_up_impl import PowerUpImpl
 DEFAULT_HEALTH_RECOVERY_AMOUNT = 10
 
 class HealthRecoveryPowerUp(PowerUpImpl):
+
+    """ HealthRecoveryPowerUp is a power-up that recovers a fixed amount of health for the player """
+
     def __init__(self, x: int, y: int, width: int, height: int, type: Entity.TypeArea, power_up_type: PowerUpType, is_timed: bool, duration: float | None, delta: int):
         super().__init__(x, y, width, height, type, power_up_type, is_timed, duration, delta)
 

@@ -7,8 +7,8 @@ from Avian_Blasters.model.item.power_up.timed_power_up import TimedPowerUp
 
 class ProjectilePowerUp(TimedPowerUp):
 
-    """A power-up that affects the type of projectiles the player shoots, 
-        and keeps track of the projectiles created while the power-up is active"""
+    """ ProjectilePowerUp is a class that represents a power-up that affects the type of projectiles the player shoots, 
+        and keeps track of the projectiles created while the power-up is active. """
     
     def __init__(self, x: int, y: int, width: int, height: int, type: Entity.TypeArea, power_up_type: PowerUpType, duration: float, is_timed: bool = True, delta: int = DEFAULT_DELTA):
         super().__init__(x, y, width, height, type, power_up_type, duration, is_timed, delta)

@@ -8,6 +8,9 @@ from Avian_Blasters.model.item.projectile.projectile import ProjectileType
 
 
 class LaserPowerUp(ProjectilePowerUp):
+
+    """ LaserPowerUp is a timed power-up that changes the player's projectile type to laser for a duration """
+
     def __init__(self, x: int, y: int, width: int, height: int, type: Entity.TypeArea, power_up_type: PowerUpType, is_timed: bool, duration: float, delta: int):
         super().__init__(x, y, width, height, type, power_up_type, duration, is_timed, delta)
 

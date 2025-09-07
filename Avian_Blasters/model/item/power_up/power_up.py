@@ -16,23 +16,29 @@ class PowerUpType(Enum):
 
 class PowerUp(ItemImpl):
 
+    """ PowerUp is a class that represents a power-up item in the game, 
+        which can be collected by the player to gain temporary or permanent enhancements. """
+
     @property
     def power_up_type(self) -> PowerUpType:
+        """ Returns the type of the power-up """
         ...
 
     @property
     def is_timed(self) -> bool:
+        """ Returns True if the power-up is timed, False otherwise """
         ...
 
     @property
     def duration(self) -> float | None:
+        """ Returns the duration of the power-up effect in seconds, or None if it is not timed """
         ...
     
     def is_collected(self, player_area: Area) -> bool:
+        """ Returns True if the power-up has been collected by the player"""
         ...
 
     def apply_effect(self, player : "Player"): 
+        """ Apply the effect of the power-up to the player"""
         ...
 
-    def remove_effect(self, player : "Player"):
-        ...
