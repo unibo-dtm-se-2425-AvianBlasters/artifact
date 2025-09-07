@@ -14,16 +14,13 @@ class ProjectileFactory:
         ProjectileType.SOUND_WAVE: (2, 5)
     }
 
-    def create_projectile(self, projectile_type: ProjectileType, x: int, y: int, width: int , height: int, type_area: Entity.TypeArea, delta: int = DEFAULT_DELTA):
+    def create_projectile(self, projectile_type: ProjectileType, x: int, y: int, type_area: Entity.TypeArea, delta: int = DEFAULT_DELTA):
         
         if not isinstance(type_area, Entity.TypeArea):
             raise ValueError("Invalid type area")
 
         if not isinstance(projectile_type, ProjectileType):
             raise ValueError("Invalid projectile type")
-        
-        if width <= 0 or height <= 0:
-            raise ValueError("Width and height must be positive integers")
 
         if projectile_type in self.DEFAULT_SIZES:
                 width, height = self.DEFAULT_SIZES[projectile_type]

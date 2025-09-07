@@ -36,8 +36,6 @@ class EnemyAttackHandler(GeneralAttackHandlerImpl):
                 projectile_type=self._projectile_type,
                 x=enemy.x,
                 y=enemy.y + max(1, enemy.height // 2),
-                width=ENEMY_PROJECTILE_WIDTH,
-                height=ENEMY_PROJECTILE_HEIGHT,
                 type_area=Entity.TypeArea.ENEMY_PROJECTILE,
                 delta=self._projectile_speed
             )
@@ -95,8 +93,6 @@ class BatAttackHandler(EnemyAttackHandler):
                 projectile_type=self._projectile_type,
                 x=enemy.x,
                 y=enemy.y + max(1, enemy.height // 2),
-                width=ENEMY_PROJECTILE_WIDTH,
-                height=ENEMY_PROJECTILE_HEIGHT,
                 type_area=Entity.TypeArea.ENEMY_PROJECTILE,
                 delta=self._projectile_speed
             )

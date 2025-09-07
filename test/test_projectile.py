@@ -12,7 +12,7 @@ class TestProjectileFactory(unittest.TestCase):
         self.factory = ProjectileFactory()
 
     def test_create_normal_projectile(self):
-        projectile = self.factory.create_projectile(projectile_type = ProjectileType.NORMAL, x = 5, y = 5, width = 2, height = 4, type_area = Entity.TypeArea.PLAYER_PROJECTILE, delta = 1)
+        projectile = self.factory.create_projectile(projectile_type = ProjectileType.NORMAL, x = 5, y = 5, type_area = Entity.TypeArea.PLAYER_PROJECTILE, delta = 1)
         self.assertIsInstance(projectile, ProjectileImpl)
         self.assertEqual(projectile.projectile_type, ProjectileType.NORMAL)
         self.assertEqual(projectile.get_area().get_position_x, 5)
@@ -22,15 +22,11 @@ class TestProjectileFactory(unittest.TestCase):
 
     def test_create_invalid_projectile_type(self):
         with self.assertRaises(ValueError):
-            self.factory.create_projectile(projectile_type = "INVALID", x = 5, y = 5, width = 2, height = 4, type_area = Entity.TypeArea.PLAYER_PROJECTILE, delta = 1)
-
-    def test_create_invalid_dimensions(self):
-        with self.assertRaises(ValueError):
-            self.factory.create_projectile(projectile_type = ProjectileType.NORMAL, x = 5, y = 5, width = -1, height = 4, type_area = Entity.TypeArea.PLAYER_PROJECTILE, delta = 1)
+            self.factory.create_projectile(projectile_type = "INVALID", x = 5, y = 5, type_area = Entity.TypeArea.PLAYER_PROJECTILE, delta = 1)
 
     def test_create_invalid_type_area(self):
         with self.assertRaises(ValueError):
-            self.factory.create_projectile(projectile_type = ProjectileType.NORMAL, x = 5, y = 5, width = 2, height = 4, type_area = "INVALID", delta = 1)
+            self.factory.create_projectile(projectile_type = ProjectileType.NORMAL, x = 5, y = 5, type_area = "INVALID", delta = 1)
 
 class TestProjectile(unittest.TestCase):
 
