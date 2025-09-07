@@ -18,7 +18,8 @@ class PowerUpHandlerImpl(PowerUpHandler):
     def collect_power_up(self, power_up : PowerUp, player: Player):
         if not power_up.collected:
             if self._power_up_active:
-                self._power_up_active.remove_effect(player)
+                if (self._power_up_active.is_timed):
+                    self._power_up_active.remove_effect(player)
                 self._power_up_active.collected = False
 
             self._power_up_active = power_up
