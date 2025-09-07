@@ -55,6 +55,9 @@ class PlayerAttackHandler(GeneralAttackHandlerImpl):
                     delta=self.PLAYER_PROJECTILE_SPEED
                 )
                 projectiles.append(projectile)
+            current_power_up = player.get_power_up_handler().get_current_power_up()
+            if (current_power_up is not None and hasattr(current_power_up, 'add_projectile')):
+                current_power_up.add_projectile(projectile)
             self._reset_cooldown()
             return projectiles
                 

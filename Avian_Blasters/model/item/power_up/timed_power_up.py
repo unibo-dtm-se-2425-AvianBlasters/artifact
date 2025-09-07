@@ -11,6 +11,7 @@ class TimedPowerUp(PowerUpImpl):
         super().__init__(x, y, width, height, type, power_up_type, is_timed, duration, delta)
 
     def remove_effect(self, player : Player):
+        """ Remove the effect of the power-up from the player """
         ...
         
       

@@ -156,8 +156,6 @@ class GameControllerImpl(GameController):
                     projectile.destroy()
             else:
                 if projectile.projectile_type == ProjectileType.LASER:
-                    if self._player.get_power_up_handler().is_expired():
-                        projectile.destroy()
                     movement_x = self._player.get_area().get_position_x
                     movement_y = 0
                 elif projectile.projectile_type in [ProjectileType.NORMAL, ProjectileType.SOUND_WAVE]:
