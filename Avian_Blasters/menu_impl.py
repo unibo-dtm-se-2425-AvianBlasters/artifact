@@ -7,10 +7,21 @@ import pygame_menu.events
 from pygame_menu.widgets.widget.table import Table
 from tkinter import *
 from tkinter.ttk import *
+from pygame_menu.widgets.core import Selection
+
+class MenuSelection(Selection):
+    def __init__(self, border_width, margin_x, margin_y):
+        super().__init__(margin_left=margin_x, margin_right=margin_x, margin_top=margin_y, margin_bottom=margin_y)
+        self.border_width = border_width
+
+    def draw(self, surface, widget):
+        rect = widget.get_rect()
+        pygame.draw.rect(surface, (255, 220, 0), rect, self.border_width)
 
 class MainMenuImpl(MainMenu):
 
     def __init__(self):
+
         root = Tk()
 
         # getting screen's height in pixels
@@ -19,11 +30,46 @@ class MainMenuImpl(MainMenu):
         # getting screen's width in pixels
         self._width = root.winfo_screenwidth()
 
-        pygame.init()
+        self._menu_theme = pygame_menu.themes.Theme(
+            background_color=(0, 130, 250),             
+            title_background_color=(0, 130, 250),
+            title_font_color=(255, 220, 0),            
+            title_font=pygame_menu.font.FONT_8BIT,
+            title_font_size=40,
+            title_offset=(self._width//12, 30),
+            widget_font_color=(255, 255, 255),         
+            widget_font=pygame_menu.font.FONT_MUNRO,
+            widget_font_size=20,
+            widget_background_color=(255, 100, 0),     
+            widget_border_color=(255, 220, 0),         
+            widget_border_width=2,
+            widget_padding=(5, 20),
+            widget_margin=(5, 10),
+            widget_selection_effect=MenuSelection(border_width=4, margin_x=0, margin_y=0)
+        )
 
+        self._scoreboard_theme = pygame_menu.themes.Theme(
+            background_color=(0, 130, 250),             
+            title_background_color=(0, 130, 250),
+            title_font_color=(255, 220, 0),            
+            title_font=pygame_menu.font.FONT_8BIT,
+            title_font_size=20,
+            title_offset=(self._width//5.5, 30),
+            widget_font_color=(255, 255, 255),         
+            widget_font=pygame_menu.font.FONT_MUNRO,
+            widget_font_size=15,
+            widget_background_color=(255, 100, 0),     
+            widget_border_color=(255, 220, 0),
+            widget_border_width=2,
+            widget_padding=(5, 10),
+            widget_margin=(0, 5),
+            widget_selection_effect=MenuSelection(border_width=4, margin_x=0, margin_y=0)
+        )
+
+        pygame.init()
         self._surface = pygame.display.set_mode((self._width/2, self._height/2), pygame.RESIZABLE)
-        self._MENU = pygame_menu.Menu('', self._width/2, self._height/2, center_content=True)
-        self._SCORE_MENU = pygame_menu.Menu('Best Scores', self._width/2, self._height/2)
+        self._MENU = pygame_menu.Menu('AVIAN BLASTERS', self._width/2, self._height/2, center_content=True, theme=self._menu_theme)
+        self._SCORE_MENU = pygame_menu.Menu('Best Scores', self._width/2, self._height/2, theme=self._scoreboard_theme)
         self._table_number = 0
         self._table : Table = None
         self._highest = 0
@@ -74,7 +120,8 @@ class MainMenuImpl(MainMenu):
             table = self._SCORE_MENU.add.table(table_id=str(self._table_number), font_size=int(self._width*0.009))
             print('Reset scoreboard')
         table.default_cell_padding = 6
-        table.default_row_background_color = 'gray'
+        table.default_row_background_color = (0, 90, 200)
+        
 
         end = beginning + self._max
         if end > length:
