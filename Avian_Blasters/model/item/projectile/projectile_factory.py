@@ -6,6 +6,8 @@ from Avian_Blasters.model.item.projectile.projectile_impl import ProjectileImpl
 
 class ProjectileFactory:
 
+    """ ProjectileFactory is a factory class to create projectiles """
+
     DEFAULT_SIZES = {
         ProjectileType.NORMAL: (2, 4),
         ProjectileType.LASER: (2, 90),

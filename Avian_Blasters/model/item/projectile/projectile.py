@@ -7,9 +7,12 @@ class ProjectileType(Enum):
     SOUND_WAVE = 3
 
 class Projectile(ItemImpl):
+
+    """ Projectile is a class that represents a projectile item in the game."""
     
     @property
     def projectile_type(self) -> ProjectileType:
+        """ Returns the type of the projectile """
         ...
 
         

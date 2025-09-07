@@ -5,6 +5,9 @@ from Avian_Blasters.model.item.projectile.projectile import Projectile, Projecti
 from Avian_Blasters.model.position import Position
 
 class ProjectileImpl(Projectile):
+
+    """ ProjectileImpl is an implementation of the Projectile interface """
+
     def __init__(self, x : int, y : int, width : int, height : int, type : Entity.TypeArea, projectile_type : ProjectileType, delta : int):
         super().__init__(x, y, width, height, type, delta)
         self._projectile_type = projectile_type
