@@ -48,7 +48,7 @@ class EnemyAttackHandler(GeneralAttackHandlerImpl):
 class BirdAttackHandler(EnemyAttackHandler):
     """Birds drop standard bullets downward"""
     
-    def __init__(self, projectile_factory: ProjectileFactory, fire_chance: float = 0.06, 
+    def __init__(self, projectile_factory: ProjectileFactory, fire_chance: float = 0.008, 
                  cooldown_steps: int = 60, projectile_speed: int = 1):
         super().__init__(projectile_factory, fire_chance, cooldown_steps, projectile_speed)
 
