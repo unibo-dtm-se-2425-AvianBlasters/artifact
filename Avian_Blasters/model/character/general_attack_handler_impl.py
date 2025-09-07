@@ -10,6 +10,10 @@ COOLDOWN_STEPS_DEFAULT = 20
 PROJECTILE_SPEED_DEFAULT = 1
 
 class GeneralAttackHandlerImpl(GeneralAttackHandler):
+
+    """ GeneralAttackHandlerImpl is an implementation of GeneralAttackHandler interface 
+        that provides basic functionality for handling attacks of a character """
+
     def __init__(self, projectile_factory : ProjectileFactory, projectile_speed : int = PROJECTILE_SPEED_DEFAULT, cooldown_steps: int = COOLDOWN_STEPS_DEFAULT):
         self._projectile_type = PROJECTILE_TYPE_DEFAULT
         self._projectile_speed = projectile_speed

@@ -7,6 +7,8 @@ from Avian_Blasters.model.item.power_up.power_up import PowerUp
 
 
 class PowerUpHandlerImpl(PowerUpHandler):
+
+    """ PowerUpHandlerImpl is an implementation of PowerUpHandler interface"""
     
     def __init__(self, power_up_active : PowerUp | None):
        self._power_up_active = power_up_active
@@ -45,5 +47,3 @@ class PowerUpHandlerImpl(PowerUpHandler):
     def get_current_power_up(self) -> PowerUp | None:
         return self._power_up_active
     
-    def is_expired(self) -> bool:
-        return self._power_up_active is None
