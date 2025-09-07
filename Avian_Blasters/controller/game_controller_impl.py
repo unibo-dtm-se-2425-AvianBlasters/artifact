@@ -11,12 +11,12 @@ from Avian_Blasters.model.item.power_up.power_up_factory import PowerUpFactory
 from Avian_Blasters.model.item.projectile.projectile import ProjectileType
 from Avian_Blasters.view.game_view import GameView
 from Avian_Blasters.view.game_view_impl import GameViewImpl
-from Avian_Blasters.model.world import World
+from Avian_Blasters.model.world import WORLD_WIDTH, World
 from Avian_Blasters.model.world_impl import WORLD_HEIGHT, WorldImpl
 from Avian_Blasters.model.character.player.player import Player
 from Avian_Blasters.model.character.player.player_impl import PlayerImpl
 from Avian_Blasters.model.entity import Entity
-from Avian_Blasters.model.character.enemy.enemy_factory import create_enemy_formation
+from Avian_Blasters.model.character.enemy.enemy_factory import create_enemy_formation, handle_bird_formation_movement, can_bird_shoot, update_bat_spawning
 from Avian_Blasters.scoreboard_impl import ScoreboardImpl
 
 # Game constants
@@ -41,10 +41,6 @@ class GameControllerImpl(GameController):
         self._fps = fps
         self._scoreboard = ScoreboardImpl()
         self._power_up_factory = PowerUpFactory()
-        
-        # Enemy spawning system
-        self._enemy_spawn_timer = 0.0
-        self._enemy_spawn_interval = 8.0  # Spawn new wave every 5 seconds
     
     def initialize(self) -> bool:
         """Initialize the game controller and its dependencies"""
@@ -199,9 +195,14 @@ class GameControllerImpl(GameController):
         """Update the positions and behavior of all enemies in the world"""
         if not self._world:
             return
+    
+        handle_bird_formation_movement(self._world.get_enemies())
         
-        # Handle continuous enemy spawning
-        self._handle_enemy_spawning(delta_time)
+        # Handle random bat spawning
+        new_bat = update_bat_spawning(delta_time, self._world.get_enemies())
+        if new_bat:
+            print("New bat spawned")
+            self._world.add_enemies([new_bat])
         
         # Update existing enemies
         enemies_to_remove = []
@@ -238,24 +239,18 @@ class GameControllerImpl(GameController):
                 
                 enemy.move()
                 
-                projectiles = enemy.shoot()
-                if projectiles:
-                    self._world.add_projectiles(projectiles)
+                # Only allow shooting if bird has clear shot (no bird in front)
+                if can_bird_shoot(enemy, self._world.get_enemies()):
+                    projectiles = enemy.shoot()
+                    if projectiles:
+                        self._world.add_projectiles(projectiles)
         
         for enemy in enemies_to_remove:
             self._world.remove_entity(enemy)
     
-    def _handle_enemy_spawning(self, delta_time: float) -> None:
-        self._enemy_spawn_timer += delta_time
-        if self._enemy_spawn_timer >= self._enemy_spawn_interval:
-            new_enemies = create_enemy_formation()
-            if new_enemies:
-                self._world.add_enemies(new_enemies)
-            self._enemy_spawn_timer = 0.0
-    
     def _try_drop_power_up(self, enemy_x: int, enemy_y: int) -> None:
         # 20% chance to drop a power-up
-        if random.random() < 0.20:
+        if random.random() < 0.40:
             # Choose a random power-up type
             available_power_ups = [
                 PowerUpType.LASER,
