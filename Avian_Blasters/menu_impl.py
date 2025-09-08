@@ -1,3 +1,4 @@
+import os
 from Avian_Blasters.menu import MainMenu
 from Avian_Blasters.controller.game_controller_impl import GameControllerImpl
 from Avian_Blasters.scoreboard_impl import ScoreboardImpl
@@ -8,6 +9,8 @@ from pygame_menu.widgets.widget.table import Table
 from tkinter import *
 from tkinter.ttk import *
 from pygame_menu.widgets.core import Selection
+
+from Avian_Blasters.sound_manager_impl import SoundManagerImpl
 
 class MenuSelection(Selection):
     def __init__(self, border_width, margin_x, margin_y):
@@ -66,6 +69,9 @@ class MainMenuImpl(MainMenu):
             widget_selection_effect=MenuSelection(border_width=4, margin_x=0, margin_y=0)
         )
 
+        self._sound_manager = SoundManagerImpl()
+        self._music_file_path = 'assets' + os.sep + 'music' + os.sep + 'menu_music.mp3'
+
         pygame.init()
         self._surface = pygame.display.set_mode((self._width/2, self._height/2), pygame.RESIZABLE)
         self._MENU = pygame_menu.Menu('AVIAN BLASTERS', self._width/2, self._height/2, center_content=True, theme=self._menu_theme)
@@ -79,6 +85,7 @@ class MainMenuImpl(MainMenu):
         self._difficulty = 3
         
     def initiate(self):
+        self._sound_manager.play_music(self._music_file_path)
         self._SCORE_MENU.add.button('Go Back', pygame_menu.events.BACK)
         self._table = self._SCORE_MENU.add.table(table_id=str(self._table_number), font_size=int(self._width*0.009))
         self._build_table(self._table, self._highest)
@@ -144,9 +151,11 @@ class MainMenuImpl(MainMenu):
         controller = GameControllerImpl(self._difficulty, self._name, self._fps)
         if controller.initialize():
             print("Game Start")
+            self._sound_manager.stop_music()
             controller.run()
         else:
             print("Failed to initialize game. Please check your pygame installation.")
+        self._sound_manager.play_music(self._music_file_path)
         self._surface = pygame.display.set_mode((self._width/2, self._height/2), pygame.RESIZABLE)
     
     def _set_difficulty(self, value : tuple[any, int], selection : any) -> None:
