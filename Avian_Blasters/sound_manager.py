@@ -7,3 +7,6 @@ class SoundManager:
 
     def stop_music(self) -> None:
         ...
+
+    def play_sound_effect(self, sound_file_path: str, volume: float) -> None:
+        ...

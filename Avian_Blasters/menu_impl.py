@@ -70,7 +70,8 @@ class MainMenuImpl(MainMenu):
         )
 
         self._sound_manager = SoundManagerImpl()
-        self._music_file_path = 'assets' + os.sep + 'music' + os.sep + 'menu_music.mp3'
+        self._menu_music_path = 'assets' + os.sep + 'music' + os.sep + 'menu_music.mp3'
+        self._game_music_path = 'assets' + os.sep + 'music' + os.sep + 'game_music.mp3' # Music by Ievgen Poltavskyi from Pixabay
 
         pygame.init()
         self._surface = pygame.display.set_mode((self._width/2, self._height/2), pygame.RESIZABLE)
@@ -85,7 +86,7 @@ class MainMenuImpl(MainMenu):
         self._difficulty = 3
         
     def initiate(self):
-        self._sound_manager.play_music(self._music_file_path)
+        self._sound_manager.play_music(self._menu_music_path)
         self._SCORE_MENU.add.button('Go Back', pygame_menu.events.BACK)
         self._table = self._SCORE_MENU.add.table(table_id=str(self._table_number), font_size=int(self._width*0.009))
         self._build_table(self._table, self._highest)
@@ -152,10 +153,12 @@ class MainMenuImpl(MainMenu):
         if controller.initialize():
             print("Game Start")
             self._sound_manager.stop_music()
+            self._sound_manager.play_music(self._game_music_path, volume=0.3)
             controller.run()
         else:
             print("Failed to initialize game. Please check your pygame installation.")
-        self._sound_manager.play_music(self._music_file_path)
+        self._sound_manager.stop_music()
+        self._sound_manager.play_music(self._menu_music_path)
         self._surface = pygame.display.set_mode((self._width/2, self._height/2), pygame.RESIZABLE)
     
     def _set_difficulty(self, value : tuple[any, int], selection : any) -> None:

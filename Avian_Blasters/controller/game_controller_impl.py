@@ -1,3 +1,4 @@
+import os
 import pygame
 import time
 import random
@@ -9,6 +10,7 @@ from Avian_Blasters.model.item.power_up.power_up import PowerUpType
 from Avian_Blasters.model.item.power_up.power_up_types.laser_power_up import LaserPowerUp
 from Avian_Blasters.model.item.power_up.power_up_factory import PowerUpFactory
 from Avian_Blasters.model.item.projectile.projectile import ProjectileType
+from Avian_Blasters.sound_manager_impl import SoundManagerImpl
 from Avian_Blasters.view.game_view import GameView
 from Avian_Blasters.view.game_view_impl import GameViewImpl
 from Avian_Blasters.model.world import WORLD_WIDTH, World
@@ -41,6 +43,10 @@ class GameControllerImpl(GameController):
         self._fps = fps
         self._scoreboard = ScoreboardImpl()
         self._power_up_factory = PowerUpFactory()
+        self._sound_manager = SoundManagerImpl()
+        self._shoot_sound_path = 'assets' + os.sep + 'sounds' + os.sep + 'shoot.mp3'
+        self._power_up_sound_path = 'assets' + os.sep + 'sounds' + os.sep + 'power_up.mp3'
+        self._game_over_sound_path = 'assets' + os.sep + 'sounds' + os.sep + 'game_over.mp3'
     
     def initialize(self) -> bool:
         """Initialize the game controller and its dependencies"""
@@ -173,6 +179,7 @@ class GameControllerImpl(GameController):
                     power_up.move(0, 1, power_up.get_area().width, power_up.get_area().height)
                     if self._player.get_area().overlap(power_up.get_area()):
                         power_up_handler.collect_power_up(power_up, self._player)
+                        self._sound_manager.play_sound_effect(self._power_up_sound_path, volume=0.5)
             if hasattr(power_up_handler, 'player_update'):
                     power_up_handler.player_update(self._player, self._paused)         
 
@@ -281,6 +288,7 @@ class GameControllerImpl(GameController):
             elif action == InputHandler.Action.SHOOT and self._player and not self._paused:
                 projectiles = self._player.shoot()
                 if projectiles:
+                    self._sound_manager.play_sound_effect(self._shoot_sound_path, volume=0.5)
                     self._world.add_projectiles(projectiles)
     
     def is_game_running(self) -> bool:
@@ -290,6 +298,7 @@ class GameControllerImpl(GameController):
     def cleanup(self) -> None:
         """Cleanup resources when the game ends"""
         if self._view:
+            self._sound_manager.play_sound_effect(self._game_over_sound_path, volume=0.5)
             self._view.cleanup()
         print("Game ended. Thanks for playing!")
     
