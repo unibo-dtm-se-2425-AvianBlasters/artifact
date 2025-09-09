@@ -5,7 +5,9 @@
     ":semanticCommits"
   ],
   "assignees": [
-    "gciatto"
+    "Mb05987",
+    "beatricemicolucci",
+    "FilVel"
   ],
   "automerge": true,
   "dependencyDashboard": true,
