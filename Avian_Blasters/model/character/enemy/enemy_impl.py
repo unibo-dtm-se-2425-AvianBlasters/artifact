@@ -1,6 +1,5 @@
 from typing import Optional
 import time
-
 from Avian_Blasters.model.character.enemy.enemy import Enemy
 from Avian_Blasters.model.character.health_handler import HealthHandler
 from Avian_Blasters.model.character.health_handler_impl import HealthHandlerImpl

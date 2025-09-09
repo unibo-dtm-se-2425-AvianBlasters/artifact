@@ -9,13 +9,11 @@ _bat_spawn_timer = 0.0
 _bat_spawn_interval = random.uniform(5.0, 20.0)  
 
 def create_enemy_formation() -> List[Entity]:
-    """Spawn 5 birds in a row formation at the start of the game"""
-    from Avian_Blasters.model.character.enemy.bird import Bird
-    from Avian_Blasters.model.character.enemy.bat import Bat
+    """Spawn birds in a formation (3 rows × 10 columns) at the start of the game"""
     
     enemies = []
     
-    # Create 5 birds in a row formation
+    # Create 10 birds per row, 3 rows
     num_birds = 10
     num_rows = 3
     
