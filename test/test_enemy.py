@@ -255,12 +255,12 @@ class TestBat(unittest.TestCase):
         self.assertEqual(expected_y, self.bat.y)
 
     def test_homing_behavior_right(self):
-        """Test bat moving right when in BIRD_LIKE state"""
+        """Test bat can home in on the Player if the latter is on the former's right when in HOMING state"""
         # Create bat with higher horizontal speed to ensure detectable movement
         self.bat = Bat(x=50, y=120, width=14, height=10, speed=5, health=8, 
                       horizontal_speed=2.0, screen_width=800)
-        # Set player position to trigger BIRD_LIKE state
-        self.bat.set_player_position(50, 125)  # Close to bat's position
+        # Set player position to trigger HOMING state
+        self.bat.set_player_position(200, 125)  # Close to bat's position
         
         # Move multiple times to trigger state change and build up movement
         for _ in range(10):
@@ -275,13 +275,13 @@ class TestBat(unittest.TestCase):
         self.assertGreater(self.bat.x, initial_x)  # Should move right from left side
 
     def test_homing_behavior_left(self):
-        """Test bat can move left when in BIRD_LIKE state"""
+        """Test bat can home in on the Player if the latter is on the former's left when in HOMING state"""
         # Position bat near right edge with higher horizontal speed
         self.bat = Bat(x=780, y=120, width=14, height=10, speed=5, health=8, 
                       horizontal_speed=2.0, screen_width=800)
-        self.bat.set_player_position(780, 125)  # Close to bat's position
+        self.bat.set_player_position(100, 125)  # Close to bat's position
         
-        # Move to trigger state change to BIRD_LIKE and reach boundary
+        # Move to trigger state change to HOMING and reach boundary
         for _ in range(10):
             self.bat.move()
         
@@ -290,20 +290,24 @@ class TestBat(unittest.TestCase):
         for _ in range(5):
             self.bat.move()
         
-        # Near right boundary, bat should move left in BIRD_LIKE state
+        # Near right boundary, bat should move left in HOMING state
         self.assertLess(self.bat.x, initial_x)  # Should move left from boundary
 
     def test_homing_with_multiple_moves(self):
-        """Test that bat shows consistent movement pattern in BIRD_LIKE state"""
-        # Set player position to trigger BIRD_LIKE state
+        """Test that bat shows consistent movement pattern considering the Player's
+        current position"""
+        # Set player position to trigger HOMING state
         self.bat.set_player_position(150, 125)  # Close to bat's position
         
+        i = 0
         positions = []
         for _ in range(15):
+            self.bat.set_player_position(150 + i, 125)  # Close to bat's position
             positions.append(self.bat.x)
             self.bat.move()
-        
-        # After state change to BIRD_LIKE, bat should show horizontal movement
+            i += 1
+       
+        # After state change to HOMING, bat should show horizontal movement
         # Check that positions change (showing movement capability)
         unique_positions = len(set(positions))
         self.assertGreater(unique_positions, 1, "Bat should move and change positions")
