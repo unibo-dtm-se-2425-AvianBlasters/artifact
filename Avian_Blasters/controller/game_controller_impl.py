@@ -44,9 +44,14 @@ class GameControllerImpl(GameController):
         self._scoreboard = ScoreboardImpl()
         self._power_up_factory = PowerUpFactory()
         self._sound_manager = SoundManagerImpl()
-        self._shoot_sound_path = 'assets' + os.sep + 'sounds' + os.sep + 'shoot.mp3'
-        self._power_up_sound_path = 'assets' + os.sep + 'sounds' + os.sep + 'power_up.mp3'
-        self._game_over_sound_path = 'assets' + os.sep + 'sounds' + os.sep + 'game_over.mp3'
+        sound_path = 'assets' + os.sep + 'sounds' + os.sep
+        self._shoot_sound_path = sound_path + 'shoot.mp3'
+        self._power_up_sound_path = sound_path + 'power_up.mp3'
+        self._game_over_sound_path = sound_path + 'game_over.mp3'
+        self._game_start_sound_path = sound_path + 'game_start.mp3'
+        self._enemy_defeated_sound_path = sound_path + 'enemy_defeat.mp3'
+        self._enemy_hit_sound_path = sound_path + 'enemy_hit.mp3'
+        self._player_hit_sound_path = sound_path + 'player_hit.mp3'
     
     def initialize(self) -> bool:
         """Initialize the game controller and its dependencies"""
@@ -100,6 +105,8 @@ class GameControllerImpl(GameController):
         print("Starting Avian Blasters...")
         print("Controls: Arrow keys or A/D to move, Space to shoot, Right Shift to pause, Escape to quit")
         
+        self._sound_manager.play_sound_effect(self._game_start_sound_path, volume=0.5)
+
         while self._running:
             # Calculate delta time
             delta_time = self._clock.tick(self._fps) / 1000.0
@@ -140,7 +147,8 @@ class GameControllerImpl(GameController):
             if hasattr(attack_handler, 'update'):
                 attack_handler.update()
         
-        self._player.is_touched(self._world.get_projectiles() + self._world.get_enemies())
+        if self._player.is_touched(self._world.get_projectiles() + self._world.get_enemies()):
+            self._sound_manager.play_sound_effect(self._player_hit_sound_path, volume = 0.5)
         if self._player.get_health_handler().current_health <= 0:
             self._running = False
             print("Oh no! The Avians have reached the car. Maaaaan... Game Over!")
@@ -214,8 +222,13 @@ class GameControllerImpl(GameController):
                 if collision_occurred and self._player:
                     enemy_died = enemy.is_dead()
                     
+                    sound = None
                     if enemy_died:
                         self._try_drop_power_up(enemy.get_area().get_position_x, enemy.get_area().get_position_y)
+                        sound = self._enemy_defeated_sound_path
+                    else:
+                        sound = self._enemy_hit_sound_path
+                    self._sound_manager.play_sound_effect(sound, volume=0.5)
                     
                     points = 10 if enemy_died else 5
                     self._player.get_score().add_points(points)
