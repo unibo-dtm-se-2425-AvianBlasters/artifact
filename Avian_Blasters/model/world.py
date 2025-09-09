@@ -44,9 +44,16 @@ class World:
     def get_projectiles(self) -> list[Projectile]:
         """Returns a list of the projectiles currently present in the game
         world"""
-    
+        ...
+
     def add_projectiles(self, projectiles : list[Projectile]):
         """Adds a list of projectiles to the one contained in World"""
+        ...
 
     def remove_entity(self, entity: Entity):
         """Removes an entity from World"""
+        ...
+
+    def remove_destroyed_items(self):
+        """Removes all items that are not active anymore"""
+        ...
