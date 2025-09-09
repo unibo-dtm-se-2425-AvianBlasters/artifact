@@ -86,7 +86,9 @@ url = 'https://github.com/aequitas-aod/Avian_Blasters'
 setup(
     name='Avian_Blasters',  # Required
     version=version,
-    description='Description of the project here',
+    description='“Avian Blasters” (or “Avian Blasters: The Avians Strike Back”)' +
+    ' is a fixed-screen arcade shoot ’em up inspired by games like Space Invaders ' +
+    ' and Galaga created for a university Software Engineering Project.',
     license='Apache 2.0 License',
     long_description=long_description,
     long_description_content_type='text/markdown',
