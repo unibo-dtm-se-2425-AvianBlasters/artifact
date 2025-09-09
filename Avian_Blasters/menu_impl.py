@@ -100,7 +100,7 @@ class MainMenuImpl(MainMenu):
         self._MENU.add.button('Quit', pygame_menu.events.EXIT)
         self._SCORE_MENU.add.button('Higher scores', self._build_table, self._table, -self._max)
         self._SCORE_MENU.add.button('Lower scores', self._build_table, self._table, self._max)
-        self._reset_secoreboard(self._table)
+        self._build_table(self._table, 0)
         self._MENU.mainloop(self._surface)
 
     def _reset_secoreboard(self, table : Table):
@@ -115,33 +115,32 @@ class MainMenuImpl(MainMenu):
         if self._highest + beginning <= 0:
             beginning = 0
             self._highest = 0
-        elif self._highest + beginning <= length:
+        elif self._highest + beginning < length:
             self._highest += beginning
+        elif self._highest + beginning == length:
+            return
         beginning = self._highest
-
-        print(self._highest)
 
         if len(table._rows) > 0:
             self._SCORE_MENU.remove_widget(str(self._table_number))
             self._table_number += 1
             table = None
             table = self._SCORE_MENU.add.table(table_id=str(self._table_number), font_size=int(self._width*0.009))
-            print('Reset scoreboard')
         table.default_cell_padding = 6
         table.default_row_background_color = (0, 90, 200)
         
-
         end = beginning + self._max
         if end > length:
-            print(end)
             end = length
+
+        table.add_row(["Rank", "Name", "Score", "Difficulty"], cell_align=pygame_menu.locals.ALIGN_LEFT)
 
         i = 1 
         for row in scoreboard[beginning:end]:
             name, score, difficulty = row
             table.add_row([str(i + beginning), name, str(score), difficulty], cell_align=pygame_menu.locals.ALIGN_LEFT)
             i += 1
-            if table.get_height() > self._SCORE_MENU.get_height() * 2/4:
+            if table.get_height() > self._SCORE_MENU.get_height() / 2:
                 break
         if self._table_number == 0:
             self._max = min(i - 1, self._max)
@@ -168,7 +167,7 @@ class MainMenuImpl(MainMenu):
 
     def _set_fps(self, value : tuple[any, int], selection : any) -> None:
         selected, index = value
-        print(f'Selected difficulty: "{selected}" ({selection}) at index {index}')
+        print(f'Selected FPS: "{selected}" ({selection}) at index {index}')
         self._fps = selection
 
     def _set_name(self, name : str):
