@@ -28,9 +28,6 @@ class Entity():
         """Moves the entity by a certain x and y axis movement. It allows
         for a redefinition of its width and height"""
         ...
-        
-    #def move(self, movement_x : int, movement_y : int):
-    #    ...
 
     def is_touched(self, other : "Entity") -> bool:
         """Checks whether an Entity is touching another"""

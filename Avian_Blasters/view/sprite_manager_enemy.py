@@ -75,13 +75,7 @@ class SpriteManagerEnemy(AbstractSpriteManager):
             print(f"Failed to load bat sprite sheet: {e}")
             return False
     
-    def get_sprite(self, entity_type: Entity.TypeArea, variant: int = 0) -> pygame.Surface:
-        if not self.is_loaded():
-            return self._create_fallback_sprite_for_bird(3)
-        return super().get_sprite(3, variant)
-    
-    def get_sprite_for_enemy(self, enemy: Enemy, variant: int = 0) -> pygame.Surface:
-
+    def get_sprite(self, enemy : Enemy, variant: int = 0) -> pygame.Surface:
         if isinstance(enemy, Bird):
             health = enemy.get_health
             if not self.is_loaded():
