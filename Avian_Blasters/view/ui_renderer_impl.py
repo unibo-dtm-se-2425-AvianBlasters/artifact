@@ -27,7 +27,7 @@ class UIRendererImpl(UIRenderer):
             return
             
         try:
-            score = player.get_score().get_current_score()
+            score = player.get_score().score
             score_text = f"SCORE: {score:07d}"
             text_surface = self._font.render(score_text, True, (255, 255, 255))
             screen.blit(text_surface, (x, y))

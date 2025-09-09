@@ -119,7 +119,6 @@ class GameControllerImpl(GameController):
             points = self._world.get_players()[0].get_score().score
             difficulty = self._difficulty
             self._scoreboard.add_score([name, points, difficulty])
-        print("Oh no! The Avians have reached the car. Maaaaan... Game Over!")
         self.cleanup()
     
     def update_game_state(self, delta_time: float) -> None:
@@ -144,7 +143,7 @@ class GameControllerImpl(GameController):
         self._player.is_touched(self._world.get_projectiles() + self._world.get_enemies())
         if self._player.get_health_handler().current_health <= 0:
             self._running = False
-        
+            print("Oh no! The Avians have reached the car. Maaaaan... Game Over!")
 
     def _update_projectiles(self) -> None:
         """Update the positions of all projectiles in the world"""
