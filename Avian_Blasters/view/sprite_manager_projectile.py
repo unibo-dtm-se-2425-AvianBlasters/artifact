@@ -7,7 +7,7 @@ from Avian_Blasters.model.entity import Entity
 
 class SpriteManagerProjectile(AbstractSpriteManager):
     def __init__(self):
-        super().__init__(path = 'assets' + os.sep + 'sprites' + os.sep + 'Projectiles_V3.png',
+        super().__init__(path = 'assets' + os.sep + 'sprites' + os.sep + 'Projectiles.png',
                          sprite_definitions = {
                             "PLAYER_NORMAL": {
                                 'positions': [(28, 28, 12, 20)],

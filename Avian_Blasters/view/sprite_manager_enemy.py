@@ -10,7 +10,7 @@ import os
 class SpriteManagerEnemy(AbstractSpriteManager):
     
     def __init__(self):
-        super().__init__(path='assets' + os.sep + 'sprites' + os.sep + 'Bird_V3.png',
+        super().__init__(path='assets' + os.sep + 'sprites' + os.sep + 'Bird.png',
                        sprite_definitions={
                            3: {  # Full health - Green bird
                                'positions': [(25, 25, 64, 42), (117, 25, 64, 42)],
@@ -52,7 +52,7 @@ class SpriteManagerEnemy(AbstractSpriteManager):
     
     def _load_bat_sprites(self) -> bool:
         try:
-            bat_path = 'assets' + os.sep + 'sprites' + os.sep + 'Bat_V3.png'
+            bat_path = 'assets' + os.sep + 'sprites' + os.sep + 'Bat.png'
             self._bat_sprite_sheet = pygame.image.load(bat_path).convert_alpha()
             if self._bat_sprite_sheet is None:
                 print("Failed to load Bat sprite sheet")

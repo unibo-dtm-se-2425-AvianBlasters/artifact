@@ -11,7 +11,7 @@ class SpriteManagerPlayer(AbstractSpriteManager):
     handling the sprites linked to the player character"""
     
     def __init__(self):
-        super().__init__(path = 'assets' + os.sep + 'sprites' + os.sep + 'Car_V3.png',
+        super().__init__(path = 'assets' + os.sep + 'sprites' + os.sep + 'Car.png',
                        sprite_definitions = {
                            5: {
                                'positions': [(23, 307, 64, 40), (120, 307, 64, 40)],

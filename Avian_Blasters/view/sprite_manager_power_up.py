@@ -7,7 +7,7 @@ from Avian_Blasters.view.abstract_sprite_manager import AbstractSpriteManager
 
 class SpriteManagerPowerUp(AbstractSpriteManager):
     def __init__(self):
-        super().__init__(path = 'assets' + os.sep + 'sprites' + os.sep + 'Power-Ups_V3.png',
+        super().__init__(path = 'assets' + os.sep + 'sprites' + os.sep + 'Power-Ups.png',
                          sprite_definitions = {
                              PowerUpType.INVULNERABILITY: {
                                 'positions': [(28, 25, 25, 23)],
