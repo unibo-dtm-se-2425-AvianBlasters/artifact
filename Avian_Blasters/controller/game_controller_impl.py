@@ -126,6 +126,9 @@ class GameControllerImpl(GameController):
             points = self._world.get_players()[0].get_score().score
             difficulty = self._difficulty
             self._scoreboard.add_score([name, points, difficulty])
+            print("Score saved!")
+        else:
+            print("The score has not been saved as no name was given!")
         self.cleanup()
     
     def update_game_state(self, delta_time: float) -> None:
