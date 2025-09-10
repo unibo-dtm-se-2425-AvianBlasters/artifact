@@ -2,7 +2,7 @@ import os
 import pygame
 from typing import Tuple
 from Avian_Blasters.model.item.projectile.projectile import Projectile, ProjectileType
-from Avian_Blasters.view.abstract_sprite_manager import AbstractSpriteManager
+from Avian_Blasters.view.sprite_manager.abstract_sprite_manager import AbstractSpriteManager
 from Avian_Blasters.model.entity import Entity
 
 class SpriteManagerProjectile(AbstractSpriteManager):

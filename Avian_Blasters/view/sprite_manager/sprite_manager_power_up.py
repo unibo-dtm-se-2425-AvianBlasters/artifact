@@ -2,7 +2,7 @@ import os
 from typing import Tuple
 import pygame
 from Avian_Blasters.model.item.power_up.power_up import PowerUp, PowerUpType
-from Avian_Blasters.view.abstract_sprite_manager import AbstractSpriteManager
+from Avian_Blasters.view.sprite_manager.abstract_sprite_manager import AbstractSpriteManager
 
 
 class SpriteManagerPowerUp(AbstractSpriteManager):

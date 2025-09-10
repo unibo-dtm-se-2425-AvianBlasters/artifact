@@ -1,6 +1,6 @@
 import pygame
 from typing import Dict, Tuple, Optional
-from Avian_Blasters.view.abstract_sprite_manager import AbstractSpriteManager
+from Avian_Blasters.view.sprite_manager.abstract_sprite_manager import AbstractSpriteManager
 from Avian_Blasters.model.entity import Entity
 from Avian_Blasters.model.character.enemy.enemy import Enemy
 from Avian_Blasters.model.character.enemy.bird import Bird
