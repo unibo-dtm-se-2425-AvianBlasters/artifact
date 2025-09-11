@@ -1,9 +1,7 @@
 from Avian_Blasters.model.character.player.player import Player
 from Avian_Blasters.model.entity import Entity
 from Avian_Blasters.model.item.power_up.power_up import PowerUpType
-from Avian_Blasters.model.item.power_up.power_up_impl import PowerUpImpl
 from Avian_Blasters.model.item.power_up.projectile_power_up import ProjectilePowerUp
-from Avian_Blasters.model.item.power_up.timed_power_up import TimedPowerUp
 from Avian_Blasters.model.item.projectile.projectile import ProjectileType
 
 

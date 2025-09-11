@@ -1,11 +1,10 @@
 import unittest
 from unittest.mock import Mock
-from Avian_Blasters.model.character.player.player_attack_handler import PLAYER_COOLDOWN_STEPS, PLAYER_PROJECTILE_WIDTH, PlayerAttackHandler
+from Avian_Blasters.model.character.player.player_attack_handler import PLAYER_COOLDOWN_STEPS, PlayerAttackHandler
 from Avian_Blasters.model.entity import Entity
 from Avian_Blasters.model.item.projectile.projectile import Projectile, ProjectileType
 from Avian_Blasters.model.item.projectile.projectile_factory import ProjectileFactory
 from Avian_Blasters.model.item.projectile.projectile_impl import ProjectileImpl
-from Avian_Blasters.model.position import Position
 
 class TestProjectileFactory(unittest.TestCase):
     def setUp(self):

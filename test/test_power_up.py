@@ -1,6 +1,5 @@
 import unittest
-from unittest.mock import Mock, PropertyMock, patch
-from Avian_Blasters.model.area import Area
+from unittest.mock import Mock, patch
 from Avian_Blasters.model.area_impl import AreaImpl
 from Avian_Blasters.model.character.player.player_attack_handler import PlayerAttackHandler
 from Avian_Blasters.model.character.player.player_status_handler import PlayerStatus

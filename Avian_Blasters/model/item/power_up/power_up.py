@@ -3,7 +3,6 @@ from enum import Enum
 from typing import TYPE_CHECKING
 
 from Avian_Blasters.model.area import Area
-from Avian_Blasters.model.item.item import Item
 from Avian_Blasters.model.item.item_impl import ItemImpl
 if TYPE_CHECKING:
     from Avian_Blasters.model.character.player.player import Player

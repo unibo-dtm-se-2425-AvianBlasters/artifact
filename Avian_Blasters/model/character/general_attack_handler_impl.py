@@ -1,4 +1,3 @@
-from Avian_Blasters.model.character.character import Character
 from Avian_Blasters.model.character.general_attack_handler import GeneralAttackHandler
 from Avian_Blasters.model.cooldown_handler import CoolDownHandler
 from Avian_Blasters.model.cooldown_handler_impl import CoolDownHandlerImpl
