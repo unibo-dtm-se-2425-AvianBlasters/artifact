@@ -84,9 +84,11 @@ class MainMenuImpl(MainMenu):
         self._fps = 60
         self._name = ""
         self._difficulty = 3
+        self._volume_on = True
         
     def initiate(self):
-        self._sound_manager.play_music(self._menu_music_path)
+        if self._volume_on:
+            self._sound_manager.play_music(self._menu_music_path)
         self._SCORE_MENU.add.button('Go Back', pygame_menu.events.BACK)
         self._table = self._SCORE_MENU.add.table(table_id=str(self._table_number), font_size=int(self._width*0.009))
         self._build_table(self._table, self._highest)
@@ -97,6 +99,7 @@ class MainMenuImpl(MainMenu):
         self._MENU.add.selector('FPS :', [('Smooth 60', 60), ('Typical 30', 30), ('Rough 15', 15)], default=0, onchange=self._set_fps)
         self._MENU.add.button('Scoreboard', self._SCORE_MENU)
         self._MENU.add.button('Reset', self._reset_secoreboard, self._table)
+        self._MENU.add.selector('Volume :', [('On', True), ('Off', False)], default = 0, onchange=self._toggle_volume)
         self._MENU.add.button('Quit', pygame_menu.events.EXIT)
         self._SCORE_MENU.add.button('Higher scores', self._build_table, self._table, -self._max)
         self._SCORE_MENU.add.button('Lower scores', self._build_table, self._table, self._max)
@@ -157,7 +160,8 @@ class MainMenuImpl(MainMenu):
         else:
             print("Failed to initialize game. Please check your pygame installation.")
         self._sound_manager.stop_music()
-        self._sound_manager.play_music(self._menu_music_path)
+        if (self._volume_on):
+            self._sound_manager.play_music(self._menu_music_path)
         self._surface = pygame.display.set_mode((self._width/2, self._height/2), pygame.RESIZABLE)
     
     def _set_difficulty(self, value : tuple[any, int], selection : any) -> None:
@@ -169,6 +173,13 @@ class MainMenuImpl(MainMenu):
         selected, index = value
         print(f'Selected FPS: "{selected}" ({selection}) at index {index}')
         self._fps = selection
+
+    def _toggle_volume(self, value : tuple[any, bool], selection : any) -> None:
+        self._volume_on = selection
+        if self._volume_on:
+            self._sound_manager.play_music(self._menu_music_path)
+        else:
+            self._sound_manager.stop_music()
 
     def _set_name(self, name : str):
         self._name = name[:30]
