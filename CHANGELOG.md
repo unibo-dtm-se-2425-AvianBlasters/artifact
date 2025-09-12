@@ -1,3 +1,14 @@
+## [3.0.0](https://github.com/unibo-dtm-se-2425-AvianBlasters/artifact/compare/2.0.0...3.0.0) (2025-09-12)
+
+
+### ⚠ BREAKING CHANGES
+
+* made so try_attack has a parameter of type Character in attack_handler adjacent classes
+
+### Bug Fixes
+
+* made so try_attack has a parameter of type Character in attack_handler adjacent classes ([2077910](https://github.com/unibo-dtm-se-2425-AvianBlasters/artifact/commit/2077910bc66204fa7c89495db873719447cd8cda))
+
 ## [2.0.0](https://github.com/unibo-dtm-se-2425-AvianBlasters/artifact/compare/1.0.0...2.0.0) (2025-09-12)
 
 
