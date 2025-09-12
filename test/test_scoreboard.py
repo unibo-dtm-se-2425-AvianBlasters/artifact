@@ -1,5 +1,5 @@
 import unittest
-from Avian_Blasters.scoreboard_impl import ScoreboardImpl
+from Avian_Blasters.menu.scoreboard_impl import ScoreboardImpl
 
 class TestScoreboard(unittest.TestCase):
 
