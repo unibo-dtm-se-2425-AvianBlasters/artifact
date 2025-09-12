@@ -1,5 +1,6 @@
 from Avian_Blasters.model.character.general_attack_handler_impl import GeneralAttackHandlerImpl
 from Avian_Blasters.model.entity import Entity
+from Avian_Blasters.model.character.character import Character
 from Avian_Blasters.model.item.projectile.projectile import ProjectileType
 from Avian_Blasters.model.item.projectile.projectile_factory import ProjectileFactory
 
@@ -27,7 +28,7 @@ class PlayerAttackHandler(GeneralAttackHandlerImpl):
             raise ValueError("Number of projectiles must be at least 1")
         self._number_of_projectiles = number_of_projectiles
 
-    def try_attack(self, player):
+    def try_attack(self, player : Character):
         if not self._cooldown_handler.is_over():
             return []
         else:

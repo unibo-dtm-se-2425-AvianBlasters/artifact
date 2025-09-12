@@ -1,10 +1,10 @@
 from abc import abstractmethod
+from Avian_Blasters.model.character.character import Character
 from Avian_Blasters.model.cooldown_handler import CoolDownHandler
 from Avian_Blasters.model.item.projectile.projectile import Projectile
 
 
 class GeneralAttackHandler:
-
     """ GeneralAttackHandler is a class that handles the attack of a character"""
 
     @property
@@ -18,7 +18,7 @@ class GeneralAttackHandler:
         ...
     
     @abstractmethod
-    def try_attack(self, character) -> list[Projectile]:
+    def try_attack(self, character : Character) -> list[Projectile]:
         """ Tries to make the character shoot, returning a list of projectiles if successful """
         ...
 

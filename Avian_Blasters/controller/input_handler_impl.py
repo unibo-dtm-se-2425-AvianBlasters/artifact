@@ -9,7 +9,6 @@ class InputHandlerImpl(InputHandler):
         self._keys_pressed = {}
     
     def handle_events(self) -> List[InputHandler.Action]:
-        """Process pygame events and return list of actions"""
         actions = []
         
         for event in pygame.event.get():
@@ -29,12 +28,10 @@ class InputHandlerImpl(InputHandler):
         return actions
     
     def is_key_pressed(self, key: int) -> bool:
-        """Check if a specific key is currently pressed"""
         keys = pygame.key.get_pressed()
         return keys[key]
     
     def get_continuous_actions(self) -> List[InputHandler.Action]:
-        """Get actions for keys that are held down (like movement)"""
         actions = []
         
         keys = pygame.key.get_pressed()

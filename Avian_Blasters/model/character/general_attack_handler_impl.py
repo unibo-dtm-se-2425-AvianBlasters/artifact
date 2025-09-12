@@ -1,3 +1,4 @@
+from Avian_Blasters.model.character.character import Character
 from Avian_Blasters.model.character.general_attack_handler import GeneralAttackHandler
 from Avian_Blasters.model.cooldown_handler import CoolDownHandler
 from Avian_Blasters.model.cooldown_handler_impl import CoolDownHandlerImpl
@@ -9,9 +10,8 @@ COOLDOWN_STEPS_DEFAULT = 20
 PROJECTILE_SPEED_DEFAULT = 1
 
 class GeneralAttackHandlerImpl(GeneralAttackHandler):
-
     """ GeneralAttackHandlerImpl is an implementation of GeneralAttackHandler interface 
-        that provides basic functionality for handling attacks of a character """
+        that provides basic functionality for handling attacks of a character"""
 
     def __init__(self, projectile_factory : ProjectileFactory, projectile_speed : int = PROJECTILE_SPEED_DEFAULT, cooldown_steps: int = COOLDOWN_STEPS_DEFAULT):
         self._projectile_type = PROJECTILE_TYPE_DEFAULT
@@ -30,8 +30,8 @@ class GeneralAttackHandlerImpl(GeneralAttackHandler):
     def set_projectile_type(self, projectile_type: ProjectileType):
         self._projectile_type = projectile_type
         
-    def try_attack(self, character):
-        """Base implementation - should be overridden by subclasses"""
+    def try_attack(self, character : Character):
+        #Base implementation - should be overridden by subclasses
         return []
         
     def _reset_cooldown(self):

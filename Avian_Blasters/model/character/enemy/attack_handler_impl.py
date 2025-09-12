@@ -1,6 +1,7 @@
 import random
 from Avian_Blasters.model.character.general_attack_handler_impl import GeneralAttackHandlerImpl
 from Avian_Blasters.model.entity import Entity
+from Avian_Blasters.model.character.character import Character
 from Avian_Blasters.model.item.projectile.projectile import ProjectileType
 from Avian_Blasters.model.item.projectile.projectile_factory import ProjectileFactory
 
@@ -25,8 +26,7 @@ class EnemyAttackHandler(GeneralAttackHandlerImpl):
             return False
         return random.random() <= self._fire_chance
         
-    def try_attack(self, enemy):
-        """Try to attack and return a list of projectiles"""
+    def try_attack(self, enemy : Character):
         if not self._can_attack():
             return []
         else:    
@@ -83,7 +83,6 @@ class BatAttackHandler(EnemyAttackHandler):
         return False
         
     def try_attack(self, enemy):
-        """Try to attack and return a list of projectiles"""
         if not self._can_attack(enemy):
             return []
         else:    
