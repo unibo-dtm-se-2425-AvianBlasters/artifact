@@ -7,8 +7,6 @@ jobs:
     concurrency:
       # Only one release job at a time. Strictly sequential.
       group: deploy
-    permissions: 
-      contents: write
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code

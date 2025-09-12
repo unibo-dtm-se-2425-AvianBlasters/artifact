@@ -47,6 +47,8 @@ jobs:
       - name: Test
         run: python -m unittest discover -s test -t .
   deploy:
+    permissions: 
+      contents: write
     needs:
       - test
     uses: ./.github/workflows/deploy.yml
