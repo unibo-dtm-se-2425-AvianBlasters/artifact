@@ -80,7 +80,7 @@ class GetMinimumPythonVersion(distutils.cmd.Command):
         print(".".join(python_version[2:].split(".")[:2]))
 
 
-url = 'https://github.com/aequitas-aod/Avian_Blasters'
+url = 'https://github.com/unibo-dtm-se-2425-AvianBlasters/artifact'
 
 
 setup(
@@ -111,7 +111,7 @@ setup(
     python_requires=python_version,
     install_requires=dependencies,
     zip_safe=False,
-    platforms="Independant",
+    platforms="Windows, Linux, MacOs",
     project_urls={  # Optional
         'Bug Reports': f'{url}/issues',
         # 'Funding': 'https://donate.pypi.org',
