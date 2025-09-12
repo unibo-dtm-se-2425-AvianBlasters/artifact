@@ -26,9 +26,6 @@ class EntityImpl(Entity):
                           self._area.get_position_y + movement_y * self._delta,
                           width,
                           height)
-        
-    # def move(self, movement_x : int, movement_y : int):
-    #    self.move(self, movement_x * self._delta, movement_y * self._delta, self._area.get_width, self._area.get_height)
     
     def is_touched(self, other : Entity) -> bool:
         if not isinstance(other, Entity):
