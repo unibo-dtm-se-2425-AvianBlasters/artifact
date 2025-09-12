@@ -8,7 +8,7 @@ from Avian_Blasters.model.character.enemy.bat import Bat
 import os
 
 class SpriteManagerEnemy(AbstractSpriteManager):
-    
+    """Manages loading and providing sprites for enemy characters like Birds and Bats."""
     def __init__(self):
         super().__init__(path='assets' + os.sep + 'sprites' + os.sep + 'Bird.png',
                        sprite_definitions={
@@ -99,7 +99,7 @@ class SpriteManagerEnemy(AbstractSpriteManager):
     def get_sprite_size(self, entity_type: Entity.TypeArea) -> Tuple[int, int]:
         return (16, 10)  # Standard enemy sprite size
     
-    def _create_fallback_sprite_for_bird(self, health: int) -> pygame.Surface:
+    def _create_fallback_sprite_for_bird(self, health: int) -> pygame.Surface: # Simple colored rectangle based on health
         colours = {
             3: (0, 255, 0),
             2: (255, 255, 0),
@@ -107,7 +107,7 @@ class SpriteManagerEnemy(AbstractSpriteManager):
         }
         return super()._create_fallback_sprite(health, colours)
     
-    def _create_fallback_sprite_for_bat(self, health: int = 3) -> pygame.Surface:
+    def _create_fallback_sprite_for_bat(self, health: int = 3) -> pygame.Surface:   # Simple colored rectangle based on health
         surface = pygame.Surface((16, 10))
         
         if health == 3:

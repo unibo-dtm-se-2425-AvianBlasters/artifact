@@ -1,5 +1,5 @@
 import pygame
-from typing import Dict, Tuple, Optional
+from typing import Tuple
 from Avian_Blasters.view.sprite_manager.abstract_sprite_manager import AbstractSpriteManager
 from Avian_Blasters.model.character.player import Player
 from Avian_Blasters.model.character.player.player_status_handler import PlayerStatus

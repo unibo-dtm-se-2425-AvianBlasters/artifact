@@ -1,6 +1,5 @@
 from typing import Optional
 from enum import Enum
-
 from Avian_Blasters.model.character.enemy.enemy_impl import EnemyImpl
 from Avian_Blasters.model.character.enemy.attack_handler_impl import BatAttackHandler
 from Avian_Blasters.model.item.projectile.projectile_factory import ProjectileFactory
@@ -117,7 +116,7 @@ class Bat(EnemyImpl):
             EntityImpl.move(self, dx, dy, self.get_area().width, self.get_area().height)
     
     def shoot(self) -> list:
-        """Override shooting behavior - only shoot in BIRD_LIKE state"""
+        """Override shooting behavior - only shoot in HOMING state"""
         if self._movement_state == BatMovementState.HOMING:
             # Use parent's shooting behavior when in bird-like mode
             return super().shoot()

@@ -1,5 +1,3 @@
-import math
-
 from Avian_Blasters.model.character.enemy.enemy_impl import EnemyImpl
 from Avian_Blasters.model.character.enemy.attack_handler_impl import BirdAttackHandler
 from Avian_Blasters.model.item.projectile.projectile_factory import ProjectileFactory

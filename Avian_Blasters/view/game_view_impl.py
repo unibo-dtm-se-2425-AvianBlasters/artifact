@@ -1,7 +1,7 @@
 import pygame
-from typing import List, Dict
+from typing import Dict
 from Avian_Blasters.model.item.power_up.power_up import PowerUp
-from Avian_Blasters.model.item.projectile.projectile import Projectile, ProjectileType
+from Avian_Blasters.model.item.projectile.projectile import Projectile
 from Avian_Blasters.view.game_view import GameView
 from Avian_Blasters.view.sprite_manager.sprite_manager import SpriteManager
 from Avian_Blasters.view.sprite_manager.default_sprite_manager import DefaultSpriteManager
@@ -19,6 +19,8 @@ from Avian_Blasters.model.entity import Entity
 # Color constants
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
+
+GRAPH_REFRESH = 60
 
 class GameViewImpl(GameView):
     """GameViewImpl is a pygame implementation of GameView"""
@@ -74,11 +76,11 @@ class GameViewImpl(GameView):
         # Render all entities
         entities = world.get_all_entities()
         for entity in entities:
-            if self._cooldown_animation < self._fps//2 or entity.get_type not in [Entity.TypeArea.PLAYER, Entity.TypeArea.ENEMY]:
+            if self._cooldown_animation < GRAPH_REFRESH//2 or entity.get_type not in [Entity.TypeArea.PLAYER, Entity.TypeArea.ENEMY]:
                 self.render_entity(entity)
-            elif self._cooldown_animation < self._fps:
+            elif self._cooldown_animation < GRAPH_REFRESH:
                 self.render_entity_with_variant(entity, 1)
-                if self._cooldown_animation == self._fps - 1:
+                if self._cooldown_animation == GRAPH_REFRESH - 1:
                     self._cooldown_animation = 0
         
         # Render UI elements

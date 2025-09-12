@@ -99,7 +99,7 @@ class MainMenuImpl(MainMenu):
         self._MENU.add.selector('FPS :', [('Smooth 60', 60), ('Typical 30', 30), ('Rough 15', 15)], default=0, onchange=self._set_fps)
         self._MENU.add.button('Scoreboard', self._SCORE_MENU)
         self._MENU.add.button('Reset', self._reset_secoreboard, self._table)
-        self._MENU.add.selector('Volume :', [('On', True), ('Off', False)], default = 0, onchange=self._toggle_volume)
+        self._MENU.add.selector('Music :', [('On', True), ('Off', False)], default = 0, onchange=self._toggle_volume)
         self._MENU.add.button('Quit', pygame_menu.events.EXIT)
         self._SCORE_MENU.add.button('Higher scores', self._build_table, self._table, -self._max)
         self._SCORE_MENU.add.button('Lower scores', self._build_table, self._table, self._max)
@@ -154,8 +154,9 @@ class MainMenuImpl(MainMenu):
         controller = GameControllerImpl(self._difficulty, self._name, self._fps)
         if controller.initialize():
             print("Game Start")
-            self._sound_manager.stop_music()
-            self._sound_manager.play_music(self._game_music_path, volume=0.3)
+            if self._volume_on:
+                self._sound_manager.stop_music()
+                self._sound_manager.play_music(self._game_music_path, volume=0.3)
             controller.run()
         else:
             print("Failed to initialize game. Please check your pygame installation.")

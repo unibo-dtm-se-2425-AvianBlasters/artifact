@@ -6,9 +6,6 @@ from Avian_Blasters.model.item.power_up.power_up import PowerUp
 from Avian_Blasters.model.item.projectile.projectile import Projectile
 from typing import Type
 
-WORLD_WIDTH = 120
-WORLD_HEIGHT = 90 
-
 class WorldImpl(World):
     """WorldImpl is an implementation of World"""
     
