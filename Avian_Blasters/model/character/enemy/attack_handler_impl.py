@@ -1,5 +1,4 @@
 import random
-
 from Avian_Blasters.model.character.general_attack_handler_impl import GeneralAttackHandlerImpl
 from Avian_Blasters.model.entity import Entity
 from Avian_Blasters.model.item.projectile.projectile import ProjectileType

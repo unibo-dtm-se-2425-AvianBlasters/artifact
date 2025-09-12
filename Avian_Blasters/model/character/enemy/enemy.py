@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
 from typing import Optional
-
 from Avian_Blasters.model.character.character import Character
 from Avian_Blasters.model.item.projectile.projectile import Projectile
 
