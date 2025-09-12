@@ -11,6 +11,5 @@ class MyClass:
     def my_method(self):
         return "Hello World"
 
-
 # let this be the last line of this file
 logger.info("Avian_Blasters loaded")
