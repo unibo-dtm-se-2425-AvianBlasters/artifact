@@ -1,3 +1,30 @@
+## [2.0.0](https://github.com/unibo-dtm-se-2425-AvianBlasters/artifact/compare/1.0.0...2.0.0) (2025-09-12)
+
+
+### ⚠ BREAKING CHANGES
+
+* moved menu adjacent classes into a package of their own
+
+### Bug Fixes
+
+* moved menu adjacent classes into a package of their own ([56bd563](https://github.com/unibo-dtm-se-2425-AvianBlasters/artifact/commit/56bd563afd7f82c387202724a2830cd6b6a83a37))
+
+
+### Build and continuous integration
+
+* updated url in setup.py ([22d63b8](https://github.com/unibo-dtm-se-2425-AvianBlasters/artifact/commit/22d63b82c105429a8cbe8279f7fd807256099f5a))
+
+
+### General maintenance
+
+* reinstaintated default MyClass ([0b331d6](https://github.com/unibo-dtm-se-2425-AvianBlasters/artifact/commit/0b331d6a66529454e9ce494bb530515e90acb425))
+* removed unused default package classes ([6de59f5](https://github.com/unibo-dtm-se-2425-AvianBlasters/artifact/commit/6de59f51d16dd0f5eb767e3dd2a525dd15575474))
+
+
+### Refactoring
+
+* fixed import as Score classes have been moved to a different package ([24dc582](https://github.com/unibo-dtm-se-2425-AvianBlasters/artifact/commit/24dc582a79f34a21a5a86b185e608bbd0960c3e1))
+
 ## 1.0.0 (2025-09-12)
 
 
