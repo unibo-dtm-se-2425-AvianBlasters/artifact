@@ -1,5 +1,3 @@
-from enum import Enum
-
 class MainMenu():
 
     def initiate(self):

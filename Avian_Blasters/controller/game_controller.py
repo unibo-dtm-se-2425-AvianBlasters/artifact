@@ -1,5 +1,3 @@
-from Avian_Blasters.model.world import World
-from Avian_Blasters.view.game_view import GameView
 from Avian_Blasters.controller.input_handler import InputHandler
 
 class GameController:

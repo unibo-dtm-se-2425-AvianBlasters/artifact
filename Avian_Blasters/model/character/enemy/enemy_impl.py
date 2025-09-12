@@ -2,7 +2,6 @@ from typing import Optional
 import time
 from Avian_Blasters.model.character.enemy.enemy import Enemy
 from Avian_Blasters.model.character.health_handler import HealthHandler
-from Avian_Blasters.model.character.health_handler_impl import HealthHandlerImpl
 from Avian_Blasters.model.character.general_attack_handler import GeneralAttackHandler
 from Avian_Blasters.model.character.enemy.attack_handler_impl import EnemyAttackHandler
 from Avian_Blasters.model.item.projectile.projectile import Projectile, ProjectileType

@@ -1,5 +1,4 @@
 import pygame
-from typing import Optional
 from Avian_Blasters.model.character.player.player import Player
 
 class UIRenderer:

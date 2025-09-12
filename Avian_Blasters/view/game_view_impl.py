@@ -1,5 +1,5 @@
 import pygame
-from typing import List, Dict
+from typing import Dict
 from Avian_Blasters.model.item.power_up.power_up import PowerUp
 from Avian_Blasters.model.item.projectile.projectile import Projectile, ProjectileType
 from Avian_Blasters.view.game_view import GameView

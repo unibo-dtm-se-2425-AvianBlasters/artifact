@@ -1,20 +1,18 @@
 import os
 import pygame
-import time
 import random
 from typing import List
 from Avian_Blasters.controller.game_controller import GameController
 from Avian_Blasters.controller.input_handler import InputHandler
 from Avian_Blasters.controller.input_handler_impl import InputHandlerImpl
 from Avian_Blasters.model.item.power_up.power_up import PowerUpType
-from Avian_Blasters.model.item.power_up.power_up_types.laser_power_up import LaserPowerUp
 from Avian_Blasters.model.item.power_up.power_up_factory import PowerUpFactory
 from Avian_Blasters.model.item.projectile.projectile import ProjectileType
 from Avian_Blasters.sound_manager_impl import SoundManagerImpl
 from Avian_Blasters.view.game_view import GameView
 from Avian_Blasters.view.game_view_impl import GameViewImpl
-from Avian_Blasters.model.world import WORLD_WIDTH, World
-from Avian_Blasters.model.world_impl import WORLD_HEIGHT, WorldImpl
+from Avian_Blasters.model.world import WORLD_HEIGHT, World
+from Avian_Blasters.model.world_impl import WorldImpl
 from Avian_Blasters.model.character.player.player import Player
 from Avian_Blasters.model.character.player.player_impl import PlayerImpl
 from Avian_Blasters.model.entity import Entity
@@ -223,7 +221,6 @@ class GameControllerImpl(GameController):
             elif enemy.is_dead():
                 enemies_to_remove.append(enemy)
             else:
-                previous_health = enemy.get_health
                 collision_occurred = enemy.is_touched(self._world.get_projectiles())
                 
                 if collision_occurred and self._player:
