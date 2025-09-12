@@ -1,7 +1,7 @@
 import os
-from Avian_Blasters.menu import MainMenu
+from Avian_Blasters.menu.menu import MainMenu
 from Avian_Blasters.controller.game_controller_impl import GameControllerImpl
-from Avian_Blasters.scoreboard_impl import ScoreboardImpl
+from Avian_Blasters.menu.scoreboard_impl import ScoreboardImpl
 import pygame
 import pygame_menu
 import pygame_menu.events

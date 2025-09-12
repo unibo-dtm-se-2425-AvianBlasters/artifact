@@ -1,4 +1,4 @@
-from Avian_Blasters.scoreboard import Scoreboard
+from Avian_Blasters.menu.scoreboard import Scoreboard
 import os
 
 class ScoreboardImpl(Scoreboard):
@@ -6,7 +6,7 @@ class ScoreboardImpl(Scoreboard):
 
     def __init__(self):
         current_dir = os.path.dirname(__file__)
-        self._file_path = os.path.join(current_dir, '..', 'assets', 'scoreboard.txt')
+        self._file_path = os.path.join(current_dir, '..', '..', 'assets', 'scoreboard.txt')
 
     def get_scores(self, number_of_scores : int) -> list[tuple[str, int, str]]:
         self.__check_if_scoreboard_exists()

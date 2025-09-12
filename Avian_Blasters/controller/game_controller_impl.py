@@ -17,7 +17,7 @@ from Avian_Blasters.model.character.player.player import Player
 from Avian_Blasters.model.character.player.player_impl import PlayerImpl
 from Avian_Blasters.model.entity import Entity
 from Avian_Blasters.model.character.enemy.enemy_factory import create_enemy_formation, handle_bird_formation_movement, can_bird_shoot, update_bat_spawning
-from Avian_Blasters.scoreboard_impl import ScoreboardImpl
+from Avian_Blasters.menu.scoreboard_impl import ScoreboardImpl
 
 # Game constants
 SCREEN_WIDTH = 800

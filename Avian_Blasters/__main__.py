@@ -1,4 +1,4 @@
-from Avian_Blasters.menu_impl import MainMenuImpl
+from Avian_Blasters.menu.menu_impl import MainMenuImpl
 
 def main():
     """Main entry point for Avian Blasters game"""
