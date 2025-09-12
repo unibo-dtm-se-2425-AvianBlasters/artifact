@@ -6,6 +6,7 @@ from Avian_Blasters.model.item.projectile.projectile_factory import ProjectileFa
 PLAYER_COOLDOWN_STEPS = 30
 PLAYER_PROJECTILE_WIDTH = 5
 PLAYER_PROJECTILE_HEIGHT = 5
+LASER_HEIGHT = 90
 
 class PlayerAttackHandler(GeneralAttackHandlerImpl):
     """PlayerAttackHandler is an implementation of GeneralAttackHandler used to handle
@@ -42,7 +43,7 @@ class PlayerAttackHandler(GeneralAttackHandlerImpl):
                 else:
                     projectile_x = start_x + i * offset
                 if self._projectile_type == ProjectileType.LASER:
-                    projectile_y = player_center_y - (90 // 2) - player.get_area().height // 2
+                    projectile_y = player_center_y - (LASER_HEIGHT // 2) - player.get_area().height // 2
                 else: 
                     projectile_y = player_center_y
                 projectile = self._projectile_factory.create_projectile(
