@@ -74,11 +74,11 @@ class GameViewImpl(GameView):
         # Render all entities
         entities = world.get_all_entities()
         for entity in entities:
-            if self._cooldown_animation < self._fps//2 or entity.get_type not in [Entity.TypeArea.PLAYER, Entity.TypeArea.ENEMY]:
+            if self._cooldown_animation < 60//2 or entity.get_type not in [Entity.TypeArea.PLAYER, Entity.TypeArea.ENEMY]:
                 self.render_entity(entity)
-            elif self._cooldown_animation < self._fps:
+            elif self._cooldown_animation < 60:
                 self.render_entity_with_variant(entity, 1)
-                if self._cooldown_animation == self._fps - 1:
+                if self._cooldown_animation == 59:
                     self._cooldown_animation = 0
         
         # Render UI elements

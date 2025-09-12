@@ -117,7 +117,7 @@ class Bat(EnemyImpl):
             EntityImpl.move(self, dx, dy, self.get_area().width, self.get_area().height)
     
     def shoot(self) -> list:
-        """Override shooting behavior - only shoot in BIRD_LIKE state"""
+        """Override shooting behavior - only shoot in HOMING state"""
         if self._movement_state == BatMovementState.HOMING:
             # Use parent's shooting behavior when in bird-like mode
             return super().shoot()
