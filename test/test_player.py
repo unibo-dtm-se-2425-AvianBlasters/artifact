@@ -16,13 +16,13 @@ class TestPlayer(unittest.TestCase):
     initial_multiplier = 1
     limit_right = 100
     limit_left = -100
-    fps = 60
+    refresh_rate = 60
 
     def setUp(self):
         self.player = PlayerImpl(self.initial_x, self.initial_y,
                                 self.width, self.width,self.delta,
                                 self.health, self.initial_score, self.initial_multiplier, 
-                                self.limit_right, self.limit_left, self.fps)
+                                self.limit_right, self.limit_left, self.refresh_rate)
     
     def test_inital_status(self):
         self.assertEqual(self.health, self.player.get_health_handler().current_health)
@@ -35,7 +35,7 @@ class TestPlayer(unittest.TestCase):
         with self.assertRaises(ValueError):
             PlayerImpl(x = self.initial_x, y = self.initial_y, width = self.width, height = self.height,  delta = 1,
                        health = self.health, initial_score = self.initial_score, initial_multiplier = self.initial_multiplier,
-                       limit_right = self.limit_left, limit_left = self.limit_left, fps = self.fps)
+                       limit_right = self.limit_left, limit_left = self.limit_left, refresh_rate = self.refresh_rate)
 
 
     def verify_movement(self, movement_x, check):
@@ -77,7 +77,7 @@ class TestPlayer(unittest.TestCase):
         self.assertTrue(self.player.is_touched([test_enemy_projectile]))
         self.assertEqual(self.health - 1, self.player.get_health_handler().current_health)
         i = 0
-        while (i < 5 * self.fps):
+        while (i < 5 * self.refresh_rate):
             self.assertTrue(self.player.is_hurt())
             self.assertFalse(self.player.is_touched([test_enemy_projectile]))
             i += 1

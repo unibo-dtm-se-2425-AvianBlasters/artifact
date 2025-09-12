@@ -21,18 +21,18 @@ class PlayerImpl(CharacterImpl, Player):
     """PlayerImpl is an implementation of Player that takes advantage of
     the implementations present in CharacterImpl"""
     
-    def __init__(self, x : int, y : int, width : int, height : int, delta : int, health : int, initial_score : int, initial_multiplier : int, limit_right : int, limit_left : int, fps : int):
+    def __init__(self, x : int, y : int, width : int, height : int, delta : int, health : int, initial_score : int, initial_multiplier : int, limit_right : int, limit_left : int, refresh_rate : int):
         super().__init__(x, y, width, height, Entity.TypeArea.PLAYER, delta, health)
         self._power_up_handler = PowerUpHandlerImpl(None)
         self._score = ScoreImpl(initial_score, initial_multiplier)
-        self._status_handler = PlayerStatusImpl(PlayerStatus.Status.NORMAL, fps)
+        self._status_handler = PlayerStatusImpl(PlayerStatus.Status.NORMAL, refresh_rate)
         self._attack_handler = PlayerAttackHandler(ProjectileFactory(), PlayerAttackHandler.PLAYER_PROJECTILE_SPEED, ProjectileType.NORMAL, )
         if limit_right <= limit_left:
             raise ValueError("The right limit must be bigger than the left one!")
         self._limit_r = limit_right
         self._limit_l = limit_left
         self._default_speed = delta
-        self._fps = fps
+        self._fps = refresh_rate
         self._is_hurt = False
 
     def get_power_up_handler(self) -> PowerUpHandler:
