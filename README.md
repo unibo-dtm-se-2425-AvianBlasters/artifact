@@ -63,13 +63,13 @@ Overview:
 ├── .github/                # configuration of GitHub CI
 │   └── workflows/          # configuration of GitHub Workflows
 │       ├── check.yml       # runs tests on multiple OS and versions of Python
-│       └── deploy.yml      # if check succeeds, and the current branch is one of {main, master}, triggers automatic releas on PyPi
+│       └── deploy.yml      # if check succeeds, and the current branch is master, automatic release on TestPyPi is triggered
 ├── MANIFEST.in             # file stating what to include/exclude in releases 
 ├── LICENSE                 # license file (Apache 2.0)
 ├── pyproject.toml          # declares build dependencies
 ├── renovate.json           # configuration of Renovate bot, for automatic dependency updates
 ├── requirements-dev.txt    # declares development dependencies
 ├── requirements.txt        # declares runtime dependencies
-├── setup.py                # configuration of the package to be released on Pypi
+├── setup.py                # configuration of the package to be released on TestPyPi
 └── Dockerfile              # configuration of the Docker image to be realsed on Dockerhub
 ```
