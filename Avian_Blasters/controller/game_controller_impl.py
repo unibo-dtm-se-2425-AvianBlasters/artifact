@@ -2,6 +2,7 @@ import os
 import pygame
 import random
 from typing import List
+from enum import Enum
 from Avian_Blasters.controller.game_controller import GameController
 from Avian_Blasters.controller.input_handler import InputHandler
 from Avian_Blasters.controller.input_handler_impl import InputHandlerImpl
@@ -24,6 +25,16 @@ SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 GAME_TITLE = "Avian Blasters: The Avians Strike Back"
 TARGET_FPS = 60
+SOUND_PATH = 'assets' + os.sep + 'sounds' + os.sep
+
+class SoundEffects(Enum):
+    GAME_START = SOUND_PATH + 'game_start.mp3'
+    GAME_OVER = SOUND_PATH + 'game_over.mp3'
+    SHOOT = SOUND_PATH + 'shoot.mp3'
+    PLAYER_HIT = SOUND_PATH + 'player_hit.mp3'
+    POWER_UP_GET = SOUND_PATH + 'power_up.mp3'
+    ENEMY_HIT = SOUND_PATH + 'enemy_hit.mp3'
+    ENEMY_DEFEAT = SOUND_PATH + 'enemy_defeat.mp3'
 
 class GameControllerImpl(GameController):
     """GameControllerImpl is the main implementation of GameController"""
@@ -42,14 +53,6 @@ class GameControllerImpl(GameController):
         self._scoreboard = ScoreboardImpl()
         self._power_up_factory = PowerUpFactory()
         self._sound_manager = SoundManagerImpl()
-        sound_path = 'assets' + os.sep + 'sounds' + os.sep
-        self._shoot_sound_path = sound_path + 'shoot.mp3'
-        self._power_up_sound_path = sound_path + 'power_up.mp3'
-        self._game_over_sound_path = sound_path + 'game_over.mp3'
-        self._game_start_sound_path = sound_path + 'game_start.mp3'
-        self._enemy_defeated_sound_path = sound_path + 'enemy_defeat.mp3'
-        self._enemy_hit_sound_path = sound_path + 'enemy_hit.mp3'
-        self._player_hit_sound_path = sound_path + 'player_hit.mp3'
     
     def initialize(self) -> bool:
         """Initialize the game controller and its dependencies"""
@@ -103,7 +106,7 @@ class GameControllerImpl(GameController):
         print("Starting Avian Blasters...")
         print("Controls: Arrow keys or A/D to move, Space to shoot, Right Shift to pause, Escape to quit")
         
-        self._sound_manager.play_sound_effect(self._game_start_sound_path, volume=0.5)
+        self._sound_manager.play_sound_effect(SoundEffects.GAME_START.value, volume=0.5)
 
         graph_update = TARGET_FPS/self._fps
         
@@ -154,7 +157,7 @@ class GameControllerImpl(GameController):
                 attack_handler.update()
         
         if self._player.is_touched(self._world.get_projectiles() + self._world.get_enemies()):
-            self._sound_manager.play_sound_effect(self._player_hit_sound_path, volume = 0.5)
+            self._sound_manager.play_sound_effect(SoundEffects.PLAYER_HIT.value, volume = 0.5)
         if self._player.get_health_handler().current_health <= 0:
             self._running = False
             print("Oh no! The Avians have reached the car. Maaaaan... Game Over!")
@@ -192,7 +195,7 @@ class GameControllerImpl(GameController):
                     power_up.move(0, 1, power_up.get_area().width, power_up.get_area().height)
                     if self._player.get_area().overlap(power_up.get_area()):
                         power_up_handler.collect_power_up(power_up, self._player)
-                        self._sound_manager.play_sound_effect(self._power_up_sound_path, volume=0.5)
+                        self._sound_manager.play_sound_effect(SoundEffects.POWER_UP_GET.value, volume=0.5)
             if hasattr(power_up_handler, 'player_update'):
                     power_up_handler.player_update(self._player, self._paused)         
 
@@ -230,9 +233,9 @@ class GameControllerImpl(GameController):
                     sound = None
                     if enemy_died:
                         self._try_drop_power_up(enemy.get_area().get_position_x, enemy.get_area().get_position_y)
-                        sound = self._enemy_defeated_sound_path
+                        sound = SoundEffects.ENEMY_DEFEAT.value
                     else:
-                        sound = self._enemy_hit_sound_path
+                        sound = SoundEffects.ENEMY_HIT.value
                     self._sound_manager.play_sound_effect(sound, volume=0.5)
                     
                     points = 10 if enemy_died else 5
@@ -309,7 +312,7 @@ class GameControllerImpl(GameController):
             elif action == InputHandler.Action.SHOOT and self._player and not self._paused:
                 projectiles = self._player.shoot()
                 if projectiles:
-                    self._sound_manager.play_sound_effect(self._shoot_sound_path, volume=0.5)
+                    self._sound_manager.play_sound_effect(SoundEffects.SHOOT.value, volume=0.5)
                     self._world.add_projectiles(projectiles)
     
     def is_game_running(self) -> bool:
@@ -319,7 +322,7 @@ class GameControllerImpl(GameController):
     def cleanup(self) -> None:
         """Cleanup resources when the game ends"""
         if self._view:
-            self._sound_manager.play_sound_effect(self._game_over_sound_path, volume=0.5)
+            self._sound_manager.play_sound_effect(SoundEffects.GAME_OVER.value, volume=0.5)
             self._view.cleanup()
         print("Game ended. Thanks for playing!")
     
