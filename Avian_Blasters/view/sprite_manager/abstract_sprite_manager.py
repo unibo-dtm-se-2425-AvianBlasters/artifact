@@ -16,7 +16,6 @@ class AbstractSpriteManager(SpriteManager):
         self._sprite_definitions = sprite_definitions
     
     def load_sprites(self) -> bool:
-        """Load sprites from the sprite sheet file"""
         try:
             # Load and convert sprite sheet for optimal performance
             self._sprite_sheet = pygame.image.load(self._path).convert_alpha()
@@ -48,7 +47,6 @@ class AbstractSpriteManager(SpriteManager):
             return False
     
     def get_sprite(self, index : Any, variant: int = 0) -> pygame.Surface:
-        """Get a sprite surface for the specified entity type and variant"""
         if not self._loaded or index not in self._sprites:
             # Return a fallback colored rectangle if sprites aren't loaded
             return self._create_fallback_sprite(index)
@@ -60,12 +58,10 @@ class AbstractSpriteManager(SpriteManager):
         return sprites[variant]
     
     def get_sprite_size(self, index : Any) -> Tuple[int, int]:
-        """Get the size (width, height) of sprites for the specified entity type"""
         if index in self._sprite_sizes:
             return self._sprite_sizes[index]
     
     def is_loaded(self) -> bool:
-        """Check if sprites have been successfully loaded"""
         return self._loaded
     
     def _create_fallback_sprite(self, index : Any, colours : dict[Any, tuple[int, int, int]]) -> pygame.Surface:
