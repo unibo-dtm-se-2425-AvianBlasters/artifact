@@ -1,3 +1,15 @@
+## [3.1.0](https://github.com/unibo-dtm-se-2425-AvianBlasters/artifact/compare/3.0.0...3.1.0) (2025-09-13)
+
+
+### Features
+
+* updated name of constant to fit better with its actual use ([62403c7](https://github.com/unibo-dtm-se-2425-AvianBlasters/artifact/commit/62403c7357322663715e04778081fcd94c348138))
+
+
+### Refactoring
+
+* **controller:** update to the graphical refresh logic linked to fps ([55942a4](https://github.com/unibo-dtm-se-2425-AvianBlasters/artifact/commit/55942a45e1422f7133bfcff97113267c49051375))
+
 ## [3.0.0](https://github.com/unibo-dtm-se-2425-AvianBlasters/artifact/compare/2.0.0...3.0.0) (2025-09-12)
 
 
