@@ -41,7 +41,6 @@ class DefaultSpriteManager(AbstractSpriteManager):
         return super().get_sprite(entity_type, variant)
     
     def get_sprite_size(self, entity_type: Entity.TypeArea) -> Tuple[int, int]:
-        """Get the size (width, height) of sprites for the specified entity type"""
         if entity_type in self._sprite_sizes:
             return self._sprite_sizes[entity_type]
     
