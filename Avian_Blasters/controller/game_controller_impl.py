@@ -24,7 +24,7 @@ from Avian_Blasters.menu.scoreboard_impl import ScoreboardImpl
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 GAME_TITLE = "Avian Blasters: The Avians Strike Back"
-TARGET_FPS = 60
+REFRESH_RATE = 60
 SOUND_PATH = 'assets' + os.sep + 'sounds' + os.sep
 
 class SoundEffects(Enum):
@@ -108,11 +108,11 @@ class GameControllerImpl(GameController):
         
         self._sound_manager.play_sound_effect(SoundEffects.GAME_START.value, volume=0.5)
 
-        graph_update = TARGET_FPS/self._fps
+        graph_update = REFRESH_RATE/self._fps
         
         while self._running:
             # Calculate delta time
-            delta_time = self._clock.tick(TARGET_FPS) / 1000.0
+            delta_time = self._clock.tick(REFRESH_RATE) / 1000.0
             
             # Handle input
             actions = self._input_handler.handle_events()
@@ -121,7 +121,7 @@ class GameControllerImpl(GameController):
             if not self._paused:
                 # Update game state
                 self.update_game_state(delta_time)
-                if graph_update >= TARGET_FPS/self._fps:
+                if graph_update >= REFRESH_RATE/self._fps:
                     graph_update = 0
                     self._view.render_world(self._world)
                     self._view.update_display()
