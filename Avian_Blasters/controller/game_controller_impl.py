@@ -105,6 +105,8 @@ class GameControllerImpl(GameController):
         
         self._sound_manager.play_sound_effect(self._game_start_sound_path, volume=0.5)
 
+        graph_update = TARGET_FPS/self._fps
+        
         while self._running:
             # Calculate delta time
             delta_time = self._clock.tick(TARGET_FPS) / 1000.0
@@ -113,15 +115,14 @@ class GameControllerImpl(GameController):
             actions = self._input_handler.handle_events()
             self.handle_input(actions)
             
-            graph_update = 1 / self._fps
             if not self._paused:
                 # Update game state
                 self.update_game_state(delta_time)
-                if graph_update >= 1 / self._fps:
+                if graph_update >= TARGET_FPS/self._fps:
                     graph_update = 0
                     self._view.render_world(self._world)
                     self._view.update_display()
-                graph_update += delta_time
+                graph_update += 1
         
         if (self._name != ''):
             name = self._name
