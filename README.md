@@ -4,7 +4,7 @@ Avian Blasters (or Avian Blasters: The Avians Strike Back) is a desktop game app
 
 ---
 
-Defend yourself agianst the Avians, with your trusty car, the Jolly Runner, in this arcade inspired shooter.
+Defend yourself against the Avians, with your trusty car, the Jolly Runner, in this arcade inspired shooter.
 
 Your driving and shooting skills will be put to the test as every distraction will become your worst nightmare!
 
@@ -15,6 +15,7 @@ Coming to your home in 2025, on Windows, Linux, and MacOs devices!
 Are you brave enough to face the rising odds?
 
 ---
+
 For a more detailed user guide, describing all the in-game features and controls, click [`here`](https://unibo-dtm-se-2425-avianblasters.github.io/report/sections/09-userguide/)! 
 
 ## To start the software application
@@ -33,7 +34,7 @@ Python version 3.9 or above is required for this application and needs to be ins
 
         pip install -r requirements.txt
     
-    For developmental purpouses use:
+    For developmental purposes use:
 
         pip install -r requirements-dev.txt
 
@@ -41,7 +42,7 @@ Python version 3.9 or above is required for this application and needs to be ins
 
         python -m Avian_Blasters
 
-## Futher resources
+## Further resources
 
 [`Bug Reports`](https://github.com/unibo-dtm-se-2425-AvianBlasters/artifact/issues)
 
@@ -56,7 +57,7 @@ Python version 3.9 or above is required for this application and needs to be ins
 Overview:
 ```bash
 <root directory>
-├── Avian_Blasters/             # main package
+├── Avian_Blasters/         # main package
 │   ├── __init__.py         # python package marker
 │   └── __main__.py         # application entry point
 ├── test/                   # test package
