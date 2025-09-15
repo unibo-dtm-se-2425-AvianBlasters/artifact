@@ -29,7 +29,7 @@ class ScoreboardImpl(Scoreboard):
     
     def add_score(self, new_score : tuple[str, int, int]):
         if not (isinstance(new_score[0], str) and isinstance(new_score[1], int) and (isinstance(new_score[2], int))):
-            return
+            raise Exception("Score won't be stored, as the new score is not set up correctly!")
         
         self.__check_if_scoreboard_exists()
         

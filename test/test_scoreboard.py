@@ -20,9 +20,15 @@ class TestScoreboard(unittest.TestCase):
             self._scoreboard.get_scores("Ciao")
     
     def test_add(self):
+        # Test addition of scores and handling of wrong requests
         original_lenght = len(self._scoreboard.get_scores(300))
         self._scoreboard.add_score(("Test", 100000, 1))
         self.assertEqual(original_lenght + 1, len(self._scoreboard.get_scores(300)))
         self._scoreboard.reset_scoreboard()
-        self._scoreboard.add_score("Test")
+        with self.assertRaises(Exception):
+            self._scoreboard.add_score("Test")
+        with self.assertRaises(Exception):
+            self._scoreboard.add_score(("Test", "Test", "Test"))
+        with self.assertRaises(Exception):
+            self._scoreboard.add_score((1, 2, "Test"))
         self.assertEqual(original_lenght, len(self._scoreboard.get_scores(300)))
