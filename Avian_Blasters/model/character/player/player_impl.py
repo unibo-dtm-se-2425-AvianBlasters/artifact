@@ -44,14 +44,14 @@ class PlayerImpl(CharacterImpl, Player):
     def move(self, x : int):
         if not isinstance(x, int):
             raise ValueError("X must be a positive integer!")
-        effective_movement = self.__effective_movement(x)
+        self.__effective_movement()
         dx = 0
         dy = 0
-        if self.__can_move(effective_movement):
-            dx = effective_movement
-        elif effective_movement > 0:
+        if self.__can_move(x):
+            dx = x
+        elif x > 0:
             dx = (self._limit_r - self.get_area().get_position_x) / self._delta
-        elif effective_movement < 0:
+        elif x < 0:
             dx = (self._limit_l - self.get_area().get_position_x) / self._delta
         super().move(dx, dy, self.get_area().width, self.get_area().height)
 
@@ -62,13 +62,13 @@ class PlayerImpl(CharacterImpl, Player):
             return self._limit_l < (x * self._delta + self.get_area().get_position_x - self.get_area().width / 2)
         return True
 
-    def __effective_movement(self, x : int) -> int:
+    def __effective_movement(self):
         # Apply movement reduction if player is slowed by bat sound waves
         if self._status_handler.status == PlayerStatus.Status.SLOWED:
             # Reduce movement speed by 50% when slowed
-            return int(x * 0.5)
+            self.delta = self._default_speed // 2
         else:
-            return x
+            self.delta = self._default_speed
                 
     def get_score(self) -> Score:
         return self._score

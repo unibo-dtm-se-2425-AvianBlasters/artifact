@@ -25,7 +25,7 @@ GRAPH_REFRESH = 60
 class GameViewImpl(GameView):
     """GameViewImpl is a pygame implementation of GameView"""
     
-    def __init__(self, fps : int):
+    def __init__(self):
         self._screen = None
         self._screen_width = 0
         self._screen_height = 0
@@ -41,12 +41,9 @@ class GameViewImpl(GameView):
         self._default_sprite_manager = DefaultSpriteManager()
         self._ui_renderer: UIRenderer = UIRendererImpl()
         self._cooldown_animation = 0
-        self._fps = fps
     
     def initialize(self, width: int, height: int, title: str) -> bool:
-        """Initialize the pygame display and return success status"""
         try:
-            pygame.init()
             self._screen = pygame.display.set_mode((width, height))
             pygame.display.set_caption(title)
             self._screen_width = width
@@ -70,7 +67,6 @@ class GameViewImpl(GameView):
             return False
     
     def render_world(self, world: World) -> None:
-        """Render the complete game world including all entities"""
         self.clear_screen()
         
         # Render all entities
@@ -95,12 +91,12 @@ class GameViewImpl(GameView):
         self._cooldown_animation += 1
 
     def render_entity(self, entity: Entity) -> None:
-        self.render_entity_generic(entity)
+        self.__render_entity_generic(entity)
 
     def render_entity_with_variant(self, entity: Entity, variant: int) -> None:
-        self.render_entity_generic(entity, variant)
+        self.__render_entity_generic(entity, variant)
     
-    def render_entity_generic(self, entity: Entity, variant: int = 0) -> None:
+    def __render_entity_generic(self, entity: Entity, variant: int = 0) -> None:
         """Render a single entity to the screen"""
         if self._screen is None:
             return
@@ -110,8 +106,7 @@ class GameViewImpl(GameView):
         # Convert world coordinates to screen coordinates
         screen_x = int(area.get_position_x * self._scale_x)
         screen_y = int(area.get_position_y * self._scale_y)
-
-        
+    
         # Get sprite for this entity with proper error handling
         try:
             if isinstance(entity, Player):
@@ -144,9 +139,7 @@ class GameViewImpl(GameView):
                 # Convert sprite to match display format
                 converted_sprite = sprite.convert(self._screen)
                 self._screen.blit(converted_sprite, (sprite_x, sprite_y))
-            
-
-            
+                 
         except Exception as e:
             # Fallback to colored rectangles if sprite rendering fails
             sprite_width = int(area.width * self._scale_x)
@@ -166,21 +159,16 @@ class GameViewImpl(GameView):
             rect = pygame.Rect(sprite_x, sprite_y, sprite_width, sprite_height)
             pygame.draw.rect(self._screen, color, rect)
     
-    
     def clear_screen(self) -> None:
-        """Clear the screen with background color"""
         if self._screen is not None:
             self._screen.fill(BLACK)
     
     def update_display(self) -> None:
-        """Update the pygame display"""
         pygame.display.flip()
     
     def get_screen_dimensions(self) -> tuple[int, int]:
-        """Get the current screen width and height"""
         return (self._screen_width, self._screen_height)
     
     def cleanup(self) -> None:
-        """Cleanup pygame resources"""
         #pygame.quit()
         self._screen = None

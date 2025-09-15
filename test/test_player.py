@@ -66,6 +66,23 @@ class TestPlayer(unittest.TestCase):
         self.verify_movement(movement_x2, self.limit_left)
         movement_x3 = 300
         self.verify_movement(movement_x3, self.limit_right)
+
+    def test_slowdown(self):
+        # Verify that the Player does not go beyond the walls (outer limits)
+        self.player.get_status().slow_down(5)
+        x = 1
+        i = 0
+        expectation = x
+        while i < 5 * self.refresh_rate:
+            self.verify_movement(x, expectation * (self.delta/2))
+            self.player.get_status().update()
+            i += 1
+            x = -x
+            if x > 0:
+                expectation = x
+            else:
+                expectation = 0 
+        self.verify_movement(x, x * self.delta)
         
     def test_add_points(self):
         # Test to verify score variation
