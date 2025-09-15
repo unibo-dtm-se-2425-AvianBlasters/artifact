@@ -33,11 +33,13 @@ class TestEntity(unittest.TestCase):
         self.entity.delta = self.delta * 2
         self.assertEqual(self.delta * 2, self.entity.delta)
         
+        # Verify that selecting a non int delta, does not change the current one
         with self.assertRaises(Exception):
             self.entity.delta = self.delta / 3
         self.assertEqual(self.delta * 2, self.entity.delta)
     
     def test_overlap(self):
+        # Test if the overlap functionality works as intended
         self.assertTrue(self.entity.is_touched(self.entity))
         
         entity2 = EntityImpl(self.x + int(self.width * 1.5), self.y + int(self.height * 1.5), self.width, self.height, self.type, self.delta)
@@ -53,6 +55,7 @@ class TestEntity(unittest.TestCase):
             self.entity.is_touched(self.x)
     
     def test_movement(self):
+        # Verify that entity moves as envisioned and it can handle wrong inputs
         self.entity.move(self.delta, self.delta, self.width, self.height)
         self.assertEqual(self.x + self.delta * self.delta, self.entity.get_area().get_position_x)
         self.assertEqual(self.y + self.delta * self.delta, self.entity.get_area().get_position_y)

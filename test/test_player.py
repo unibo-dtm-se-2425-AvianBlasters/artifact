@@ -19,7 +19,7 @@ class TestPlayer(unittest.TestCase):
     refresh_rate = 60
 
     def setUp(self):
-        self.player = PlayerImpl(self.initial_x, self.initial_y,
+        self.player : Player = PlayerImpl(self.initial_x, self.initial_y,
                                 self.width, self.width,self.delta,
                                 self.health, self.initial_score, self.initial_multiplier, 
                                 self.limit_right, self.limit_left, self.refresh_rate)
@@ -32,13 +32,14 @@ class TestPlayer(unittest.TestCase):
         self.assertEqual(PlayerStatus.Status.NORMAL, self.player.get_status().status)
     
     def test_wrong_set_up(self):
+        # Test to verify that if limit left and right are inversed an error will be raised
         with self.assertRaises(ValueError):
             PlayerImpl(x = self.initial_x, y = self.initial_y, width = self.width, height = self.height,  delta = 1,
                        health = self.health, initial_score = self.initial_score, initial_multiplier = self.initial_multiplier,
                        limit_right = self.limit_left, limit_left = self.limit_left, refresh_rate = self.refresh_rate)
 
-
     def verify_movement(self, movement_x, check):
+        #Given movement_x, checks whether it compares with expected movement of the Player character
         self.player.move(movement_x)
         if (movement_x * self.delta > self.limit_right or movement_x * self.delta < self.limit_left) and check not in [self.limit_left, self.limit_right]:
             self.assertNotEqual(check, self.player.get_area().get_position_x)
@@ -47,6 +48,7 @@ class TestPlayer(unittest.TestCase):
         self.assertEqual(self.initial_y, self.player.get_area().get_position_y)
 
     def test_movement(self):
+        # Verify basic movement
         self.verify_movement(0, self.initial_x)
         movement_x = 10
         self.verify_movement(movement_x, movement_x * self.delta)
@@ -55,6 +57,7 @@ class TestPlayer(unittest.TestCase):
         self.verify_movement(movement_x, self.initial_x)
     
     def test_going_against_wall(self):
+        # Verify that the Player does not go beyond the walls (outer limits)
         movement_x = int (100 / self.delta) + 1
         self.verify_movement(movement_x, self.limit_right)
         movement_x2 = - int (100 / self.delta)
@@ -65,6 +68,7 @@ class TestPlayer(unittest.TestCase):
         self.verify_movement(movement_x3, self.limit_right)
         
     def test_add_points(self):
+        # Test to verify score variation
         self.assertEqual(self.initial_score, self.player.get_score().score)
         score_increment = 100
         self.player.get_score().add_points(score_increment)
@@ -72,6 +76,8 @@ class TestPlayer(unittest.TestCase):
         self.assertNotEqual(self.initial_score, self.player.get_score().score)
     
     def test_damage(self):
+        # Test to veirfy if damage is handled correctly, considering also invulnerabiliy periods
+        # and wrong parameters
         test_enemy_projectile = EntityImpl(x = 0, y = 0, width = self.width, height = self.height, type = Entity.TypeArea.ENEMY_PROJECTILE, delta = self.delta)
         test_enemy = EntityImpl(x = 0, y = 30, width = self.width, height = self.height, type = Entity.TypeArea.ENEMY, delta = self.delta)
         self.assertTrue(self.player.is_touched([test_enemy_projectile]))
@@ -91,12 +97,14 @@ class TestPlayer(unittest.TestCase):
             self.player.is_touched(["Hello!"])
 
     def test_enemy_reaching_player(self):
+        # Test to verify the Player's defeat if the enemy touches it
         test_enemy = EntityImpl(x = 0, y = 30, width = self.width, height = self.height, type = Entity.TypeArea.ENEMY, delta = self.delta)
         test_enemy.move(0, -30/self.delta, self.width, self.height)
         self.assertTrue(self.player.is_touched([test_enemy]))
         self.assertEqual(0, self.player.get_health_handler().current_health)
 
     def test_enemy_reaching_player_height_while_invulnerable(self):
+        # Test to verify the Player's defeat if the enemy touches it, while invulnerable
         test_enemy = EntityImpl(x = 0, y = 30, width = self.width, height = self.height, type = Entity.TypeArea.ENEMY, delta = self.delta)
         test_enemy.move(0, -30/self.delta, self.width, self.height)
         self.player.get_status().invincibility(300)
@@ -104,6 +112,7 @@ class TestPlayer(unittest.TestCase):
         self.assertEqual(0, self.player.get_health_handler().current_health)
     
     def test_shoot(self):
+        # Test for the shooting capabilities of player, considering the cooldown between shots
         shots = self.player.shoot()
         for shot in shots:
             self.assertEqual(ProjectileType.NORMAL, shot.projectile_type)
@@ -116,57 +125,57 @@ class TestPlayer(unittest.TestCase):
         shots = self.player.shoot()
         for shot in shots:
             self.assertEqual(ProjectileType.NORMAL, shot.projectile_type)
-
-        
+  
 class TestPlayerStatusHandler(unittest.TestCase):
-    fps = 60
+    refresh_rate = 60
 
     def setUp(self):
-        self.status_handler = PlayerStatusImpl(PlayerStatus.Status.NORMAL, self.fps)
+        self.status_handler : PlayerStatus = PlayerStatusImpl(PlayerStatus.Status.NORMAL, self.refresh_rate)
 
     def test_set_up(self):
         self.assertEqual(PlayerStatus.Status.NORMAL, self.status_handler.status)
 
     def test_wrong_set_up(self):
         with self.assertRaises(ValueError):
-            PlayerStatusImpl("INVALID", self.fps)
+            PlayerStatusImpl("INVALID", self.refresh_rate)
         
         with self.assertRaises(ValueError):
             PlayerStatusImpl(PlayerStatus.Status.NORMAL, 0)
 
     def test_invulnerability(self):
+        # Test to verify the implementation of the invulnerability status
         cooldown = 15
         self.status_handler.invincibility(cooldown)
         i = 0
-        while (i < cooldown * self.fps):
+        while (i < cooldown * self.refresh_rate):
             self.assertEqual(PlayerStatus.Status.INVULNERABLE, self.status_handler.status)
             self.status_handler.update()
             i += 1
         self.assertEqual(PlayerStatus.Status.NORMAL, self.status_handler.status)
 
-    def test_slowing_effect(self):      
+    def test_slowing_effect(self):
+        # Test to verify the implementation of the slowed status
         cooldown = 10
         self.status_handler.slow_down(cooldown)
         self.assertEqual(PlayerStatus.Status.SLOWED, self.status_handler.status)
         
-        # Update several times and check that it eventually goes back to normal
         i = 0
-        while (i < cooldown * self.fps):
+        while (i < cooldown * self.refresh_rate):
             self.assertEqual(PlayerStatus.Status.SLOWED, self.status_handler.status)
             self.status_handler.update()
             i += 1
         
-        # After cooldown * fps updates, should be back to normal
         self.assertEqual(PlayerStatus.Status.NORMAL, self.status_handler.status)
 
     def test_change(self):
+        # Test to verify that if the status is invulnerable, it can not be changed
         cooldown = 5
         self.status_handler.slow_down(cooldown)
         self.assertEqual(PlayerStatus.Status.SLOWED, self.status_handler.status)
         self.status_handler.invincibility(cooldown)
         self.assertEqual(PlayerStatus.Status.INVULNERABLE, self.status_handler.status)
         i = 0
-        while (i < cooldown * self.fps):
+        while (i < cooldown * self.refresh_rate):
             self.status_handler.slow_down(cooldown)
             self.assertEqual(PlayerStatus.Status.INVULNERABLE, self.status_handler.status)
             self.status_handler.update()
@@ -177,30 +186,30 @@ class TestPlayerStatusHandler(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.status_handler.status ="INVALID"
 
-
 class TestScore(unittest.TestCase):
     def setUp(self):
-        self.score = ScoreImpl(0,1)
+        self.score : Score = ScoreImpl(0,1)
     
     def test_set_up(self):
         self.assertEqual(0, self.score.score)
         self.assertEqual(1, self.score.multiplier)
     
     def test_wrong_set_up(self):
-        #score must be >= 0
+        # Score must be >= 0
         with self.assertRaises(ValueError):
             ScoreImpl(-1, 1)
         
-        #multiplier must be at least 1
+        # Multiplier must be at least 1
         with self.assertRaises(ValueError):
             ScoreImpl(0, 0)
     
     def test_add_points(self):
+        # Test for the point addition, considering points being deducted
         self.addition(1000)
         self.addition(-10000)
     
     def test_multiplier_change(self):
-        initial_multiplier = self.score._multiplier
+        initial_multiplier = self.score.multiplier
         new_multiplier = 2
         self.score.multiplier = new_multiplier
         self.assertEqual(new_multiplier, self.score.multiplier)
