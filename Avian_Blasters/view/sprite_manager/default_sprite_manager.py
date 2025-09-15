@@ -15,17 +15,17 @@ class DefaultSpriteManager(AbstractSpriteManager):
                                 'size': (16, 10)
                             },
                             Entity.TypeArea.ENEMY: {
-                                'positions': [(26, 24, 64, 44), (120, 24, 64, 44), (80, 40, 64, 40),  # birds
-                                             (26, 304, 64, 44), (60, 60, 60, 40), (80, 60, 60, 40)],   # bats
+                                'positions': [(26, 24, 64, 44), (120, 24, 64, 44),  # birds
+                                             (304, 24, 64, 44), (344, 24, 60, 44)],   # bats
                                 'size': (16, 10)
                             },
                             Entity.TypeArea.PLAYER_PROJECTILE: {
-                                'positions': [(224, 292, 12, 20)],  # Projectiles
+                                'positions': [(216, 292, 12, 20)],  # Projectiles
                                 'size': (12, 20)
                             },
                             Entity.TypeArea.ENEMY_PROJECTILE: {
-                                'positions': [(213, 33, 12, 20), (100, 70, 4, 8)],  # Enemy projectiles
-                                'size': (4, 8)
+                                'positions': [(216, 35, 12, 20), (532, 32, 64, 44)],  # Enemy projectiles
+                                'size': (12, 20)
                             },
                             Entity.TypeArea.POWERUP: {
                                 'positions': [(143, 28, 12, 40), (120, 40, 16, 16), (120, 60, 16, 16)],  # Power-ups
@@ -41,8 +41,7 @@ class DefaultSpriteManager(AbstractSpriteManager):
         return super().get_sprite(entity_type, variant)
     
     def get_sprite_size(self, entity_type: Entity.TypeArea) -> Tuple[int, int]:
-        if entity_type in self._sprite_sizes:
-            return self._sprite_sizes[entity_type]
+        return super().get_sprite_size(entity_type)
     
     def is_loaded(self) -> bool:
         return super().is_loaded()

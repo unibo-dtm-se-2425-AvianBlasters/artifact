@@ -58,7 +58,7 @@ class GameViewImpl(GameView):
             
             # Load sprites
             for manager in self._sprite_managers.values():
-                if not manager.load_sprites():
+                if not manager.load_sprites() and self._default_sprite_manager.load_sprites():
                     print("Warning: Failed to load some sprites, using fallback.")
             # Initialize UI renderer
             if not self._ui_renderer.initialize():
@@ -114,7 +114,6 @@ class GameViewImpl(GameView):
         
         # Get sprite for this entity with proper error handling
         try:
-
             if isinstance(entity, Player):
                 sprite = self._sprite_managers[Entity.TypeArea.PLAYER].get_sprite(entity, variant)
             elif isinstance(entity, Enemy):

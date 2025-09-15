@@ -22,8 +22,8 @@ class AbstractSpriteManager(SpriteManager):
             if self._sprite_sheet is None:
                 return False
             
-            # Extract individual sprites for each entity type
-            for entity_type, definition in self._sprite_definitions.items():
+            # Extract individual sprites for each index
+            for index, definition in self._sprite_definitions.items():
                 sprites = []
                 for i, pos in enumerate(definition['positions']):
                     x, y, width, height = pos
@@ -36,8 +36,8 @@ class AbstractSpriteManager(SpriteManager):
                     # Use the actual extracted sprites now
                     sprites.append(sprite_copy)
                 
-                self._sprites[entity_type] = sprites
-                self._sprite_sizes[entity_type] = definition['size']
+                self._sprites[index] = sprites
+                self._sprite_sizes[index] = definition['size']
             
             self._loaded = True
             return True
