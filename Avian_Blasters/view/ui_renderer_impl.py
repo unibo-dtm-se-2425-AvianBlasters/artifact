@@ -11,7 +11,6 @@ class UIRendererImpl(UIRenderer):
         self._small_font: Optional[pygame.font.Font] = None
         
     def initialize(self, font_size: int = 24) -> bool:
-        """Initialize fonts and UI resources"""
         try:
             pygame.font.init()
             self._font = pygame.font.Font(None, font_size)
@@ -22,7 +21,6 @@ class UIRendererImpl(UIRenderer):
             return False
     
     def render_score(self, screen: pygame.Surface, player: Player, x: int, y: int) -> None:
-        """Render the player's score at the specified position"""
         if self._font is None:
             return
             
@@ -38,7 +36,6 @@ class UIRendererImpl(UIRenderer):
             screen.blit(text_surface, (x, y))
     
     def render_health(self, screen: pygame.Surface, player: Player, x: int, y: int) -> None:
-        """Render the player's health/lives at the specified position"""
         if self._small_font is None:
             return
             
@@ -65,7 +62,6 @@ class UIRendererImpl(UIRenderer):
             screen.blit(text_surface, (x, y))
     
     def render_game_over(self, screen: pygame.Surface, screen_width: int, screen_height: int) -> None:
-        """Render game over screen"""
         if self._font is None:
             return
             
@@ -78,5 +74,4 @@ class UIRendererImpl(UIRenderer):
         screen.blit(restart_text, restart_rect)
     
     def cleanup(self) -> None:
-        """Cleanup UI resources"""
         pass

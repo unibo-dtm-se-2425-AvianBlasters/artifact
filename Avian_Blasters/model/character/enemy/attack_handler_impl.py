@@ -77,8 +77,8 @@ class BatAttackHandler(EnemyAttackHandler):
         player_x, player_y = self._player_position
         vertical_distance = abs(enemy.y - player_y)
         
-        # Only attack if within 10 units vertically and pass random chance
-        if vertical_distance <= 10:
+        # Only attack if within 20 units vertically and pass random chance
+        if vertical_distance <= 20:
             return random.random() <= self._fire_chance
         return False
         

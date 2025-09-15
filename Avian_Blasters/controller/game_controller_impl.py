@@ -55,13 +55,12 @@ class GameControllerImpl(GameController):
         self._sound_manager = SoundManagerImpl()
     
     def initialize(self) -> bool:
-        """Initialize the game controller and its dependencies"""
         try:
             # Initialize pygame clock
             self._clock = pygame.time.Clock()
             
             # Initialize view
-            self._view = GameViewImpl(self._fps)
+            self._view = GameViewImpl()
             if not self._view.initialize(SCREEN_WIDTH, SCREEN_HEIGHT, GAME_TITLE):
                 return False
             
@@ -98,7 +97,6 @@ class GameControllerImpl(GameController):
             return False
     
     def run(self) -> None:
-        """Start and run the main game loop"""
         if not self._running:
             print("Game controller not initialized!")
             return
@@ -138,7 +136,6 @@ class GameControllerImpl(GameController):
         self.cleanup()
     
     def update_game_state(self, delta_time: float) -> None:
-        """Update the game world state based on elapsed time"""        
         self._update_player()
         self._update_enemies(delta_time)
         self._update_projectiles()
@@ -295,7 +292,6 @@ class GameControllerImpl(GameController):
             self._world.add_power_ups([power_up])
     
     def handle_input(self, actions: List[InputHandler.Action]) -> None:
-        """Process input actions and update the game state accordingly"""
         for action in actions:
             if action == InputHandler.Action.QUIT:
                 self._running = False
@@ -316,11 +312,9 @@ class GameControllerImpl(GameController):
                     self._world.add_projectiles(projectiles)
     
     def is_game_running(self) -> bool:
-        """Check if the game should continue running"""
         return self._running
     
     def cleanup(self) -> None:
-        """Cleanup resources when the game ends"""
         if self._view:
             self._sound_manager.play_sound_effect(SoundEffects.GAME_OVER.value, volume=0.5)
             self._view.cleanup()
