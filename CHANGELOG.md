@@ -1,3 +1,27 @@
+## [4.0.0](https://github.com/unibo-dtm-se-2425-AvianBlasters/artifact/compare/3.1.0...4.0.0) (2025-09-15)
+
+
+### ⚠ BREAKING CHANGES
+
+* **view:** removed unused parameter from GameViewImpl
+
+### Bug Fixes
+
+* improved slow down handling of Player ([39027e9](https://github.com/unibo-dtm-se-2425-AvianBlasters/artifact/commit/39027e9d1ae97ab9dd2777932f837ff725324af9))
+* **view:** removed unused parameter from GameViewImpl ([2a23de2](https://github.com/unibo-dtm-se-2425-AvianBlasters/artifact/commit/2a23de282eaeb983e3440314a4753cb4e219a9c1))
+
+
+### Tests
+
+* streamlined World related tests with verify method ([5023dcb](https://github.com/unibo-dtm-se-2425-AvianBlasters/artifact/commit/5023dcbc32c6d8ef66284a53302c0be56ae68610))
+* updated player and entity tests with documentation ([c80b9b5](https://github.com/unibo-dtm-se-2425-AvianBlasters/artifact/commit/c80b9b5cb4101d7096937a3f4e30afd23207e42f))
+
+
+### Refactoring
+
+* added exception to handle wrong requests to add_score ([26d46e7](https://github.com/unibo-dtm-se-2425-AvianBlasters/artifact/commit/26d46e7ce8953e92b8dad9956d50fa2595aded91))
+* made sure DefaultSpriteManager works as intended ([629b27a](https://github.com/unibo-dtm-se-2425-AvianBlasters/artifact/commit/629b27a01f86549dc686eb03768d95dd8eff096c))
+
 ## [3.1.0](https://github.com/unibo-dtm-se-2425-AvianBlasters/artifact/compare/3.0.0...3.1.0) (2025-09-13)
 
 
