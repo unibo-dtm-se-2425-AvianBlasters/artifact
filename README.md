@@ -20,7 +20,7 @@ For a more detailed user guide, describing all the in-game features and controls
 
 ## To start the software application
 
-Python version 3.9 or above is required for this application and needs to be installed on your device.
+This software project has been tested using Python 3.9 and above. The ideal Python version to use for this application is 3.12.1 or above and it needs to be installed on your device.
 
 1) Clone the repository locally: 
 
@@ -48,7 +48,7 @@ Python version 3.9 or above is required for this application and needs to be ins
 
 [`Project documentation`](https://unibo-dtm-se-2425-avianblasters.github.io/report)
 
-[`TestPyPi page`](https://test.pypi.org/project/Avian-Blasters/3.1.0/)
+[`TestPyPI page`](https://test.pypi.org/project/Avian-Blasters/3.1.0/)
 
 [`Link to the project template`](https://github.com/unibo-dtm-se/template-python-project)
 
