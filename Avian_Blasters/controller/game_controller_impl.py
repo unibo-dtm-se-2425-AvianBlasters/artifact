@@ -265,6 +265,7 @@ class GameControllerImpl(GameController):
         # Respawn a new wave if all enemies have been cleared
         if not self._world.get_enemies():
             self._world.add_enemies(create_enemy_formation())
+            print("A new wave has arrived!")
             
     def _try_drop_power_up(self, enemy_x: int, enemy_y: int) -> None:
         # 20% chance to drop a power-up
