@@ -23,11 +23,6 @@ class GeneralAttackHandler:
         ...
 
     @abstractmethod
-    def _reset_cooldown(self):
-        """ Resets the cooldown of the character after an attack """
-        ...
-
-    @abstractmethod
     def update(self):
         """ Updates the cooldown handler of the character """
         ...

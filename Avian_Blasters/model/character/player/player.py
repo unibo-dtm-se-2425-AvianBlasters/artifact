@@ -1,7 +1,6 @@
 from Avian_Blasters.model.entity import Entity
 from Avian_Blasters.model.character.character import Character
-from Avian_Blasters.model.character.health_handler import HealthHandler
-from Avian_Blasters.model.character.player.player_attack_handler import PlayerAttackHandler
+from Avian_Blasters.model.character.general_attack_handler import GeneralAttackHandler
 from Avian_Blasters.model.character.player.power_up_handler import PowerUpHandler
 from Avian_Blasters.model.character.player.player_status_handler import PlayerStatus
 from Avian_Blasters.model.character.player.score import Score
@@ -9,16 +8,12 @@ from Avian_Blasters.model.character.player.score import Score
 class Player(Character):
     """This class defines the actions and characteristics of the player character"""
     
-    def get_health_handler(self) -> HealthHandler:
-        """This is a getter for the HealthHandler of the player"""
-        ...
-    
     def get_power_up_handler(self) -> PowerUpHandler:
         """This is a getter for the PowerUpHandler of the player
         which allows for opeartions linked to PowerUps"""
         ...
 
-    def get_player_attack_handler(self) -> PlayerAttackHandler:
+    def get_player_attack_handler(self) -> GeneralAttackHandler:
         """A getter for the AttackHandler of the player, allowing
         for their attacks"""
         ...
