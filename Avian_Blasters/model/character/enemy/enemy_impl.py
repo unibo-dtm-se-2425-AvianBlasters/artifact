@@ -88,7 +88,7 @@ class EnemyImpl(CharacterImpl, Enemy):
 
             if entity.get_type == Entity.TypeArea.PLAYER_PROJECTILE:
                 if super().is_touched(entity):
-                    if hasattr(entity, 'projectile_type'):          # Ensure the entity has a projectile_type attribute
+                    if isinstance(entity, Projectile):          # Ensure the entity has a projectile_type attribute
                         if entity.projectile_type == ProjectileType.NORMAL:     
                             self.take_damage(1)
                             entity.destroy()

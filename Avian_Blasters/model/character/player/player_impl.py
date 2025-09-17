@@ -1,6 +1,7 @@
 from Avian_Blasters.model.character.character_impl import CharacterImpl
 from Avian_Blasters.model.character.player.player_attack_handler import PlayerAttackHandler
 from Avian_Blasters.model.entity import Entity
+from Avian_Blasters.model.character.general_attack_handler import GeneralAttackHandler
 from Avian_Blasters.model.character.player import *
 from Avian_Blasters.model.character.player.player import Player
 from Avian_Blasters.model.character.player.player_status_handler import PlayerStatus
@@ -38,7 +39,7 @@ class PlayerImpl(CharacterImpl, Player):
     def get_power_up_handler(self) -> PowerUpHandler:
         return self._power_up_handler
     
-    def get_player_attack_handler(self) -> PlayerAttackHandler:
+    def get_player_attack_handler(self) -> GeneralAttackHandler:
         return self._attack_handler
     
     def move(self, x : int):
@@ -76,35 +77,35 @@ class PlayerImpl(CharacterImpl, Player):
     def is_touched(self, others: list[Entity]) -> bool:
         self.__update()
         if self._status_handler.status != PlayerStatus.Status.INVULNERABLE:
-            for i in others:
-                if not isinstance(i, Entity):
+            for entity in others:
+                if not isinstance(entity, Entity):
                     raise ValueError("A list of Entity objects must be used!")
-                if i.get_type == Entity.TypeArea.ENEMY or i.get_type == Entity.TypeArea.ENEMY_PROJECTILE:
-                    if super().is_touched(i):
+                if entity.get_type == Entity.TypeArea.ENEMY or entity.get_type == Entity.TypeArea.ENEMY_PROJECTILE:
+                    if super().is_touched(entity):
                         # Check if it's a sound wave projectile from bats
-                        if hasattr(i, 'projectile_type') and i.projectile_type == ProjectileType.SOUND_WAVE:
+                        if isinstance(entity, Projectile) and entity.projectile_type == ProjectileType.SOUND_WAVE:
                             # Sound waves don't deal damage but slow the player
                             self._status_handler.slow_down(DEFAULT_COOLDOWN)
                         else:
                             # Regular damage from enemies or normal projectiles
-                            damage = 3 if i.get_type == Entity.TypeArea.ENEMY else 1
+                            damage = 3 if entity.get_type == Entity.TypeArea.ENEMY else 1
                             self.get_health_handler().take_damage(damage)
                             if self.get_health_handler().current_health > 0:
                                 self._status_handler.invincibility(DEFAULT_COOLDOWN)
                             self._is_hurt = True
                         return True
-                    elif i.get_type == Entity.TypeArea.ENEMY and self.__check_if_enemy_crossed(i):
+                    elif entity.get_type == Entity.TypeArea.ENEMY and self.__check_if_enemy_crossed(entity):
                         self.__instant_defeat()
                         return True
         else:
             self._status_handler.update()
             if self._status_handler.status != PlayerStatus.Status.INVULNERABLE:
                 self._is_hurt = False
-            for i in others:
-                if not isinstance(i, Entity):
+            for entity in others:
+                if not isinstance(entity, Entity):
                     raise ValueError("A list of Entity objects must be used!")
-                if i.get_type == Entity.TypeArea.ENEMY:
-                    if self.__check_if_enemy_crossed(i):
+                if entity.get_type == Entity.TypeArea.ENEMY:
+                    if self.__check_if_enemy_crossed(entity):
                         self.__instant_defeat()
                         return True
         return False
