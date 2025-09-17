@@ -1,7 +1,7 @@
 from Avian_Blasters.model.entity import Entity
 from Avian_Blasters.model.item.item_impl import DEFAULT_DELTA
 from Avian_Blasters.model.item.power_up.power_up import PowerUpType
-from Avian_Blasters.model.item.power_up.power_up_impl import PowerUpImpl
+from Avian_Blasters.model.item.power_up.power_up import PowerUp
 from Avian_Blasters.model.item.power_up.power_up_types.double_fire_power_up import DoubleFirePowerUp
 from Avian_Blasters.model.item.power_up.power_up_types.health_recovery_power_up import HealthRecoveryPowerUp
 from Avian_Blasters.model.item.power_up.power_up_types.invulnerability_power_up import InvulnerabilityPowerUp
@@ -19,7 +19,7 @@ class PowerUpFactory:
         PowerUpType.HEALTH_RECOVERY: (HealthRecoveryPowerUp, False, None)
     } 
 
-    def create_power_up(self, power_up_type: PowerUpType, x: int, y: int, width: int , height: int, type_area: Entity.TypeArea, delta: int = DEFAULT_DELTA) -> PowerUpImpl:
+    def create_power_up(self, power_up_type: PowerUpType, x: int, y: int, width: int , height: int, type_area: Entity.TypeArea, delta: int = DEFAULT_DELTA) -> PowerUp:
         
         if not isinstance(type_area, Entity.TypeArea):
             raise ValueError("Invalid type area")

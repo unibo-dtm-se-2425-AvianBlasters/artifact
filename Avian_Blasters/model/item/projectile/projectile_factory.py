@@ -1,5 +1,6 @@
 from Avian_Blasters.model.entity import Entity
 from Avian_Blasters.model.item.item_impl import DEFAULT_DELTA
+from Avian_Blasters.model.item.projectile.projectile import Projectile
 from Avian_Blasters.model.item.projectile.projectile import ProjectileType
 from Avian_Blasters.model.item.projectile.projectile_impl import ProjectileImpl
 
@@ -14,7 +15,7 @@ class ProjectileFactory:
         ProjectileType.SOUND_WAVE: (2, 5)
     }
 
-    def create_projectile(self, projectile_type: ProjectileType, x: int, y: int, type_area: Entity.TypeArea, delta: int = DEFAULT_DELTA):
+    def create_projectile(self, projectile_type: ProjectileType, x: int, y: int, type_area: Entity.TypeArea, delta: int = DEFAULT_DELTA) -> Projectile:
         
         if not isinstance(type_area, Entity.TypeArea):
             raise ValueError("Invalid type area")
