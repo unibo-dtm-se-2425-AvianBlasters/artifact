@@ -1,3 +1,10 @@
+## [4.2.0](https://github.com/unibo-dtm-se-2425-AvianBlasters/artifact/compare/4.1.0...4.2.0) (2025-09-19)
+
+
+### Features
+
+* removed unused dependency 'pandas' ([220dc1e](https://github.com/unibo-dtm-se-2425-AvianBlasters/artifact/commit/220dc1ed48edc8d2cb0ba90fbc9618e610e33b67))
+
 ## [4.1.0](https://github.com/unibo-dtm-se-2425-AvianBlasters/artifact/compare/4.0.0...4.1.0) (2025-09-17)
 
 
