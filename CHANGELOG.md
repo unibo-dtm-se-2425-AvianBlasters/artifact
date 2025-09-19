@@ -1,3 +1,17 @@
+## [4.1.0](https://github.com/unibo-dtm-se-2425-AvianBlasters/artifact/compare/4.0.0...4.1.0) (2025-09-17)
+
+
+### Features
+
+* added cli feedback for when a new enemy wave appears ([7347995](https://github.com/unibo-dtm-se-2425-AvianBlasters/artifact/commit/73479957e32a6a7d6e1def95f4407ec23ddc6893))
+* updated interfaces to remove protected methods or public ones already defined in another interface ([51a7a7d](https://github.com/unibo-dtm-se-2425-AvianBlasters/artifact/commit/51a7a7d9b46f43d518f85142d5d252343c794208))
+* updated return types to base objects, instead of implemented ones ([7b0bf37](https://github.com/unibo-dtm-se-2425-AvianBlasters/artifact/commit/7b0bf378350af8f6acd272ae581e0c9abedbd253))
+
+
+### Refactoring
+
+* used isinstance instead of hasattr for improved code consistency ([b192097](https://github.com/unibo-dtm-se-2425-AvianBlasters/artifact/commit/b192097221b5dbaf0b0f78a374b2462d9a23aecb))
+
 ## [4.0.0](https://github.com/unibo-dtm-se-2425-AvianBlasters/artifact/compare/3.1.0...4.0.0) (2025-09-15)
 
 
